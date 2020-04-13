@@ -7,6 +7,7 @@ function Player(x,y, xspeed, yspeed, xacc, yacc, w, h) {
   this.yacc = yacc;
   this.h = h;
   this.w = w;
+  this.tilt = 0;
 
   // UPDATE / PHYSICS FUNCTION
   this.update = function() {
@@ -26,7 +27,7 @@ function Player(x,y, xspeed, yspeed, xacc, yacc, w, h) {
       this.xspeed = this.xspeed * (GROUND_BOUNCE);
     }
 
-    // BALL HITS LEFT OF CANVAS
+    // PLAYER HITS LEFT OF CANVAS
     if(this.x < (this.w / 2)) {
       // This line is used in order to reposition the object, otherwise we cannot apply acceleration anymore
       this.x = (this.w / 2);
@@ -34,30 +35,12 @@ function Player(x,y, xspeed, yspeed, xacc, yacc, w, h) {
       this.xspeed = this.xspeed * (GROUND_BOUNCE);
     }
 
-    // BALL HITS BOTTOM OF CANVAS
+    // PLAYER HITS BOTTOM OF CANVAS
     if(this.y > (CANVAS_HEIGHT - (this.h / 2))) {
+      this.xspeed = 0;
+      this.yspeed = 0;
       // This line is used in order to reposition the object, otherwise we cannot apply acceleration anymore
       this.y = CANVAS_HEIGHT - (this.h / 2);
-      // Collision with ground
-      this.yspeed = this.yspeed * (GROUND_BOUNCE);
-      // Suppressing oscillations on the Y-axis (MAYBE ENCLOSE THIS -2 AS A DAMPENING CONSTANT)
-      if(this.yspeed < 0 && this.yspeed > -2) {
-        this.yspeed = 0;
-      }
-      // Suppressing oscillations on the X-axis (MAYBE ENCLOSE THIS 0.1 AS A DAMPENING CONSTANT)
-      if(abs(this.xspeed) < 0.1){ 
-        this.xspeed = 0;
-      }
-      // Friction
-      if(this.xspeed > 0) {
-        this.xspeed = this.xspeed - FRICTION_FORCE;
-      }
-      else if (this.xspeed < 0) {
-        this.xspeed = this.xspeed + FRICTION_FORCE;
-      }
-      else {
-        this.xspeed = 0;
-      }
     }
 
     // PLAYER HITS TOP OF CANVAS - DEBUG
@@ -67,12 +50,24 @@ function Player(x,y, xspeed, yspeed, xacc, yacc, w, h) {
     }*/
   }
 
+  // BASIC COLLISION ALGORITHM
+  this.contact = function(ball) {
+    if (this.x + (this.w/2) >= ball.x - (ball.diameter / 2) && // Right edge of player vs. left "edge" of the ball
+        this.x - (this.w/2) <= ball.x + (ball.diameter / 2) && // Left edge of player vs. right "edge" of the ball
+        this.y + (this.h/2) >= ball.y - (ball.diameter / 2) && // Bottom edge of player vs. top "edge" of the ball
+        this.y - (this.h/2) <= ball.y + (ball.diameter / 2))   // Top edge of player vs. bottom "edge" of the ball
+    {
+      return true;
+    }
+      return false;
+  }
+
   this.jump = function() {
     //this.xacc = ?; this is going to be a challenge to code
     this.yacc = -1;
   }
 
-  // Drawing function
+  // DRAWING FUNCTION
   this.show = function() {
     rectMode(CENTER);
     fill(255);
