@@ -12,17 +12,19 @@ function main_debug() {
     ball.reset_loc();
   }
 
-  // DISPLAY ELAPSED TIME
+  // TIMER - OK IT IS WORKING
   push();
   textSize(40);
   fill(255);
   stroke(0, 0, 0);
-  t_elapsed_sec = round((millis() / 1000) % 60);
-  if (t_elapsed_sec % 60 == 0) {
-    t_elapsed_min = t_elapsed_min + 1;
-    t_elapsed_sec = 0;
+  if (frameCount % 60 == 0) {
+    t_elapsed_sec = t_elapsed_sec + 1;
   }
-  text(t_elapsed_min + ":" + t_elapsed_sec, (CANVAS_WIDTH / 2), 30);
+  if (t_elapsed_sec >= 60) {
+    t_elapsed_min = t_elapsed_min + 1;
+    t_elapsed_sec = 0
+  }
+  text(nf(t_elapsed_min, 2, 0) + ":" + nf(t_elapsed_sec, 2, 0), (CANVAS_WIDTH / 2), 30);
   pop();
 
   // DISPLAY SCORE
@@ -51,21 +53,29 @@ function main_debug() {
   goal1.show();
   goal2.show();
 
-  // GAME LOGIC
+  // GAME LOGIC - HAVE TO FIGURE OUT WHAT THE COEFFICIENTS MUST BE
   if (player1_atk.contact(ball)) {
-    ball.xspeed = ball.xspeed * -1;
-    ball.yspeed = ball.yspeed * -1;
+    ball.xspeed = ball.xspeed * -0.7;
+    ball.yspeed = ball.yspeed * -0.7;
   }
   if (player1_def.contact(ball)) {
-    ball.xspeed = ball.xspeed * -1;
-    ball.yspeed = ball.yspeed * -1;
+    ball.xspeed = ball.xspeed * -0.7;
+    ball.yspeed = ball.yspeed * -0.7;
   }
   if (player2_atk.contact(ball)) {
-    ball.xspeed = ball.xspeed * -1;
-    ball.yspeed = ball.yspeed * -1;
+    ball.xspeed = ball.xspeed * -0.7;
+    ball.yspeed = ball.yspeed * -0.7;
   }
   if (player2_def.contact(ball)) {
-    ball.xspeed = ball.xspeed * -1;
-    ball.yspeed = ball.yspeed * -1;
+    ball.xspeed = ball.xspeed * -0.7;
+    ball.yspeed = ball.yspeed * -0.7;
+  }
+  if (goal1.contact(ball)) {
+    ball.xspeed = ball.xspeed * -0.7;
+    ball.yspeed = ball.yspeed * -0.7;
+  }
+  if (goal2.contact(ball)) {
+    ball.xspeed = ball.xspeed * -0.7;
+    ball.yspeed = ball.yspeed * -0.7;
   }
 }

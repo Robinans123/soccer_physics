@@ -1,9 +1,9 @@
 let menu = 0;
-let GRAVITY = 0.6;
+let GRAVITY = 0.8; // 0.6
 let CANVAS_WIDTH = 1400;
 let CANVAS_HEIGHT = 700;
-let FRICTION_FORCE = 0.2;
-let GROUND_BOUNCE = -0.7;
+let FRICTION_FORCE = 0.4; // 0.2
+let GROUND_BOUNCE = -0.5; // -0.7
 let goal_width = 150;
 let goal_height = 400;
 let player_width = 60;
@@ -20,12 +20,12 @@ function setup() {
 
   // INSTANCIATIONS
   ball = new Ball(300, 200, 0, 0, 0.01, GRAVITY, 40);
-  player1_atk = new Player(500, 350, 0, 0, 0.006, GRAVITY, player_width, player_height);
+  player1_atk = new Player(500, 350, 0, 0, 0, GRAVITY, player_width, player_height);
   player1_def = new Player(200, 350, 0, 0, 0, GRAVITY, player_width, player_height);
-  player2_atk = new Player(900, 350, 0, 0, -0.006, GRAVITY, player_width, player_height);
+  player2_atk = new Player(900, 350, 0, 0, 0, GRAVITY, player_width, player_height);
   player2_def = new Player(1200, 350, 0, 0, 0, GRAVITY, player_width, player_height);
-  goal1 = new Goal((goal_width / 2), (CANVAS_HEIGHT - (goal_height / 2)), goal_width, goal_height);
-  goal2 = new Goal((CANVAS_WIDTH - (goal_width / 2)), (CANVAS_HEIGHT - (goal_height / 2)), goal_width, goal_height);
+  goal1 = new Goal((goal_width / 2), (CANVAS_HEIGHT - (goal_height / 2)), goal_width, goal_height, 10, true);
+  goal2 = new Goal((CANVAS_WIDTH - (goal_width / 2)), (CANVAS_HEIGHT - (goal_height / 2)), goal_width, goal_height, 10, false);
   coll_object_list.push(ball, player1_atk, player1_def, player2_atk, player2_def, goal1, goal2);
 }
 

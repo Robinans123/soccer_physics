@@ -20,18 +20,24 @@ function Ball(x,y, xspeed, yspeed, xacc, yacc, diameter) {
 
     // BALL HITS RIGHT OF CANVAS
     if (this.x > (CANVAS_WIDTH - (this.diameter / 2) - 1)) {
+      /* DEBUG CODE
       // This line is used in order to reposition the ball, otherwise we cannot apply acceleration anymore
       this.x = CANVAS_WIDTH - (this.diameter / 2);
       // Collision with right side of canvas
       this.xspeed = this.xspeed * (GROUND_BOUNCE);
+      */
+      this.reset_loc(); // Reset location after ball exits the canvas - MAYBE ADD A BIGGER "OUTER" CANVAS IN ORDER TO NOT HAVE THE BALL RESET INSTANTLY + ADD AN OUT OF BOUNDS MESSAGE
     }
 
     // BALL HITS LEFT OF CANVAS
     if (this.x < (this.diameter / 2)) {
+      /* DEBUG CODE
       // This line is used in order to reposition the ball, otherwise we cannot apply acceleration anymore
       this.x = (this.diameter / 2);
       // Collision with left side of canvas
       this.xspeed = this.xspeed * (GROUND_BOUNCE);
+      */
+      this.reset_loc(); // Reset location after ball exits the canvas - MAYBE ADD A BIGGER "OUTER" CANVAS IN ORDER TO NOT HAVE THE BALL RESET INSTANTLY + ADD AN OUT OF BOUNDS MESSAGE
     }
 
     // BALL HITS BOTTOM OF CANVAS
@@ -63,7 +69,7 @@ function Ball(x,y, xspeed, yspeed, xacc, yacc, diameter) {
 
   // KICK FUNCTION - DEBUG OK
   this.kick = function() {
-    this.yacc = -1;
+    this.yacc = -0.8;
   }
 
   // KICK FUNCTION - DEBUG OK
