@@ -1,13 +1,14 @@
 function main_debug() {
 
+  Engine.update(engine);
   background(0, 100, 255);
 
   // SCORE LOGIC
-  if (ball.x >= CANVAS_WIDTH - goal2.w && ball.y >= CANVAS_HEIGHT - goal2.h) {
+  if (ball.body.position.x >= CANVAS_WIDTH - goal2.w && ball.body.position.y >= CANVAS_HEIGHT - goal2.h) {
     score1 = score1 + 1;
     ball.reset_loc();
   }
-  if (ball.x <= goal1.w && ball.y >= CANVAS_HEIGHT - goal1.h) {
+  if (ball.body.position.x <= goal1.w && ball.body.position.y >= CANVAS_HEIGHT - goal1.h) {
     score2 = score2 + 1;
     ball.reset_loc();
   }
@@ -38,44 +39,45 @@ function main_debug() {
   fill(0);
   textSize(20);
   stroke(0, 0, 0);
-  text('Right Click to return to menu', ((CANVAS_WIDTH  * 6) / 7), 30);
+  text('Press ESC key to return to menu', ((CANVAS_WIDTH  * 6) / 7), 30);
   pop();
-  ball.update();
 	ball.show();
-	player1_atk.update();
-	player1_atk.show();
-  player1_def.update();
+  ground.show();
+	/*player1_atk.show();
   player1_def.show();
-	player2_atk.update();
 	player2_atk.show();
-  player2_def.update();
-  player2_def.show();
+  player2_def.show();*/
   goal1.show();
   goal2.show();
 
-  // GAME LOGIC - HAVE TO FIGURE OUT WHAT THE COEFFICIENTS MUST BE
-  if (player1_atk.contact(ball)) {
-    ball.xspeed = ball.xspeed * -0.7;
-    ball.yspeed = ball.yspeed * -0.7;
-  }
-  if (player1_def.contact(ball)) {
-    ball.xspeed = ball.xspeed * -0.7;
-    ball.yspeed = ball.yspeed * -0.7;
-  }
-  if (player2_atk.contact(ball)) {
-    ball.xspeed = ball.xspeed * -0.7;
-    ball.yspeed = ball.yspeed * -0.7;
-  }
-  if (player2_def.contact(ball)) {
-    ball.xspeed = ball.xspeed * -0.7;
-    ball.yspeed = ball.yspeed * -0.7;
-  }
-  if (goal1.contact(ball)) {
-    ball.xspeed = ball.xspeed * -0.7;
-    ball.yspeed = ball.yspeed * -0.7;
-  }
-  if (goal2.contact(ball)) {
-    ball.xspeed = ball.xspeed * -0.7;
-    ball.yspeed = ball.yspeed * -0.7;
-  }
+  playerTest.show();
+  playerTest.puppetFollow();
+  //playerTest.tilt();
+
+  // DEBUG
+  playerTestBodyGroundColl = Matter.SAT.collides(playerTest.main_body, ground.body);
+  playerTestLeftLegGroundColl = Matter.SAT.collides(playerTest.leg_fixed_body, ground.body);
+  playerTestRightLegGroundColl = Matter.SAT.collides(playerTest.leg_body, ground.body);
+  playerTestFootGroundColl = Matter.SAT.collides(playerTest.foot_body, ground.body);
+
+  isPlayerTestBodyOnGround = playerTestBodyGroundColl.collided;
+  isPlayerTestLeftLegOnGround = playerTestLeftLegGroundColl.collided;
+  isPlayerTestRightLegOnGround = playerTestRightLegGroundColl.collided;
+  isPlayerTestFootOnGround = playerTestFootGroundColl.collided;
+
+  isPlayerTestOnGround = isPlayerTestBodyOnGround || isPlayerTestLeftLegOnGround|| isPlayerTestRightLegOnGround || isPlayerTestFootOnGround;
+  
+
+  /*document.getElementById("player1_def_x").innerHTML = Math.round(player1_def.main_body.position.x);
+  document.getElementById("player1_def_y").innerHTML = Math.round(player1_def.main_body.position.y);
+  document.getElementById("player1_atk_x").innerHTML = Math.round(player1_atk.main_body.position.x);
+  document.getElementById("player1_atk_y").innerHTML = Math.round(player1_atk.main_body.position.y);*/
+  document.getElementById("playerTest_x").innerHTML = Math.round(playerTest.main_body.position.x);
+  document.getElementById("playerTest_y").innerHTML = Math.round(playerTest.main_body.position.y);
+  document.getElementById("playerTest_angle").innerHTML = Math.round((playerTest.main_body.angle * 180) / PI);
+  document.getElementById("isPlayerTestBodyOnGround").innerHTML = isPlayerTestBodyOnGround;
+  document.getElementById("isPlayerTestLeftLegOnGround").innerHTML = isPlayerTestLeftLegOnGround;
+  document.getElementById("isPlayerTestRightLegOnGround").innerHTML = isPlayerTestRightLegOnGround;
+  document.getElementById("isPlayerTestFootOnGround").innerHTML = isPlayerTestFootOnGround;
+  document.getElementById("isPlayerTestOnGround").innerHTML = isPlayerTestOnGround;
 }
