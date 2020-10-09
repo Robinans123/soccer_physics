@@ -8,8 +8,10 @@ var engine;
 var world;
 var render;
 var ground;
-var jumpForce = Matter.Vector.create(0.01, -0.3);
-var jumpForce2 = Matter.Vector.create(-0.01, -0.3);
+//var jumpForce = Matter.Vector.create(0.01, -0.3);
+var jumpForce = Matter.Vector.create(0, -0.3);
+//var jumpForce2 = Matter.Vector.create(-0.01, -0.3);
+var jumpForce2 = Matter.Vector.create(0, -0.3);
 var kickForce = Matter.Vector.create(0.0, 0);
 var kickBackForce = Matter.Vector.create(-0.0, 0);
 let menu = 0;
@@ -58,6 +60,7 @@ function setup() {
   player2_def = new Player(1200, 200, player_width, player_height, player_leg_width, player_leg_height, false);*/
 
   playerTest = new PlayerTest(350, 300, player_width, player_height, player_leg_width, player_leg_height, jumpForce);
+  playerTest2 = new PlayerTest(600, 600, player_width, player_height, player_leg_width, player_leg_height, jumpForce);
 
   goal1 = new Goal((goal_width / 2), (CANVAS_HEIGHT - (goal_height / 2)), goal_width, goal_height, 10, true);
   goal2 = new Goal((CANVAS_WIDTH - (goal_width / 2)), (CANVAS_HEIGHT - (goal_height / 2)), goal_width, goal_height, 10, false);
@@ -114,14 +117,18 @@ function mouseClicked() {
   }
 }
 
-function keyPressed() {
+// EVENTS
+  function keyPressed() {
   if (keyCode == UP_ARROW) {
     
   }
 
   if (keyCode == LEFT_ARROW) {
-    if (isPlayerTestOnGround) {
-      Body.applyForce(playerTest.main_body, playerTest.main_body.position, jumpForce2);
+    //if (isPlayerTestOnGround) {
+    if (1) {
+      var jumpForceTest = Matter.Vector.create(playerTest.main_body.axes[0].x * -0.4, -playerTest.main_body.axes[0].y * -0.4);
+      //Body.applyForce(playerTest.main_body, playerTest.main_body.position, jumpForce2);
+      Body.applyForce(playerTest.main_body, playerTest.main_body.position, jumpForceTest);
     }
     //Body.applyForce(playerTest.leg_body, playerTest.leg_body.position, kickForce);
   }
@@ -136,29 +143,10 @@ function keyPressed() {
   }
 
   if (keyCode == 65) {
-    Body.applyForce(player1_def.main_body, player1_def.main_body.position, jumpForce2);
+    //Body.applyForce(player1_def.main_body, player1_def.main_body.position, jumpForce2);
   }
 
   if (keyCode == 68) {
-    Body.applyForce(player1_def.main_body, player1_def.main_body.position, jumpForce);
-  }
-}
-
-function keyReleased() {
-  if (keyCode == UP_ARROW) {
-    
-  }
-  if (keyCode == LEFT_ARROW) {
-    //Body.applyForce(playerTest.leg_body, playerTest.leg_body.position, kickBackForce);
-  }
-  if (keyCode == RIGHT_ARROW) {
-    //Body.applyForce(playerTest.leg_body, playerTest.leg_body.position, kickBackForce);
-    //playerTest.unkick();
-  }
-  if (keyCode == 65) {
-    
-  }
-  if (keyCode == 68) {
-    
+    //Body.applyForce(player1_def.main_body, player1_def.main_body.position, jumpForce);
   }
 }

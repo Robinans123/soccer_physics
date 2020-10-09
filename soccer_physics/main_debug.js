@@ -52,7 +52,23 @@ function main_debug() {
 
   playerTest.show();
   playerTest.puppetFollow();
+
+  playerTest2.show();
+  playerTest2.puppetFollow();
   //playerTest.tilt();
+
+  // CONTROLS
+  if (keyIsDown(LEFT_ARROW)){
+    //Body.applyForce(playerTest.main_body, playerTest.main_body.position, jumpForce2);
+    push();
+    text('Key Pressed', (CANVAS_WIDTH / 2), CANVAS_HEIGHT/2);
+    translate(playerTest.main_body.position.x, playerTest.main_body.position.y);
+    strokeWeight(4);
+    stroke(255, 255, 255);
+    line(0, 0, jumpForce2.x*1000, jumpForce2.y*1000);
+    pop();
+    console.log("Hello");
+  }
 
   // DEBUG
   playerTestBodyGroundColl = Matter.SAT.collides(playerTest.main_body, ground.body);
@@ -80,4 +96,13 @@ function main_debug() {
   document.getElementById("isPlayerTestRightLegOnGround").innerHTML = isPlayerTestRightLegOnGround;
   document.getElementById("isPlayerTestFootOnGround").innerHTML = isPlayerTestFootOnGround;
   document.getElementById("isPlayerTestOnGround").innerHTML = isPlayerTestOnGround;
-}
+
+  document.getElementById("jumpForce_x").innerHTML = jumpForce2.x;
+  document.getElementById("jumpForce_y").innerHTML = jumpForce2.y;
+
+  document.getElementById("playerTest_vertical_axis_x").innerHTML = Math.round(playerTest.main_body.axes[0].x * 1000) / 1000;
+  document.getElementById("playerTest_vertical_axis_y").innerHTML = Math.round(playerTest.main_body.axes[0].y * 1000) / 1000;
+  document.getElementById("playerTest_horizontal_axis_x").innerHTML = Math.round(playerTest.main_body.axes[1].x * 1000) / 1000;
+  document.getElementById("playerTest_horizontal_axis_y").innerHTML = Math.round(playerTest.main_body.axes[1].y * 1000) / 1000;
+
+  }
