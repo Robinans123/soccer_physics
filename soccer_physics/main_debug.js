@@ -41,6 +41,7 @@ function main_debug() {
   stroke(0, 0, 0);
   text('Press ESC key to return to menu', ((CANVAS_WIDTH  * 6) / 7), 30);
   pop();
+  
 	ball.show();
   ground.show();
 	/*player1_atk.show();
@@ -61,11 +62,12 @@ function main_debug() {
   if (keyIsDown(LEFT_ARROW)){
     //Body.applyForce(playerTest.main_body, playerTest.main_body.position, jumpForce2);
     push();
+    var jumpForceTest = Matter.Vector.create(playerTest.main_body.axes[0].x * -0.2, -playerTest.main_body.axes[0].y * 0.2);
     text('Key Pressed', (CANVAS_WIDTH / 2), CANVAS_HEIGHT/2);
     translate(playerTest.main_body.position.x, playerTest.main_body.position.y);
     strokeWeight(4);
     stroke(255, 255, 255);
-    line(0, 0, jumpForce2.x*1000, jumpForce2.y*1000);
+    line(0, 0, jumpForceTest.x*1000, jumpForceTest.y*1000);
     pop();
     console.log("Hello");
   }

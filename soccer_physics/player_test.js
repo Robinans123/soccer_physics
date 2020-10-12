@@ -1,5 +1,9 @@
 function PlayerTest(main_x, main_y, main_w, main_h, leg_w, leg_h, jf) {
   // TO DO : REFACTOR !!! AND ADD COMMENTS !!!
+  // Player is comprised of :
+  // - Main body
+  // - Leg body (the movable leg)
+  // - Fixed leg body
   this.main_x = main_x;
   this.main_y = main_y;
   this.main_h = main_h;
@@ -229,13 +233,13 @@ function PlayerTest(main_x, main_y, main_w, main_h, leg_w, leg_h, jf) {
     pop();
   }
 
-  this.unkick = function() {
+  /*this.unkick = function() {
     legForce = Matter.Vector.create(-0.2, 0);
     Body.applyForce(this.leg_body, this.leg_body.position, legForce);
-  }
+  }*/
 
   // THE INFAMOUS TILT THE PLAYER GETS WHEN IT LANDS ON THE GROUND
-  this.tilt = function() {
+  /*this.tilt = function() {
     if(isPlayerTestOnGround) {
       if(this.main_body.angle < -(PI / 4) || this.main_body.angle > PI / 4) {
         tiltForce = Matter.Vector.create(0.01*this.main_body.axes[0].x*Math.abs(this.main_body.angle), 0);
@@ -250,7 +254,7 @@ function PlayerTest(main_x, main_y, main_w, main_h, leg_w, leg_h, jf) {
         pop();
       }
     }
-  }
+  }*/
 
   // GRAPHICS FUNCTION
   this.show = function() {

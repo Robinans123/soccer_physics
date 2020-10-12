@@ -126,7 +126,7 @@ function mouseClicked() {
   if (keyCode == LEFT_ARROW) {
     //if (isPlayerTestOnGround) {
     if (1) {
-      var jumpForceTest = Matter.Vector.create(playerTest.main_body.axes[0].x * -0.4, -playerTest.main_body.axes[0].y * -0.4);
+      var jumpForceTest = Matter.Vector.create(playerTest.main_body.axes[0].x * -0.2, -playerTest.main_body.axes[0].y * 0.2);
       //Body.applyForce(playerTest.main_body, playerTest.main_body.position, jumpForce2);
       Body.applyForce(playerTest.main_body, playerTest.main_body.position, jumpForceTest);
     }
