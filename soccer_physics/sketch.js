@@ -64,6 +64,9 @@ function setup() {
 
   goal1 = new Goal((goal_width / 2), (CANVAS_HEIGHT - (goal_height / 2)), goal_width, goal_height, 10, true);
   goal2 = new Goal((CANVAS_WIDTH - (goal_width / 2)), (CANVAS_HEIGHT - (goal_height / 2)), goal_width, goal_height, 10, false);
+
+  gameTimer = new GameTimer();
+  gameScore = new GameScore();
 }
 
 function draw() {
@@ -126,17 +129,13 @@ function mouseClicked() {
   if (keyCode == LEFT_ARROW) {
     //if (isPlayerTestOnGround) {
     if (1) {
-      var jumpForceTest = Matter.Vector.create(playerTest.main_body.axes[0].x * -0.2, -playerTest.main_body.axes[0].y * 0.2);
-      //Body.applyForce(playerTest.main_body, playerTest.main_body.position, jumpForce2);
-      Body.applyForce(playerTest.main_body, playerTest.main_body.position, jumpForceTest);
+      playerTest.jump();
     }
-    //Body.applyForce(playerTest.leg_body, playerTest.leg_body.position, kickForce);
   }
 
   if (keyCode == RIGHT_ARROW) {
     if (isPlayerTestOnGround) {
       //Body.applyForce(playerTest.main_body, playerTest.main_body.position, jumpForce);
-      playerTest.jump();
       playerTest.kick();
     }
     //Body.applyForce(playerTest.leg_body, playerTest.leg_body.position, kickForce);

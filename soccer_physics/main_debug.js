@@ -3,37 +3,16 @@ function main_debug() {
   Engine.update(engine);
   background(0, 100, 255);
 
+
+
   // SCORE LOGIC
-  if (ball.body.position.x >= CANVAS_WIDTH - goal2.w && ball.body.position.y >= CANVAS_HEIGHT - goal2.h) {
-    score1 = score1 + 1;
-    ball.reset_loc();
-  }
-  if (ball.body.position.x <= goal1.w && ball.body.position.y >= CANVAS_HEIGHT - goal1.h) {
-    score2 = score2 + 1;
-    ball.reset_loc();
-  }
+  gameScore.scoreCheck(ball, goal1, goal2);
+  gameScore.show();
+  
 
   // TIMER - OK IT IS WORKING
-  push();
-  textSize(40);
-  fill(255);
-  stroke(0, 0, 0);
-  if (frameCount % 60 == 0) {
-    t_elapsed_sec = t_elapsed_sec + 1;
-  }
-  if (t_elapsed_sec >= 60) {
-    t_elapsed_min = t_elapsed_min + 1;
-    t_elapsed_sec = 0
-  }
-  text(nf(t_elapsed_min, 2, 0) + ":" + nf(t_elapsed_sec, 2, 0), (CANVAS_WIDTH / 2), 30);
-  pop();
-
-  // DISPLAY SCORE
-  push();
-  textSize(90);
-  stroke(0, 0, 0);
-  text(score1 + ' - ' + score2, (CANVAS_WIDTH / 2), 100);
-  pop();
+  gameTimer.timerTick();
+  gameTimer.show();
   
   push();
   fill(0);
@@ -41,22 +20,20 @@ function main_debug() {
   stroke(0, 0, 0);
   text('Press ESC key to return to menu', ((CANVAS_WIDTH  * 6) / 7), 30);
   pop();
-  
+
 	ball.show();
   ground.show();
-	/*player1_atk.show();
-  player1_def.show();
-	player2_atk.show();
-  player2_def.show();*/
+
   goal1.show();
   goal2.show();
 
   playerTest.show();
   playerTest.puppetFollow();
+  playerTest.showDebug();
 
   playerTest2.show();
   playerTest2.puppetFollow();
-  //playerTest.tilt();
+  playerTest2.showDebug();
 
   // CONTROLS
   if (keyIsDown(LEFT_ARROW)){
@@ -72,7 +49,11 @@ function main_debug() {
     console.log("Hello");
   }
 
-  // DEBUG
+
+
+
+
+  // DEBUG -------------------------------------------------------------------------------------------------------------------------------------------------------------
   playerTestBodyGroundColl = Matter.SAT.collides(playerTest.main_body, ground.body);
   playerTestLeftLegGroundColl = Matter.SAT.collides(playerTest.leg_fixed_body, ground.body);
   playerTestRightLegGroundColl = Matter.SAT.collides(playerTest.leg_body, ground.body);

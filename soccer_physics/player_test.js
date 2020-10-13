@@ -18,6 +18,7 @@ function PlayerTest(main_x, main_y, main_w, main_h, leg_w, leg_h, jf) {
 
   var cstr;
 
+  // BODIES CREATION
   var main_options = {
     friction: 0.8,
     restitution: 0.1,
@@ -212,12 +213,13 @@ function PlayerTest(main_x, main_y, main_w, main_h, leg_w, leg_h, jf) {
     Body.setPosition(this.puppet_body, puppetPosition);
   }
 
-  // JUMP FUNCTION
+  // JUMP FUNCTION (Working)
   this.jump = function() {
-    //jumpForce = Matter.Vector.create(0.01*this.main_body.axes[0].x, -0.3*this.main_body.axes[0].y);
-    //Body.applyForce(this.main_body, this.main_body.position, jumpForce);
+    var jumpForceTest = Matter.Vector.create(playerTest.main_body.axes[0].x * -0.2, -playerTest.main_body.axes[0].y * 0.2);
+    Body.applyForce(playerTest.main_body, playerTest.main_body.position, jumpForceTest);
   }
 
+  // NOT WORKING
   this.kick = function() {
     legRotationPoint = Matter.Vector.create(this.leg_body.position.x + (this.leg_w / 2), this.leg_body.position.y - (this.leg_h / 2));
     legForce = Matter.Vector.create(0.15, 0);
@@ -233,29 +235,6 @@ function PlayerTest(main_x, main_y, main_w, main_h, leg_w, leg_h, jf) {
     pop();
   }
 
-  /*this.unkick = function() {
-    legForce = Matter.Vector.create(-0.2, 0);
-    Body.applyForce(this.leg_body, this.leg_body.position, legForce);
-  }*/
-
-  // THE INFAMOUS TILT THE PLAYER GETS WHEN IT LANDS ON THE GROUND
-  /*this.tilt = function() {
-    if(isPlayerTestOnGround) {
-      if(this.main_body.angle < -(PI / 4) || this.main_body.angle > PI / 4) {
-        tiltForce = Matter.Vector.create(0.01*this.main_body.axes[0].x*Math.abs(this.main_body.angle), 0);
-        applPoint = Matter.Vector.create(0, -this.main_h);
-        Body.applyForce(this.main_body, applPoint, tiltForce);
-
-        push();
-        translate(this.leg_body.position.x, this.leg_body.position.y);
-        strokeWeight(4);
-        stroke(0, 255, 0);
-        //line(0, 0, 400*legForce.x, 400*legForce.y);
-        pop();
-      }
-    }
-  }*/
-
   // GRAPHICS FUNCTION
   this.show = function() {
     // DRAWING MAIN BODY
@@ -268,15 +247,7 @@ function PlayerTest(main_x, main_y, main_w, main_h, leg_w, leg_h, jf) {
     fill(255, 0, 0);
     rect(0, 0, this.main_w, this.main_h);
     pop();
-    // DRAWING AXES OF THE MAIN BODY
-    push();
-    translate(this.main_body.position.x, this.main_body.position.y);
-    strokeWeight(4);
-    stroke(0, 255, 0);
-    line(0, 0, 40*this.main_body.axes[0].x, 40*this.main_body.axes[0].y);
-    stroke(0);
-    line(0, 0, 40*this.main_body.axes[1].x, 40*this.main_body.axes[1].y);
-    pop();
+    
     // DRAWING LEG
     push();
     rectMode(CENTER);
@@ -297,6 +268,29 @@ function PlayerTest(main_x, main_y, main_w, main_h, leg_w, leg_h, jf) {
     rect(0, 0, this.leg_fixed_w, this.leg_fixed_h);
     pop();
 
+    // DRAWING FOOT
+    push();
+    fill(255, 0, 0);
+    rectMode(CENTER);
+    angleMode(RADIANS);
+    translate(this.foot_body.position.x, this.foot_body.position.y);
+    rotate(this.foot_body.angle);
+    rect(0, 0, this.foot_w, this.foot_h);
+    pop();
+
+  }
+
+  this.showDebug = function() {
+    // DRAWING AXES OF THE MAIN BODY
+    push();
+    translate(this.main_body.position.x, this.main_body.position.y);
+    strokeWeight(4);
+    stroke(0, 255, 0);
+    line(0, 0, 40*this.main_body.axes[0].x, 40*this.main_body.axes[0].y);
+    stroke(0);
+    line(0, 0, 40*this.main_body.axes[1].x, 40*this.main_body.axes[1].y);
+    pop();
+
     // DRAWING POINT A OF MOVABLE CONSTRAINT
     push();
     strokeWeight(8);
@@ -304,6 +298,7 @@ function PlayerTest(main_x, main_y, main_w, main_h, leg_w, leg_h, jf) {
     this.cstrAbs_Ax = this.main_body.position.x + this.cstr_A.x;
     this.cstrAbs_Ay = this.main_body.position.y + this.cstr_A.y;
     point(this.cstrAbs_Ax, this.cstrAbs_Ay);
+    
     // DRAWING POINT B OF CONSTRAINT
     pop();
     push();
@@ -346,16 +341,6 @@ function PlayerTest(main_x, main_y, main_w, main_h, leg_w, leg_h, jf) {
     this.cstrAbs_fixed2_Bx = this.leg_fixed_body.position.x + this.cstr_fixed2_B.x;
     this.cstrAbs_fixed2_By = this.leg_fixed_body.position.y + this.cstr_fixed2_B.y;
     point(this.cstrAbs_fixed2_Bx, this.cstrAbs_fixed2_By);
-    pop();
-
-    // DRAWING FOOT
-    push();
-    fill(255, 0, 0);
-    rectMode(CENTER);
-    angleMode(RADIANS);
-    translate(this.foot_body.position.x, this.foot_body.position.y);
-    rotate(this.foot_body.angle);
-    rect(0, 0, this.foot_w, this.foot_h);
     pop();
 
     // DRAWING FIRST CONSTRAINT OF FOOT
@@ -408,6 +393,5 @@ function PlayerTest(main_x, main_y, main_w, main_h, leg_w, leg_h, jf) {
     stroke(255, 255, 255);
     line(this.cstrAbs_puppet_Ax, this.cstrAbs_puppet_Ay, this.cstrAbs_puppet_Bx, this.cstrAbs_puppet_By);
     pop();
-
   }
 }

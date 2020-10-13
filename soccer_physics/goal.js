@@ -8,6 +8,7 @@ function Goal(x, y, w, h, t, s) {
   this.w = w; // This is the width of the goal (from the edge of canvas to the entrance of the goal)
   this.h = h;
   this.t = t; // Thickness of the bars of the goal
+  this.s = s;
   this.top_x = x; // X-location of the top bar of the goal
   this.top_y = CANVAS_HEIGHT - h; // Y-location of the top bar of the goal
 
