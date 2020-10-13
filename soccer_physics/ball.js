@@ -1,8 +1,8 @@
 function Ball(x, y, r) {
   // PHYSICS ENGINE OPTIONS
   var options = {
-    friction: 0.8,
-    restitution: 0.6
+    friction: 0.4,
+    restitution: 0.89
   }
 
   // ATTRIBUTES

@@ -8,16 +8,14 @@ var engine;
 var world;
 var render;
 var ground;
-//var jumpForce = Matter.Vector.create(0.01, -0.3);
 var jumpForce = Matter.Vector.create(0, -0.3);
-//var jumpForce2 = Matter.Vector.create(-0.01, -0.3);
 var jumpForce2 = Matter.Vector.create(0, -0.3);
 var kickForce = Matter.Vector.create(0.0, 0);
 var kickBackForce = Matter.Vector.create(-0.0, 0);
 let menu = 0;
 let CANVAS_WIDTH = 1400;
 let CANVAS_HEIGHT = 700;
-let ball_diameter = 15;
+let ball_diameter = 20;
 let goal_width = 150;
 let goal_height = 400;
 let player_width = 40; // default : 60
@@ -59,8 +57,11 @@ function setup() {
   player2_atk = new Player(900, 200, player_width, player_height, player_leg_width, player_leg_height, false);
   player2_def = new Player(1200, 200, player_width, player_height, player_leg_width, player_leg_height, false);*/
 
-  playerTest = new PlayerTest(350, 300, player_width, player_height, player_leg_width, player_leg_height, jumpForce);
-  playerTest2 = new PlayerTest(600, 600, player_width, player_height, player_leg_width, player_leg_height, jumpForce);
+  player1_def = new Player(300, 300, player_width, player_height, player_leg_width, player_leg_height, true);
+  player1_atk = new Player(600, 600, player_width, player_height, player_leg_width, player_leg_height, true);
+
+  player2_def = new Player(900, 600, player_width, player_height, player_leg_width, player_leg_height, false);
+  player2_atk = new Player(1200, 600, player_width, player_height, player_leg_width, player_leg_height, false);
 
   goal1 = new Goal((goal_width / 2), (CANVAS_HEIGHT - (goal_height / 2)), goal_width, goal_height, 10, true);
   goal2 = new Goal((CANVAS_WIDTH - (goal_width / 2)), (CANVAS_HEIGHT - (goal_height / 2)), goal_width, goal_height, 10, false);
@@ -84,10 +85,6 @@ function draw() {
   textAlign(CENTER, CENTER);
   text('START', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 3));
   text('DEBUG', (CANVAS_WIDTH /2), ((CANVAS_HEIGHT / 3) * 2));
-
-
-
-
 
   // START GAME - PUT GAME CODE HERE
   if (menu == 1) {
@@ -127,18 +124,19 @@ function mouseClicked() {
   }
 
   if (keyCode == LEFT_ARROW) {
-    //if (isPlayerTestOnGround) {
+    //if (isplayer1_defOnGround) {
     if (1) {
-      playerTest.jump();
+      player1_def.jump();
     }
   }
 
   if (keyCode == RIGHT_ARROW) {
-    if (isPlayerTestOnGround) {
-      //Body.applyForce(playerTest.main_body, playerTest.main_body.position, jumpForce);
-      playerTest.kick();
+    if (1) {
+      //Body.applyForce(player1_def.main_body, player1_def.main_body.position, jumpForce);
+      //player1_def.kick();
+      player1_atk.jump();
     }
-    //Body.applyForce(playerTest.leg_body, playerTest.leg_body.position, kickForce);
+    //Body.applyForce(player1_def.leg_body, player1_def.leg_body.position, kickForce);
   }
 
   if (keyCode == 65) {

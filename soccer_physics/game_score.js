@@ -2,9 +2,6 @@ function GameScore(ball, goal1, goal2) {
 
   this.score1 = 0;
   this.score2 = 0;
-  //this.ball = ball:
-  //this.goal1 = goal1;
-  //this.goal2 = goal2;
 
   this.scoreCheck = function(ball, goal1, goal2) {
     if (ball.body.position.x >= CANVAS_WIDTH - goal2.w && ball.body.position.y >= CANVAS_HEIGHT - goal2.h) {
