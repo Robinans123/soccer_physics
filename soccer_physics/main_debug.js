@@ -41,31 +41,55 @@ function main_debug() {
   player2_atk.showDebug();
 
   // CONTROLS
-  if (keyIsDown(LEFT_ARROW)){
+  if (keyIsDown(RIGHT_ARROW)){
     push();
-    var jumpForceTest = Matter.Vector.create(player1_def.main_body.axes[0].x * -0.2, -player1_def.main_body.axes[0].y * 0.2);
+    var jumpForceTest = Matter.Vector.create(player2_def.main_body.axes[0].x * -0.2, -player2_def.main_body.axes[0].y * 0.2);
     text('Key Pressed', (CANVAS_WIDTH / 2), CANVAS_HEIGHT/2);
-    translate(player1_def.main_body.position.x, player1_def.main_body.position.y);
+    translate(player2_def.main_body.position.x, player2_def.main_body.position.y);
     strokeWeight(4);
     stroke(255, 255, 255);
     line(0, 0, jumpForceTest.x*1000, jumpForceTest.y*1000);
     pop();
   }
 
-  if (keyIsDown(RIGHT_ARROW)){
+  if (keyIsDown(LEFT_ARROW)){
     push();
-    var jumpForceTest2 = Matter.Vector.create(player1_atk.main_body.axes[0].x * -0.2, -player1_atk.main_body.axes[0].y * 0.2);
+    var jumpForceTest2 = Matter.Vector.create(player2_atk.main_body.axes[0].x * -0.2, -player2_atk.main_body.axes[0].y * 0.2);
     text('Key Pressed', (CANVAS_WIDTH / 2), CANVAS_HEIGHT/2);
-    translate(player1_atk.main_body.position.x, player1_atk.main_body.position.y);
+    translate(player2_atk.main_body.position.x, player2_atk.main_body.position.y);
     strokeWeight(4);
     stroke(255, 255, 255);
     line(0, 0, jumpForceTest2.x*1000, jumpForceTest2.y*1000);
     pop();
+
+    // KICK TEST
+    // *****************************************************************************************************************
+    // I HAVE AN IDEA FOR THE KICK FUNCTION : ADD A CONSTRAINT BETWEEN THE FIXED LEG AND THE BACK OF THE MOVABLE LEG !!!
+    // *****************************************************************************************************************
+
+    //var kickForceX = Math.cos((PI / 2) * player2_atk.leg_body.axes[0].x) - Math.sin((PI /2) * player2_atk.leg_body.axes[0].y);
+    //var kickForceY = Math.sin((PI / 2) * player2_atk.leg_body.axes[0].x) + Math.cos((PI /2) * player2_atk.leg_body.axes[0].y);
+    var kickForceX = -player2_atk.leg_body.axes[1].x; // BEWARE !!! THIS HAS TO HAVE A POSITIVE SIGN FOR THE PLAYER 1
+    var kickForceY = -player2_atk.leg_body.axes[1].y; // BEWARE !!! THIS HAS TO HAVE A POSITIVE SIGN FOR THE PLAYER 1
+    var kickForce = Matter.Vector.create(kickForceX * -0.01, kickForceY * -0.01);
+    //if (player2_atk.leg_body.angle < (PI / 2) % (2 * PI)) {
+      if (player2_atk.leg_body.angle < (PI / 2)) {
+      Body.applyForce(player2_atk.leg_body, player2_atk.leg_body.position, kickForce);
+    }
+    
+
+    push();
+    text('Key Pressed', (CANVAS_WIDTH / 2), CANVAS_HEIGHT/2);
+    translate(player2_atk.leg_body.position.x, player2_atk.leg_body.position.y);
+    strokeWeight(4);
+    stroke(0);
+    line(0, 0, kickForce.x*5000, kickForce.y*5000);
+    pop();
   }
 
-
-
-
+  // ********************************************************************************************************************************
+  // DO NOT FORGET : WHEN RESETTING PLAYERS, use this function to get rid of the previous players : Matter.World.remove(world, body);
+  // ********************************************************************************************************************************
 
   // DEBUG -------------------------------------------------------------------------------------------------------------------------------------------------------------
   player1_defBodyGroundColl = Matter.SAT.collides(player1_def.main_body, ground.body);
