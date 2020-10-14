@@ -18,7 +18,8 @@ function GameScore(ball, goal1, goal2) {
   this.show = function() {
     push();
     textSize(90);
-    stroke(0, 0, 0);
+    stroke(0);
+    fill(255);
     text(this.score1 + ' - ' + this.score2, (CANVAS_WIDTH / 2), 100);
     pop();
   }

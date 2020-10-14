@@ -60,8 +60,8 @@ function setup() {
   player1_def = new Player(300, 300, player_width, player_height, player_leg_width, player_leg_height, true);
   player1_atk = new Player(600, 600, player_width, player_height, player_leg_width, player_leg_height, true);
 
-  player2_def = new Player(900, 600, player_width, player_height, player_leg_width, player_leg_height, false);
-  player2_atk = new Player(1200, 600, player_width, player_height, player_leg_width, player_leg_height, false);
+  player2_atk = new Player(900, 600, player_width, player_height, player_leg_width, player_leg_height, false);
+  player2_def = new Player(1200, 600, player_width, player_height, player_leg_width, player_leg_height, false);
 
   goal1 = new Goal((goal_width / 2), (CANVAS_HEIGHT - (goal_height / 2)), goal_width, goal_height, 10, true);
   goal2 = new Goal((CANVAS_WIDTH - (goal_width / 2)), (CANVAS_HEIGHT - (goal_height / 2)), goal_width, goal_height, 10, false);
@@ -126,7 +126,7 @@ function mouseClicked() {
   if (keyCode == LEFT_ARROW) {
     //if (isplayer1_defOnGround) {
     if (1) {
-      player1_def.jump();
+      player2_atk.jump();
     }
   }
 
@@ -134,16 +134,20 @@ function mouseClicked() {
     if (1) {
       //Body.applyForce(player1_def.main_body, player1_def.main_body.position, jumpForce);
       //player1_def.kick();
-      player1_atk.jump();
+      player2_def.jump();
+      
     }
     //Body.applyForce(player1_def.leg_body, player1_def.leg_body.position, kickForce);
   }
 
   if (keyCode == 65) {
     //Body.applyForce(player1_def.main_body, player1_def.main_body.position, jumpForce2);
+    
+    player1_def.jump();
   }
 
   if (keyCode == 68) {
     //Body.applyForce(player1_def.main_body, player1_def.main_body.position, jumpForce);
+    player1_atk.jump();
   }
 }
