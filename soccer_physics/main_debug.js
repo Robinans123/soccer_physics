@@ -73,11 +73,10 @@ function main_debug() {
     var kickForceY = -player2_atk.leg_body.axes[1].y; // BEWARE !!! THIS HAS TO HAVE A POSITIVE SIGN FOR THE PLAYER 1
     var kickForce = Matter.Vector.create(kickForceX * -0.01, kickForceY * -0.01);
     //if (player2_atk.leg_body.angle < (PI / 2) % (2 * PI)) {
-      if (player2_atk.leg_body.angle < (PI / 2)) {
+    if (player2_atk.leg_body.angle < (PI / 2)) {
       Body.applyForce(player2_atk.leg_body, player2_atk.leg_body.position, kickForce);
     }
     
-
     push();
     text('Key Pressed', (CANVAS_WIDTH / 2), CANVAS_HEIGHT/2);
     translate(player2_atk.leg_body.position.x, player2_atk.leg_body.position.y);

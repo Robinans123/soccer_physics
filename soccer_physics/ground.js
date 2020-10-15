@@ -4,8 +4,8 @@ function Ground(x, y, w, h, a) {
   this.h = h;
   this.w = w;
   var options = {
-    friction: 0.9,
-    restitution: 0.6,
+    friction: 0.5,
+    restitution: 0.8,
     isStatic: true,
   }
   this.body = Bodies.rectangle(this.x, this.y, this.w, this.h, options);

@@ -1,10 +1,6 @@
 function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
   // TO DO : REFACTOR !!! AND ADD COMMENTS !!!
-  // Player is comprised of :
-  // - Main body
-  // - Leg body (the movable leg)
-  // - Fixed leg body
-  // - Foot body
+  // EXPLANATIONS OF THE PLAYER CLASS IS EXPLAINED AT THE BOTTOM OF THE CODE
   this.main_x = main_x;
   this.main_y = main_y;
   this.main_h = main_h;
@@ -180,7 +176,6 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     this.cstr_foot2_B = Matter.Vector.create((this.foot_w / 2), -(this.foot_h / 2));
   }
   
-
   var cstr_foot_options = {
     bodyA: this.leg_body,
     bodyB: this.foot_body,
@@ -207,6 +202,37 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
   World.add(world, this.cstr_foot);
   World.add(world, this.cstr_foot2);
 
+  // NOT FINISHED
+  // CONSTRAINTS CREATION - CONSTRAINT BETWEEN LEG BODY AND FIXED LEG BODY (ON THEIR BOTTOM CORNERS)
+  /*if (this.s) {
+    this.cstr_legs_A = Matter.Vector.create(-(this.leg_w / 2) - 1, (this.leg_h / 2) + 1);
+    this.cstr_legs_B = Matter.Vector.create((this.leg_fixed_w / 2), (this.leg_fixed_h / 2));
+  }
+  else {
+    this.cstr_legs_A = Matter.Vector.create((this.leg_w / 2) + 1, (this.leg_h / 2) + 1);
+    this.cstr_legs_B = Matter.Vector.create(-(this.leg_fixed_w / 2), (this.leg_fixed_h / 2));
+  }*/
+
+  // CONSTRAINTS CREATION - 2ND TRY WITH CONSTRAINT BETWEEN CENTER OF BOTH BODIES
+  this.cstr_legs_A = Matter.Vector.create(0, 0);
+  this.cstr_legs_B = Matter.Vector.create(0, 0);
+
+  //this.cstrLegsLength = Math.sqrt(((this.leg_h) ** 2) + ((this.leg_fixed_h) ** 2));
+  this.cstrLegsLength = 0;
+
+  var cstr_legs_options = {
+    bodyA: this.leg_body,
+    bodyB: this.leg_fixed_body,
+    pointA: this.cstr_legs_A,
+    pointB: this.cstr_legs_B,
+    length: this.cstrLegsLength, // Options to be tweaked
+    stiffness: 0.01, // Options to be tweaked
+    damping: 0 // Options to be tweaked
+  }
+
+  this.cstr_legs = Matter.Constraint.create(cstr_legs_options);
+
+  World.add(world, this.cstr_legs);
 
   // PUPPET (MAYBE SOON TO BE DELETED) ------------------------------------------------------------------------------------------------------------------------------------
   // CREATING A BODY THAT FOLLOWS THE PLAYER ON THE TOP OF THE CANVAS AND IS CONSTRAINED TO IT
@@ -278,6 +304,53 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     translate(this.main_body.position.x, this.main_body.position.y);
     rotate(this.main_body.angle);
     stroke(0);
+    fill(255);
+    rect(0, 0, this.main_w, this.main_h);
+    pop();
+    
+    // DRAWING LEG
+    push();
+    rectMode(CENTER);
+    angleMode(RADIANS);
+    translate(this.leg_body.position.x, this.leg_body.position.y);
+    rotate(this.leg_body.angle);
+    fill(255);
+    rect(0, 0, this.leg_w, this.leg_h);
+    pop();
+
+    // DRAWING FIXED LEG
+    push();
+    rectMode(CENTER);
+    angleMode(RADIANS);
+    translate(this.leg_fixed_body.position.x, this.leg_fixed_body.position.y);
+    rotate(this.leg_fixed_body.angle);
+    fill(255);
+    rect(0, 0, this.leg_fixed_w, this.leg_fixed_h);
+    pop();
+
+    // DRAWING FOOT
+    push();
+    fill(255);
+    rectMode(CENTER);
+    angleMode(RADIANS);
+    translate(this.foot_body.position.x, this.foot_body.position.y);
+    rotate(this.foot_body.angle);
+    rect(0, 0, this.foot_w, this.foot_h);
+    pop();
+  }
+
+  this.isOnGround = function() {
+
+  }
+
+  this.showDebug = function() {
+    // DRAWING MAIN BODY
+    push();
+    rectMode(CENTER);
+    angleMode(RADIANS);
+    translate(this.main_body.position.x, this.main_body.position.y);
+    rotate(this.main_body.angle);
+    stroke(0);
     fill(255, 0, 0);
     rect(0, 0, this.main_w, this.main_h);
     pop();
@@ -311,13 +384,7 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     rotate(this.foot_body.angle);
     rect(0, 0, this.foot_w, this.foot_h);
     pop();
-  }
 
-  this.isOnGround = function() {
-
-  }
-
-  this.showDebug = function() {
     // DRAWING AXES OF THE MAIN BODY
     push();
     translate(this.main_body.position.x, this.main_body.position.y);
@@ -430,5 +497,34 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     stroke(255, 255, 255);
     line(this.cstrAbs_puppet_Ax, this.cstrAbs_puppet_Ay, this.cstrAbs_puppet_Bx, this.cstrAbs_puppet_By);
     pop();
+
+    // DRAWING CONSTRAINT BETWEEN LEG BODY AND LEG FIXED BODY
+    push();
+    strokeWeight(8);
+    stroke(80);
+    this.cstrAbs_legs_Ax = this.leg_body.position.x + this.cstr_legs_A.x;
+    this.cstrAbs_legs_Ay = this.leg_body.position.y + this.cstr_legs_A.y;
+    point(this.cstrAbs_legs_Ax, this.cstrAbs_legs_Ay);
+    pop();
+
+    push();
+    strokeWeight(8);
+    stroke(80);
+    this.cstrAbs_legs_Bx = this.leg_fixed_body.position.x + this.cstr_legs_B.x;
+    this.cstrAbs_legs_By = this.leg_fixed_body.position.y + this.cstr_legs_B.y;
+    point(this.cstrAbs_legs_Bx, this.cstrAbs_legs_By);
+    pop();
+
+    push();
+    strokeWeight(4);
+    stroke(80);
+    line(this.cstrAbs_legs_Ax, this.cstrAbs_legs_Ay, this.cstrAbs_legs_Bx, this.cstrAbs_legs_By);
+    pop();
   }
 }
+// EXPLANATIONS
+// Player is comprised of :
+// - Main body
+// - Leg body (the movable leg)
+// - Fixed leg body
+// - Foot body
