@@ -21,10 +21,23 @@ function Ball(x, y, r) {
   this.reset_loc = function() {
     var rand_ball_x;
     var rand_ball_y;
+    var rand_ball_velocity_x;
+    var rand_ball_velocity_y;
+    var rand_ball_force_x;
+    var rand_ball_force_y;
     rand_ball_x = random(((CANVAS_WIDTH / 2) - 100), ((CANVAS_WIDTH / 2) + 100));
     rand_ball_y = random(((CANVAS_HEIGHT / 2) - 50), ((CANVAS_HEIGHT / 2) + 50));
+    rand_ball_velocity_x = 0;
+    rand_ball_velocity_y = 0;
+    rand_ball_force_x = 0
+    rand_ball_force_y = 0;
     rand_ball_pos = Matter.Vector.create(rand_ball_x, rand_ball_y);
+    rand_ball_velocity = Matter.Vector.create(rand_ball_velocity_x, rand_ball_velocity_y);
+    rand_ball_force = Matter.Vector.create(rand_ball_force_x, rand_ball_force_y);
+    
     Matter.Body.setPosition(ball.body, rand_ball_pos);
+    Matter.Body.setVelocity(ball.body, rand_ball_velocity);
+    Matter.Body.applyForce(ball.body, ball.body.position, rand_ball_force);
   }
 
   // DRAWING FUNCTION
