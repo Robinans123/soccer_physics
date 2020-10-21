@@ -8,8 +8,16 @@ function GameScore(ball, goal1, goal2) {
       this.score1 = this.score1 + 1;
       ball.reset_loc();
     }
+    else if (ball.body.position.x >= CANVAS_WIDTH + ball.r) {
+      // Ball is out of right of canvas
+      ball.reset_loc();
+    }
     if (ball.body.position.x <= goal1.w && ball.body.position.y >= CANVAS_HEIGHT - goal1.h) {
       this.score2 = this.score2 + 1;
+      ball.reset_loc();
+    }
+    else if (ball.body.position.x <= 0 - ball.r) {
+      // Ball is out of left of canvas
       ball.reset_loc();
     }
   }

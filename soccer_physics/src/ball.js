@@ -3,7 +3,7 @@ function Ball(x, y, r) {
   var options = {
     friction: 0.01,
     restitution: 0.89,
-    density: 0.00001
+    density: 0.00005
   }
 
   // ATTRIBUTES
