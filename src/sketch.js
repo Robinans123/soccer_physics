@@ -14,18 +14,16 @@ var ground;
 let CANVAS_WIDTH = 1400; // Default 1400
 let CANVAS_HEIGHT = 700; // Default 700
 
-// 0.5 works
-var jumpForceCoeff = 0.47;
-//var jumpForce2 = Matter.Vector.create(0, -0.3);
+var jumpForceCoeff = 0.47; // 0.5 works
 var kickForce = Matter.Vector.create(0.0, 0);
 var kickBackForce = Matter.Vector.create(-0.0, 0);
 let menu = 0;
 
-let ball_diameter = 20;
+let ball_diameter = 25;
 let goal_width = 150;
 let goal_height = 400;
-let player_width = 40; // default : 60
-let player_height = 80; // default : 170
+let player_width = 50; // default : 60
+let player_height = 90; // default : 170
 let player_leg_width = player_width / 2;
 let player_leg_height = (player_height * 2) / 3;
 let ground_width = CANVAS_WIDTH;
@@ -202,5 +200,12 @@ function mouseClicked() {
   if (keyCode == 68) {
     //Body.applyForce(player1_def.main_body, player1_def.main_body.position, jumpForce);
     player1_atk.jump();
+  }
+}
+
+function keyReleased() {
+  if (keyCode == 65) {
+    player1_def.cstr_legs.stiffness = 0.06;
+    // OK IT WORKS !
   }
 }

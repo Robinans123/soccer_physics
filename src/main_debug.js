@@ -66,21 +66,19 @@ function main_debug() {
   }
 
   /*player1_atk.show();
-  player1_atk.puppetFollow();
   player1_atk.showDebug();
 
   player2_def.show();
-  player2_def.puppetFollow();
   player2_def.showDebug();
 
   player2_atk.show();
-  player2_atk.puppetFollow();
   player2_atk.showDebug();*/
 
   // CONTROLS
-  if (keyIsDown(65)) {      
+  if (keyIsDown(65)) {
+    player1_def.cstr_legs.stiffness = 0.0001;      
     //player1_def.kick();
-    // JUMP VECTOR
+    // DEBUG DISPLAY - JUMP VECTOR
     push();
     var jumpForceTest = Matter.Vector.create(player1_def.main_body.axes[0].x * -jumpForceCoeff, -player1_def.main_body.axes[0].y * jumpForceCoeff);
     text('Key Pressed', (CANVAS_WIDTH / 2), CANVAS_HEIGHT/2);
@@ -106,17 +104,6 @@ function main_debug() {
   }
 
   if (keyIsDown(RIGHT_ARROW)) {
-    // JUMP VECTOR
-    /*push();
-    var jumpForceTest = Matter.Vector.create(player2_def.main_body.axes[0].x * -jumpForceCoeff, -player2_def.main_body.axes[0].y * jumpForceCoeff);
-    text('Key Pressed', (CANVAS_WIDTH / 2), CANVAS_HEIGHT/2);
-    translate(player2_def.main_body.position.x, player2_def.main_body.position.y);
-    strokeWeight(4);
-    stroke(255, 255, 255);
-    line(0, 0, jumpForceTest.x*1000, jumpForceTest.y*1000);
-    pop();*/
-
-    
     
   }
 
@@ -130,12 +117,6 @@ function main_debug() {
     stroke(255, 255, 255);
     line(0, 0, jumpForceTest2.x*1000, jumpForceTest2.y*1000);
     pop();
-
-    // KICK TEST
-    // *****************************************************************************************************************
-    // I HAVE AN IDEA FOR THE KICK FUNCTION : ADD A CONSTRAINT BETWEEN THE FIXED LEG AND THE BACK OF THE MOVABLE LEG !!!
-    // *****************************************************************************************************************
-    // Also, maybe add the possibility to set the stiffness of the leg / fixed leg to a low value when the key is pressed and then set it to a high value
 
     var kickForceX = -player2_atk.leg_body.axes[1].x; // BEWARE !!! THIS HAS TO HAVE A POSITIVE SIGN FOR THE PLAYER 1
     var kickForceY = -player2_atk.leg_body.axes[1].y; // BEWARE !!! THIS HAS TO HAVE A POSITIVE SIGN FOR THE PLAYER 1
