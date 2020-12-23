@@ -40,7 +40,7 @@ let t_elapsed_min = 0;
 // Coefficient that is applied to the tiltForce vector that is derived from the axes[1] vector of the player
 let tiltForceCoeff = 0.017;
 
-let kForceCoeff = 0.03;
+let kickForceCoeff = 0.03;
 
 // Create "structure that contains all arguments that can be passed to the player constructor"
 /*var player1DefOptions = {
@@ -78,7 +78,6 @@ let kForceCoeff = 0.03;
   }*/
 
 function setup() {
-  console.log("coucou");
   // CANVAS CREATION
   canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
   canvas.parent('sketch-holder');

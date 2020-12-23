@@ -304,30 +304,19 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     Body.applyForce(this.main_body, this.main_body.position, jumpForceTest);
   }
 
-  // NOT WORKING
+  // WORKING MORE OR LESS
   this.kick = function() {
-    // TEST WITH ROTATION
-    /*legRotationPoint = Matter.Vector.create(this.leg_body.position.x + (this.leg_w / 2), this.leg_body.position.y - (this.leg_h / 2));
-    if (this.leg_body.angle < (PI / 2) % (2 * PI))  {
-      Body.rotate(this.leg_body, PI/2, legRotationPoint);
+    var kickForce = Matter.Vector.create(this.main_body.axes[1].x * -kickForceCoeff, this.main_body.axes[1].y * -kickForceCoeff);
+    if (this.main_body.angle - this.leg_body.angle <= PI/2) { // THIS LINE SEEMS TO WORK
+      Body.applyForce(this.leg_body, this.leg_body.position, kickForce);
+      // DISPLAY DEBUG
+      push();
+      translate(this.leg_body.position.x, this.leg_body.position.y);
+      strokeWeight(4);
+      stroke(50, 255, 55);
+      line(0, 0, kickForce.x*1000, kickForce.y*1000);
+      pop();
     }
-    else {
-      this.leg_body.angle = PI/2;
-    }*/
-
-    // TEST WITH FORCE
-    var kickForceCoeff = 0.16;
-    legForce = Matter.Vector.create(-this.leg_body.axes[1].x * kickForceCoeff, -this.leg_body.axes[1].y * kickForceCoeff);
-    //legForce = Matter.Vector.create(0.1, 0);
-    Body.applyForce(this.leg_body, this.leg_body.position, legForce);
-    
-    // DEBUG DISPLAY
-    push();
-    translate(this.leg_body.position.x, this.leg_body.position.y);
-    strokeWeight(4);
-    stroke(0, 255, 0);
-    line(0, 0, 400*legForce.x, 400*legForce.y);
-    pop();
   }
 
   // GRAPHICS FUNCTION
