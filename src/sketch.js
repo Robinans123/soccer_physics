@@ -1,20 +1,25 @@
 // Matter.js module aliases
 var Engine = Matter.Engine,
-    //Render = Matter.Render,
     World = Matter.World,
     Bodies = Matter.Bodies,
     Body = Matter.Body;
+    Render = Matter.Render;
+
+// Matter.js variables
 var engine;
 var world;
-var render;
 var ground;
-var jumpForce = Matter.Vector.create(0, -0.3);
-var jumpForce2 = Matter.Vector.create(0, -0.3);
+
+// Canvas dimensions
+let CANVAS_WIDTH = 1400; // Default 1400
+let CANVAS_HEIGHT = 700; // Default 700
+
+var jumpForceCoeff = 0.5;
+//var jumpForce2 = Matter.Vector.create(0, -0.3);
 var kickForce = Matter.Vector.create(0.0, 0);
 var kickBackForce = Matter.Vector.create(-0.0, 0);
 let menu = 0;
-let CANVAS_WIDTH = 1400;
-let CANVAS_HEIGHT = 700;
+
 let ball_diameter = 20;
 let goal_width = 150;
 let goal_height = 400;
@@ -33,18 +38,67 @@ let score2 = 0;
 let t_elapsed_sec = 0;
 let t_elapsed_min = 0;
 
+// Coefficient that is applied to the tiltForce vector that is derived from the axes[1] vector of the player
+let tiltForceCoeff = 0.02;
+
+// Create "structure that contains all arguments that can be passed to the player constructor"
+/*var player1DefOptions = {
+    playerXLocation: 300,
+    playerYLocation: 300,
+    playerWidth: player_width,
+    playerHeight: player_height,
+    playerLegWidth: player_leg_width,
+    playerLegHeight: player_leg_height,
+    playerSide: true,
+    playerFriction: 0.8,
+    playerRestitution: 0.1,
+    playerAngle: 0,
+    playerDensity: 0.01
+  }*/
+
+  // Create "structure that contains all arguments that can be passed to the goal constructor"
+  /*var goal1Options = {
+    goalXLocation: ,
+    goalYLocation: ,
+    goalWidth: 300,
+    goalHeight: ,
+    goalBarsThickness: 10,
+    goalSide: true,
+  }*/
+
+  // Create "structure that contains all arguments that can be passed to the ball constructor"
+  /*var ballOptions = {
+    ballXLocation: ,
+    ballYLocation: ,
+    ballDiameter: 20,
+    ballFriction: 0.01,
+    ballRestitution: 0.89,
+    ballDensity: 0.00005,
+  }*/
+
 function setup() {
+  console.log("coucou");
   // CANVAS CREATION
-  createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+  canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+  canvas.parent('sketch-holder');
 
   // Matter.js engine creation
   engine = Engine.create();
 
   // Matter.js renderer creation
-  /*  render = Render.create({
+
+  var render = Render.create({
       element: document.body,
-      engine: engine
-  });*/
+      engine: engine,
+      options: {
+        width: CANVAS_WIDTH,
+        height: CANVAS_HEIGHT,
+        showAxes: true,
+        showConvexHulls: true
+      }
+  });
+
+  Render.run(render);
 
   //Engine.run(engine);
   world = engine.world;
@@ -52,22 +106,19 @@ function setup() {
   // INSTANCIATIONS
   ground = new Ground(CANVAS_WIDTH / 2, (CANVAS_HEIGHT +  (ground_height / 2) - ground_offset), ground_width, ground_height, 0);
   ball = new Ball((CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 4), ball_diameter);
-  /*player1_atk = new Player(500, 200, player_width, player_height, player_leg_width, player_leg_height, true);
-  player1_def = new Player(200, 200, player_width, player_height, player_leg_width, player_leg_height, true);
-  player2_atk = new Player(900, 200, player_width, player_height, player_leg_width, player_leg_height, false);
-  player2_def = new Player(1200, 200, player_width, player_height, player_leg_width, player_leg_height, false);*/
 
   player1_def = new Player(300, 300, player_width, player_height, player_leg_width, player_leg_height, true);
-  player1_atk = new Player(600, 600, player_width, player_height, player_leg_width, player_leg_height, true);
-
-  player2_atk = new Player(900, 600, player_width, player_height, player_leg_width, player_leg_height, false);
-  player2_def = new Player(1200, 600, player_width, player_height, player_leg_width, player_leg_height, false);
-
+  //player1_atk = new Player(600, 600, player_width, player_height, player_leg_width, player_leg_height, true);
   goal1 = new Goal((goal_width / 2), (CANVAS_HEIGHT - (goal_height / 2)), goal_width, goal_height, 10, true);
+
+  //player2_atk = new Player(900, 600, player_width, player_height, player_leg_width, player_leg_height, false);
+  //player2_def = new Player(1200, 600, player_width, player_height, player_leg_width, player_leg_height, false);
   goal2 = new Goal((CANVAS_WIDTH - (goal_width / 2)), (CANVAS_HEIGHT - (goal_height / 2)), goal_width, goal_height, 10, false);
 
   gameTimer = new GameTimer();
   gameScore = new GameScore();
+
+  world.gravity.y = 1;
 }
 
 function draw() {
@@ -133,8 +184,8 @@ function mouseClicked() {
   if (keyCode == RIGHT_ARROW) {
     if (1) {
       //Body.applyForce(player1_def.main_body, player1_def.main_body.position, jumpForce);
-      //player1_def.kick();
-      player2_def.jump();
+      player1_def.kick();
+      //player2_def.jump();
       
     }
     //Body.applyForce(player1_def.leg_body, player1_def.leg_body.position, kickForce);
@@ -142,7 +193,6 @@ function mouseClicked() {
 
   if (keyCode == 65) {
     //Body.applyForce(player1_def.main_body, player1_def.main_body.position, jumpForce2);
-    
     player1_def.jump();
   }
 

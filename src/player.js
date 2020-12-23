@@ -17,24 +17,28 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
 
   // BODY -----------------------------------------------------------------------------------------------------------------------------------------------------------------
   // BODIES CREATION - OPTIONS
+  // IMPORTANT NOTE : I THINK THAT THE DENSITY OF THE MAIN BODY MUST BE EQUIVALENT TO THE ONE OF THE MOVABLE LEG (VERY LIGHT)
+  // 99% OF THE MASS SHOULD BE CONCENTRATED IN THE FIXED LEG (AND ALSO MAYBE A FRACTION OF THIS PERCENTAGE INTO THE FOOT)
+  // HOWEVER, IT SEEMS THAT KEEPING DEFAULT VALUES WORKS MUCH BETTER
   var main_options = {
     friction: 0.8,
     restitution: 0.1,
-    angle: 0
+    angle: 0,
+    density: 0.001
   }
 
   var leg_options = {
     friction: 0.8,
     restitution: 0.1,
     angle: 0,
-    //density: 0.1
+    density: 0.001
   }
 
   var leg_fixed_options = {
     friction: 0.8,
     restitution: 0.1,
     angle: 0,
-    //density: 0.05
+    density: 0.001
     //inertia: 0.0001,
     //inverseInertia: 1/0.0001,
   }
@@ -43,6 +47,7 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     friction: 0.8,
     restitution: 0.1,
     angle: 0,
+    density: 0.001
   }
 
   // BODIES CREATION - MAIN BODY
@@ -226,67 +231,42 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     pointA: this.cstr_legs_A,
     pointB: this.cstr_legs_B,
     length: this.cstrLegsLength, // Options to be tweaked
-    stiffness: 0.01, // Options to be tweaked
-    damping: 0 // Options to be tweaked
+    stiffness: 0.001, // Options to be tweaked
+    damping: 0.5 // Options to be tweaked
   }
 
   this.cstr_legs = Matter.Constraint.create(cstr_legs_options);
 
   World.add(world, this.cstr_legs);
 
-  // PUPPET (MAYBE SOON TO BE DELETED) ------------------------------------------------------------------------------------------------------------------------------------
-  // CREATING A BODY THAT FOLLOWS THE PLAYER ON THE TOP OF THE CANVAS AND IS CONSTRAINED TO IT
-  var puppet_options = {
-    friction: 0.8,
-    restitution: 0.1,
-    angle: 0,
-    angularSpeed: 0,
-    angularVelocity: 0,
-  }
-  this.puppet_w = this.main_w;
-  this.puppet_h = this.main_h;
-  this.puppet_x = this.main_x;
-  this.puppet_y = 100;
-  this.puppet_body = Bodies.rectangle(this.puppet_x, this.puppet_y, this.puppet_w, this.puppet_h, puppet_options);
-  World.add(world, this.puppet_body);
-
-  this.cstr_puppet_A = Matter.Vector.create(0, 0);
-  this.cstr_puppet_B = Matter.Vector.create(0, -(this.main_h / 2));
-
-  var cstr_puppet_options = {
-    bodyA: this.puppet_body,
-    bodyB: this.main_body,
-    pointA: this.cstr_puppet_A,
-    pointB: this.cstr_puppet_B,
-    length: CANVAS_HEIGHT - this.leg_h - this.main_h - 100, // TO BE RECALCULATED
-    stiffness: 0.001,
-    damping: 0,
-  }
-
-  this.cstr_puppet = Matter.Constraint.create(cstr_puppet_options);
-  World.add(world, this.cstr_puppet);
-
-  this.puppetFollow = function() {
-    puppetPosition_x = this.main_body.position.x;
-    puppetPosition_y = 0;
-    puppetPosition = Matter.Vector.create(puppetPosition_x, puppetPosition_y);
-    Body.setPosition(this.puppet_body, puppetPosition);
-  }
+  // --------------------------------------------------------------------------------------------------------------------------------------
+  // CLASS METHODS ------------------------------------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------------------------------------------------------
 
   // JUMP FUNCTION (Working)
   this.jump = function() {
-    var jumpForceTest = Matter.Vector.create(this.main_body.axes[0].x * -0.2, -this.main_body.axes[0].y * 0.2);
+    var jumpForceTest = Matter.Vector.create(this.main_body.axes[0].x * -jumpForceCoeff, -this.main_body.axes[0].y * jumpForceCoeff);
     Body.applyForce(this.main_body, this.main_body.position, jumpForceTest);
   }
 
   // NOT WORKING
   this.kick = function() {
-    legRotationPoint = Matter.Vector.create(this.leg_body.position.x + (this.leg_w / 2), this.leg_body.position.y - (this.leg_h / 2));
-    legForce = Matter.Vector.create(0.15, 0);
+    // TEST WITH ROTATION
+    /*legRotationPoint = Matter.Vector.create(this.leg_body.position.x + (this.leg_w / 2), this.leg_body.position.y - (this.leg_h / 2));
+    if (this.leg_body.angle < (PI / 2) % (2 * PI))  {
+      Body.rotate(this.leg_body, PI/2, legRotationPoint);
+    }
+    else {
+      this.leg_body.angle = PI/2;
+    }*/
+
+    // TEST WITH FORCE
+    var kickForceCoeff = 0.16;
+    legForce = Matter.Vector.create(-this.leg_body.axes[1].x * kickForceCoeff, -this.leg_body.axes[1].y * kickForceCoeff);
+    //legForce = Matter.Vector.create(0.1, 0);
     Body.applyForce(this.leg_body, this.leg_body.position, legForce);
-    //Body.rotate(this.leg_body, PI/2, legRotationPoint);
     
-    // DEBUG
+    // DEBUG DISPLAY
     push();
     translate(this.leg_body.position.x, this.leg_body.position.y);
     strokeWeight(4);
@@ -339,10 +319,24 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     pop();
   }
 
-  this.isOnGround = function() {
+  // Returns True if player is on ground
+  this.isOnGround = function(ground) {
+    mainBodyGroundColl = Matter.SAT.collides(this.main_body, ground.body);
+    legFixedBodyGroundColl = Matter.SAT.collides(this.leg_fixed_body, ground.body);
+    legBodyGroundColl = Matter.SAT.collides(this.leg_body, ground.body);
+    footBodyGroundColl = Matter.SAT.collides(this.foot_body, ground.body);
 
+    isMainBodyOnGround = mainBodyGroundColl.collided;
+    isLegFixedBodyOnGround = legFixedBodyGroundColl.collided;
+    isLegBodyOnGround = legBodyGroundColl.collided;
+    isFootBodyOnGround = footBodyGroundColl.collided;
+
+    isPlayerOnGround = isMainBodyOnGround || isLegFixedBodyOnGround || isLegBodyOnGround || isFootBodyOnGround;
+
+    return isPlayerOnGround;
   }
 
+  // Shows some debug stuff
   this.showDebug = function() {
     // DRAWING MAIN BODY
     push();
@@ -385,7 +379,7 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     rect(0, 0, this.foot_w, this.foot_h);
     pop();
 
-    // DRAWING AXES OF THE MAIN BODY
+    /*// DRAWING AXES OF THE MAIN BODY
     push();
     translate(this.main_body.position.x, this.main_body.position.y);
     strokeWeight(4);
@@ -464,40 +458,6 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     point(this.cstrAbs_foot_Bx, this.cstrAbs_foot_By);
     pop();
 
-    // DRAWING PUPPET
-    push();
-    rectMode(CENTER);
-    angleMode(RADIANS);
-    translate(this.puppet_body.position.x, this.puppet_body.position.y);
-    rotate(this.puppet_body.angle);
-    stroke(0);
-    fill(255, 0, 0);
-    rect(0, 0, this.puppet_w, this.puppet_h);
-    pop();
-
-    // DRAWING CONSTRAINT OF PUPPET
-    push();
-    strokeWeight(8);
-    stroke(255, 255, 255);
-    this.cstrAbs_puppet_Ax = this.puppet_body.position.x + this.cstr_puppet_A.x;
-    this.cstrAbs_puppet_Ay = this.puppet_body.position.y + this.cstr_puppet_A.y;
-    point(this.cstrAbs_puppet_Ax, this.cstrAbs_puppet_Ay);
-    pop();
-
-    push();
-    strokeWeight(8);
-    stroke(255, 255, 255);
-    this.cstrAbs_puppet_Bx = this.main_body.position.x + this.cstr_puppet_B.x;
-    this.cstrAbs_puppet_By = this.main_body.position.y + this.cstr_puppet_B.y;
-    point(this.cstrAbs_puppet_Bx, this.cstrAbs_puppet_By);
-    pop();
-
-    push();
-    strokeWeight(4);
-    stroke(255, 255, 255);
-    line(this.cstrAbs_puppet_Ax, this.cstrAbs_puppet_Ay, this.cstrAbs_puppet_Bx, this.cstrAbs_puppet_By);
-    pop();
-
     // DRAWING CONSTRAINT BETWEEN LEG BODY AND LEG FIXED BODY
     push();
     strokeWeight(8);
@@ -519,7 +479,7 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     strokeWeight(4);
     stroke(80);
     line(this.cstrAbs_legs_Ax, this.cstrAbs_legs_Ay, this.cstrAbs_legs_Bx, this.cstrAbs_legs_By);
-    pop();
+    pop();*/
   }
 }
 // EXPLANATIONS

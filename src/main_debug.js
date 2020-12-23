@@ -25,10 +25,44 @@ function main_debug() {
   goal2.show();
 
   player1_def.show();
-  player1_def.puppetFollow();
   player1_def.showDebug();
 
-  player1_atk.show();
+  // TEST OF GETTING THE PLAYER 1 DEF UPRIGHT - WORKS PARTIALLY
+  // TO DO : CREATE A VARYING FORCE (E.G. IT HAS TO BE STRONGER WHEN ANGLE OF PLAYER IS BIG) BUT IT MIGHT ALREADY BE THE CASE WHEN USING THE AXES ATTRIBUTE OF THE BODY
+  // OR    : CREATE VARIOUS ANGLE BOUNDS WHERE THE tiltForceCoeff would change
+  // THE puppetFollow() METHOD IS NOW USELESS
+  if (player1_def.isOnGround(ground)){
+    var tiltForce = Matter.Vector.create(player1_def.main_body.axes[1].x * -tiltForceCoeff, -player1_def.main_body.axes[1].y * tiltForceCoeff);
+    if ((player1_def.main_body.angle) >= PI/3.5) {
+      // TEMPORISATION NEEDED ?
+      Body.applyForce(player1_def.main_body, player1_def.main_body.position, Matter.Vector.neg(tiltForce));
+      // DEBUG DISPLAY
+      push();
+      text('Positive angle', (CANVAS_WIDTH / 2), CANVAS_HEIGHT/3);
+      translate(player1_def.main_body.position.x, player1_def.main_body.position.y);
+      strokeWeight(4);
+      stroke(255, 255, 255);
+      line(0, 0, tiltForce.x*1000, tiltForce.y*1000);
+      pop();
+    }
+    if ((player1_def.main_body.angle) <= -PI/3.5) {
+      Body.applyForce(player1_def.main_body, player1_def.main_body.position, tiltForce);
+      // DEBUG DISPLAY
+      push();
+      text('Negative angle', (CANVAS_WIDTH / 2), CANVAS_HEIGHT/3);
+      translate(player1_def.main_body.position.x, player1_def.main_body.position.y);
+      strokeWeight(4);
+      stroke(255, 255, 255);
+      line(0, 0, -tiltForce.x*1000, -tiltForce.y*1000);
+      pop();
+    }
+    else {
+      // Reset applied force when angle of player is enough to keep him upright
+      Body.applyForce(player1_def.main_body, player1_def.main_body.position, Matter.Vector.create(0,0));
+    }
+  }
+
+  /*player1_atk.show();
   player1_atk.puppetFollow();
   player1_atk.showDebug();
 
@@ -38,23 +72,38 @@ function main_debug() {
 
   player2_atk.show();
   player2_atk.puppetFollow();
-  player2_atk.showDebug();
+  player2_atk.showDebug();*/
 
   // CONTROLS
-  if (keyIsDown(RIGHT_ARROW)){
+  if (keyIsDown(65)) {      
+    //player1_def.kick();
+    // JUMP VECTOR
     push();
-    var jumpForceTest = Matter.Vector.create(player2_def.main_body.axes[0].x * -0.2, -player2_def.main_body.axes[0].y * 0.2);
+    var jumpForceTest = Matter.Vector.create(player1_def.main_body.axes[0].x * -jumpForceCoeff, -player1_def.main_body.axes[0].y * jumpForceCoeff);
     text('Key Pressed', (CANVAS_WIDTH / 2), CANVAS_HEIGHT/2);
-    translate(player2_def.main_body.position.x, player2_def.main_body.position.y);
+    translate(player1_def.main_body.position.x, player1_def.main_body.position.y);
     strokeWeight(4);
     stroke(255, 255, 255);
     line(0, 0, jumpForceTest.x*1000, jumpForceTest.y*1000);
     pop();
   }
 
+  if (keyIsDown(RIGHT_ARROW)) {
+    // JUMP VECTOR
+    /*push();
+    var jumpForceTest = Matter.Vector.create(player2_def.main_body.axes[0].x * -jumpForceCoeff, -player2_def.main_body.axes[0].y * jumpForceCoeff);
+    text('Key Pressed', (CANVAS_WIDTH / 2), CANVAS_HEIGHT/2);
+    translate(player2_def.main_body.position.x, player2_def.main_body.position.y);
+    strokeWeight(4);
+    stroke(255, 255, 255);
+    line(0, 0, jumpForceTest.x*1000, jumpForceTest.y*1000);
+    pop();*/
+  }
+
   if (keyIsDown(LEFT_ARROW)){
+    // JUMP VECTOR
     push();
-    var jumpForceTest2 = Matter.Vector.create(player2_atk.main_body.axes[0].x * -0.2, -player2_atk.main_body.axes[0].y * 0.2);
+    var jumpForceTest2 = Matter.Vector.create(player2_atk.main_body.axes[0].x * -jumpForceCoeff, -player2_atk.main_body.axes[0].y * jumpForceCoeff);
     text('Key Pressed', (CANVAS_WIDTH / 2), CANVAS_HEIGHT/2);
     translate(player2_atk.main_body.position.x, player2_atk.main_body.position.y);
     strokeWeight(4);
@@ -66,16 +115,17 @@ function main_debug() {
     // *****************************************************************************************************************
     // I HAVE AN IDEA FOR THE KICK FUNCTION : ADD A CONSTRAINT BETWEEN THE FIXED LEG AND THE BACK OF THE MOVABLE LEG !!!
     // *****************************************************************************************************************
+    // Also, maybe add the possibility to set the stiffness of the leg / fixed leg to a low value when the key is pressed and then set it to a high value
 
-    //var kickForceX = Math.cos((PI / 2) * player2_atk.leg_body.axes[0].x) - Math.sin((PI /2) * player2_atk.leg_body.axes[0].y);
-    //var kickForceY = Math.sin((PI / 2) * player2_atk.leg_body.axes[0].x) + Math.cos((PI /2) * player2_atk.leg_body.axes[0].y);
     var kickForceX = -player2_atk.leg_body.axes[1].x; // BEWARE !!! THIS HAS TO HAVE A POSITIVE SIGN FOR THE PLAYER 1
     var kickForceY = -player2_atk.leg_body.axes[1].y; // BEWARE !!! THIS HAS TO HAVE A POSITIVE SIGN FOR THE PLAYER 1
-    var kickForce = Matter.Vector.create(kickForceX * -0.01, kickForceY * -0.01);
+    var kickForce = Matter.Vector.create(kickForceX * -0.03, kickForceY * -0.03);
     //if (player2_atk.leg_body.angle < (PI / 2) % (2 * PI)) {
-    if (player2_atk.leg_body.angle < (PI / 2)) {
+    /*if (player2_atk.leg_body.angle < (PI / 2)) {
       Body.applyForce(player2_atk.leg_body, player2_atk.leg_body.position, kickForce);
-    }
+    }*/
+    Body.applyForce(player2_atk.leg_body, player2_atk.leg_body.position, kickForce);
+    //player2_atk.kick();
     
     push();
     text('Key Pressed', (CANVAS_WIDTH / 2), CANVAS_HEIGHT/2);
@@ -91,37 +141,11 @@ function main_debug() {
   // ********************************************************************************************************************************
 
   // DEBUG -------------------------------------------------------------------------------------------------------------------------------------------------------------
-  player1_defBodyGroundColl = Matter.SAT.collides(player1_def.main_body, ground.body);
-  player1_defLeftLegGroundColl = Matter.SAT.collides(player1_def.leg_fixed_body, ground.body);
-  player1_defRightLegGroundColl = Matter.SAT.collides(player1_def.leg_body, ground.body);
-  player1_defFootGroundColl = Matter.SAT.collides(player1_def.foot_body, ground.body);
 
-  isplayer1_defBodyOnGround = player1_defBodyGroundColl.collided;
-  isplayer1_defLeftLegOnGround = player1_defLeftLegGroundColl.collided;
-  isplayer1_defRightLegOnGround = player1_defRightLegGroundColl.collided;
-  isplayer1_defFootOnGround = player1_defFootGroundColl.collided;
-
-  isplayer1_defOnGround = isplayer1_defBodyOnGround || isplayer1_defLeftLegOnGround || isplayer1_defRightLegOnGround || isplayer1_defFootOnGround;
-  
-  /*document.getElementById("player1_def_x").innerHTML = Math.round(player1_def.main_body.position.x);
-  document.getElementById("player1_def_y").innerHTML = Math.round(player1_def.main_body.position.y);
-  document.getElementById("player1_atk_x").innerHTML = Math.round(player1_atk.main_body.position.x);
-  document.getElementById("player1_atk_y").innerHTML = Math.round(player1_atk.main_body.position.y);*/
-  document.getElementById("player1_def_x").innerHTML = Math.round(player1_def.main_body.position.x);
-  document.getElementById("player1_def_y").innerHTML = Math.round(player1_def.main_body.position.y);
-  document.getElementById("player1_def_angle").innerHTML = Math.round((player1_def.main_body.angle * 180) / PI);
-  document.getElementById("isplayer1_defBodyOnGround").innerHTML = isplayer1_defBodyOnGround;
-  document.getElementById("isplayer1_defLeftLegOnGround").innerHTML = isplayer1_defLeftLegOnGround;
-  document.getElementById("isplayer1_defRightLegOnGround").innerHTML = isplayer1_defRightLegOnGround;
-  document.getElementById("isplayer1_defFootOnGround").innerHTML = isplayer1_defFootOnGround;
-  document.getElementById("isplayer1_defOnGround").innerHTML = isplayer1_defOnGround;
-
-  document.getElementById("jumpForce_x").innerHTML = jumpForce2.x;
-  document.getElementById("jumpForce_y").innerHTML = jumpForce2.y;
-
-  document.getElementById("player1_def_vertical_axis_x").innerHTML = Math.round(player1_def.main_body.axes[0].x * 1000) / 1000;
-  document.getElementById("player1_def_vertical_axis_y").innerHTML = Math.round(player1_def.main_body.axes[0].y * 1000) / 1000;
-  document.getElementById("player1_def_horizontal_axis_x").innerHTML = Math.round(player1_def.main_body.axes[1].x * 1000) / 1000;
-  document.getElementById("player1_def_horizontal_axis_y").innerHTML = Math.round(player1_def.main_body.axes[1].y * 1000) / 1000;
-
-  }
+  // DEBUG DATA TO BE DISPLAYED ON THE HTML PAGE
+  document.getElementById("playerMainBodyDensity").innerHTML = player1_def.main_body.density;
+  document.getElementById("playerMovableLegDensity").innerHTML = player1_def.leg_body.density;
+  document.getElementById("playerFixedLegDensity").innerHTML = player1_def.leg_fixed_body.density;
+  document.getElementById("playerFootDensity").innerHTML = player1_def.foot_body.density;
+  document.getElementById("gravity").innerHTML = world.gravity.y;
+}

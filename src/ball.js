@@ -35,6 +35,7 @@ function Ball(x, y, r) {
     rand_ball_velocity = Matter.Vector.create(rand_ball_velocity_x, rand_ball_velocity_y);
     rand_ball_force = Matter.Vector.create(rand_ball_force_x, rand_ball_force_y);
     
+    // Set ball at random location in the middle + reset its velocity and acceleration
     Matter.Body.setPosition(ball.body, rand_ball_pos);
     Matter.Body.setVelocity(ball.body, rand_ball_velocity);
     Matter.Body.applyForce(ball.body, ball.body.position, rand_ball_force);
