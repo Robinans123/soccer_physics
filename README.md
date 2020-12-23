@@ -6,5 +6,5 @@ Game menu inspired by : https://editor.p5js.org/yeehaw/sketches/BZ2LtY_Uy
 Huge thanks to The Coding Train Youtube channel : https://www.youtube.com/channel/UCvjgXvBlbQiydffZU7m1_aw
 
 Libraries used :  
-https://p5js.org/  
-https://brm.io/matter-js/
+p5.js : https://p5js.org/  
+Matter.js : https://brm.io/matter-js/
