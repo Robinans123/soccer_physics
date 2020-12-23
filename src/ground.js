@@ -4,7 +4,7 @@ function Ground(x, y, w, h, a) {
   this.h = h;
   this.w = w;
   var options = {
-    friction: 0.5,
+    friction: 0.99,
     restitution: 0.8,
     isStatic: true,
   }

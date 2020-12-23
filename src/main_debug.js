@@ -31,29 +31,32 @@ function main_debug() {
   // TO DO : CREATE A VARYING FORCE (E.G. IT HAS TO BE STRONGER WHEN ANGLE OF PLAYER IS BIG) BUT IT MIGHT ALREADY BE THE CASE WHEN USING THE AXES ATTRIBUTE OF THE BODY
   // OR    : CREATE VARIOUS ANGLE BOUNDS WHERE THE tiltForceCoeff would change
   // THE puppetFollow() METHOD IS NOW USELESS
+  // MUST FIX THE ISSUE WHERE THE PLAYER MAKE A COMPLETE TURN
   if (player1_def.isOnGround(ground)){
     var tiltForce = Matter.Vector.create(player1_def.main_body.axes[1].x * -tiltForceCoeff, -player1_def.main_body.axes[1].y * tiltForceCoeff);
-    if ((player1_def.main_body.angle) >= PI/3.5) {
+    if ((player1_def.main_body.angle) % (2 * PI) >= PI/5) {
       // TEMPORISATION NEEDED ?
       Body.applyForce(player1_def.main_body, player1_def.main_body.position, Matter.Vector.neg(tiltForce));
       // DEBUG DISPLAY
       push();
       text('Positive angle', (CANVAS_WIDTH / 2), CANVAS_HEIGHT/3);
+      text(player1_def.main_body.angle % 2*PI, (CANVAS_WIDTH / 2), CANVAS_HEIGHT/1.5);
       translate(player1_def.main_body.position.x, player1_def.main_body.position.y);
       strokeWeight(4);
       stroke(255, 255, 255);
-      line(0, 0, tiltForce.x*1000, tiltForce.y*1000);
+      line(0, 0, -tiltForce.x*2000, -tiltForce.y*2000);
       pop();
     }
-    if ((player1_def.main_body.angle) <= -PI/3.5) {
+    if ((player1_def.main_body.angle) % (2 * PI) <= -PI/5) {
       Body.applyForce(player1_def.main_body, player1_def.main_body.position, tiltForce);
       // DEBUG DISPLAY
       push();
       text('Negative angle', (CANVAS_WIDTH / 2), CANVAS_HEIGHT/3);
-      translate(player1_def.main_body.position.x, player1_def.main_body.position.y);
+      text(player1_def.main_body.angle, (CANVAS_WIDTH / 2), CANVAS_HEIGHT/1.5);
+      translate(player1_def.main_body.position.x % 2*PI, player1_def.main_body.position.y);
       strokeWeight(4);
       stroke(255, 255, 255);
-      line(0, 0, -tiltForce.x*1000, -tiltForce.y*1000);
+      line(0, 0, tiltForce.x*2000, tiltForce.y*2000);
       pop();
     }
     else {
@@ -86,6 +89,20 @@ function main_debug() {
     stroke(255, 255, 255);
     line(0, 0, jumpForceTest.x*1000, jumpForceTest.y*1000);
     pop();
+
+    // TEST OF KICK ON PLAYER 1 DEF
+    var kForce = Matter.Vector.create(player1_def.main_body.axes[1].x * -kForceCoeff, player1_def.main_body.axes[1].y * -kForceCoeff);
+    if (player1_def.main_body.angle - player1_def.leg_body.angle <= PI/2) { // THIS LINE SEEMS TO WORK
+      Body.applyForce(player1_def.leg_body, player1_def.leg_body.position, kForce);
+      // DISPLAY DEBUG
+      push();
+      text('KICK', (CANVAS_WIDTH / 2), CANVAS_HEIGHT/4);
+      translate(player1_def.leg_body.position.x, player1_def.leg_body.position.y);
+      strokeWeight(4);
+      stroke(50, 255, 55);
+      line(0, 0, kForce.x*1000, kForce.y*1000);
+      pop();
+    }
   }
 
   if (keyIsDown(RIGHT_ARROW)) {
@@ -98,6 +115,9 @@ function main_debug() {
     stroke(255, 255, 255);
     line(0, 0, jumpForceTest.x*1000, jumpForceTest.y*1000);
     pop();*/
+
+    
+    
   }
 
   if (keyIsDown(LEFT_ARROW)){

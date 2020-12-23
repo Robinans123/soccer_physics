@@ -14,7 +14,8 @@ var ground;
 let CANVAS_WIDTH = 1400; // Default 1400
 let CANVAS_HEIGHT = 700; // Default 700
 
-var jumpForceCoeff = 0.5;
+// 0.5 works
+var jumpForceCoeff = 0.47;
 //var jumpForce2 = Matter.Vector.create(0, -0.3);
 var kickForce = Matter.Vector.create(0.0, 0);
 var kickBackForce = Matter.Vector.create(-0.0, 0);
@@ -39,7 +40,9 @@ let t_elapsed_sec = 0;
 let t_elapsed_min = 0;
 
 // Coefficient that is applied to the tiltForce vector that is derived from the axes[1] vector of the player
-let tiltForceCoeff = 0.02;
+let tiltForceCoeff = 0.017;
+
+let kForceCoeff = 0.03;
 
 // Create "structure that contains all arguments that can be passed to the player constructor"
 /*var player1DefOptions = {
@@ -184,7 +187,7 @@ function mouseClicked() {
   if (keyCode == RIGHT_ARROW) {
     if (1) {
       //Body.applyForce(player1_def.main_body, player1_def.main_body.position, jumpForce);
-      player1_def.kick();
+      //player1_def.kick();
       //player2_def.jump();
       
     }

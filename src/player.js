@@ -14,6 +14,8 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
   this.foot_h = this.leg_h / 5;
   this.leg_x = 0;
   this.leg_y = 0;
+  this.counterweight_w = this.leg_w + this.leg_fixed_w;
+  this.counterweight_h = 4;
 
   // BODY -----------------------------------------------------------------------------------------------------------------------------------------------------------------
   // BODIES CREATION - OPTIONS
@@ -48,6 +50,13 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     restitution: 0.1,
     angle: 0,
     density: 0.001
+  }
+
+  var counterweight_options = {
+    friction: 0.99,
+    restitution: 0.1,
+    angle: 0,
+    density: 0.02
   }
 
   // BODIES CREATION - MAIN BODY
@@ -97,7 +106,13 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     this.foot_body = Bodies.rectangle(this.foot_x, this.foot_y, this.foot_w, this.foot_h, foot_options);
     World.add(world, this.foot_body);
   }
-  
+
+  // BODIES CREATION - COUNTERWEIGHT BODY (counterweight that will be put under the player)
+  this.counterweight_x = this.leg_fixed_body.position.x + (this.leg_fixed_w / 2);
+  this.counterweight_y = this.leg_fixed_body.position.y + (this.leg_fixed_h / 2) + (this.counterweight_h / 2);
+  // MAYBE MAKE THE COUNTERWEIGHT A LITTLE BIT WIDER, FOR NOW IT IS WIDTH OF LEG + WIDTH OF IFXED LEG
+  this.counterweight_body = Bodies.rectangle(this.counterweight_x, this.counterweight_y, this.counterweight_w, this.counterweight_h, counterweight_options);
+  World.add(world, this.counterweight_body);
 
   // CONSTRAINTS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -223,7 +238,7 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
   this.cstr_legs_B = Matter.Vector.create(0, 0);
 
   //this.cstrLegsLength = Math.sqrt(((this.leg_h) ** 2) + ((this.leg_fixed_h) ** 2));
-  this.cstrLegsLength = 0;
+  this.cstrLegsLength = 4;
 
   var cstr_legs_options = {
     bodyA: this.leg_body,
@@ -231,13 +246,53 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     pointA: this.cstr_legs_A,
     pointB: this.cstr_legs_B,
     length: this.cstrLegsLength, // Options to be tweaked
-    stiffness: 0.001, // Options to be tweaked
-    damping: 0.5 // Options to be tweaked
+    stiffness: 0.01, // Options to be tweaked
+    damping: 0.01 // Options to be tweaked
   }
 
   this.cstr_legs = Matter.Constraint.create(cstr_legs_options);
 
   World.add(world, this.cstr_legs);
+
+  // CONSTRAINTS CREATION - CONSTRAINTS BETWEEN COUNTERWEIGHT BODY AND LEG FIXED BODY
+  if (this.s) {
+    this.cstr_counterweight_A = Matter.Vector.create(-(this.leg_fixed_w / 2) - 1, (this.leg_fixed_h / 2) + 1);
+    this.cstr_counterweight_B = Matter.Vector.create(-(this.counterweight_w / 2), -(this.counterweight_h / 2));
+    this.cstr_counterweight2_A = Matter.Vector.create((this.leg_fixed_w / 2) + 1, (this.leg_fixed_h / 2) + 1);
+    this.cstr_counterweight2_B = Matter.Vector.create(-(this.counterweight_w / 2) + this.leg_fixed_w, -(this.counterweight_h / 2));
+  }
+  else {
+    this.cstr_counterweight_A = Matter.Vector.create((this.leg_fixed_w / 2) + 1, (this.leg_fixed_h / 2) + 1);
+    this.cstr_counterweight_B = Matter.Vector.create((this.counterweight_w / 2), -(this.counterweight_h / 2));
+    this.cstr_counterweight2_A = Matter.Vector.create(-(this.leg_fixed_w / 2) - 1, (this.leg_fixed_h / 2) + 1);
+    this.cstr_counterweight2_B = Matter.Vector.create((this.counterweight_w / 2) - this.leg_fixed_w, -(this.counterweight_h / 2));
+  }
+  
+  var cstr_counterweight_options = {
+    bodyA: this.leg_fixed_body,
+    bodyB: this.counterweight_body,
+    pointA: this.cstr_counterweight_A,
+    pointB: this.cstr_counterweight_B,
+    length: 1,
+    stiffness: 0.99,
+    damping: 0
+  }
+
+  var cstr_counterweight2_options = {
+    bodyA: this.leg_fixed_body,
+    bodyB: this.counterweight_body,
+    pointA: this.cstr_counterweight2_A,
+    pointB: this.cstr_counterweight2_B,
+    length: 1,
+    stiffness: 0.99,
+    damping: 0
+  }
+
+  this.cstr_counterweight = Matter.Constraint.create(cstr_counterweight_options);
+  this.cstr_counterweight2 = Matter.Constraint.create(cstr_counterweight2_options);
+
+  World.add(world, this.cstr_counterweight);
+  World.add(world, this.cstr_counterweight2);
 
   // --------------------------------------------------------------------------------------------------------------------------------------
   // CLASS METHODS ------------------------------------------------------------------------------------------------------------------------
@@ -325,13 +380,15 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     legFixedBodyGroundColl = Matter.SAT.collides(this.leg_fixed_body, ground.body);
     legBodyGroundColl = Matter.SAT.collides(this.leg_body, ground.body);
     footBodyGroundColl = Matter.SAT.collides(this.foot_body, ground.body);
+    counterweightBodyGroundColl = Matter.SAT.collides(this.counterweight_body, ground.body);
 
     isMainBodyOnGround = mainBodyGroundColl.collided;
     isLegFixedBodyOnGround = legFixedBodyGroundColl.collided;
     isLegBodyOnGround = legBodyGroundColl.collided;
     isFootBodyOnGround = footBodyGroundColl.collided;
+    isCounterweightBodyOnGround = counterweightBodyGroundColl.collided;
 
-    isPlayerOnGround = isMainBodyOnGround || isLegFixedBodyOnGround || isLegBodyOnGround || isFootBodyOnGround;
+    isPlayerOnGround = isMainBodyOnGround || isLegFixedBodyOnGround || isLegBodyOnGround || isFootBodyOnGround || isCounterweightBodyOnGround;
 
     return isPlayerOnGround;
   }
