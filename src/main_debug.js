@@ -8,7 +8,10 @@
 
 function main_debug() {
 
+  // GAME ENGINE UPDATE - OK
   Engine.update(engine);
+
+  // CANVAS BACKGROUND AND TEXT - OK
   background(0, 100, 255);
   push();
   fill(0);
@@ -21,10 +24,11 @@ function main_debug() {
   gameScore.scoreCheck(ball, goal1, goal2);
   gameScore.show();
   
-  // TIMER - OK IT IS WORKING
+  // TIMER - OK
   gameTimer.timerTick();
   gameTimer.show();
   
+  // SHOW GRAPHICS - OK
 	ball.show();
   ground.show();
   goal1.show();
@@ -34,11 +38,13 @@ function main_debug() {
   player2_def.show();
   player2_atk.show();
 
+  // SHOW DEBUG GRAPHICS - OK
   player1_def.showDebug();
   player1_atk.showDebug();
   player2_def.showDebug();
   player2_atk.showDebug();
 
+  // KEEP PLAYERS UPRIGHT - ALMOST OK
   if (player1_def.isOnGround(ground)){
     player1_def.updateAbsoluteAngle();
     player1_def.uprightTilt();
@@ -56,7 +62,7 @@ function main_debug() {
     player2_atk.uprightTilt();
   }
 
-  // CONTROLS
+  // GAME CONTROLS - OK
   if (keyIsDown(65)) {
     player1_def.cstr_legs.stiffness = 0.0001;      
     player1_def.kick(); 
@@ -81,7 +87,7 @@ function main_debug() {
   // DO NOT FORGET : WHEN RESETTING PLAYERS, use this function to get rid of the previous players : Matter.World.remove(world, body);
   // ********************************************************************************************************************************
 
-  // DEBUG -------------------------------------------------------------------------------------------------------------------------------------------------------------
+  // DEBUG --------------------------------------------------------------------------------------------------------------------------
 
   // DEBUG DATA TO BE DISPLAYED ON THE HTML PAGE
   document.getElementById("playerMainBodyDensity").innerHTML = player1_def.main_body.density;

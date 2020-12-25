@@ -1,3 +1,11 @@
+// ************************************************
+// Teugg Soccer Physics
+// Rip-off of the once popular Soccer Physics game
+// Horribly coded by : Kevin Le Teugg, 2020
+// File : player.js
+// Description :
+// ************************************************
+
 function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
   // TO DO : REFACTOR !!! AND ADD COMMENTS !!!
   // EXPLANATIONS OF THE PLAYER CLASS IS EXPLAINED AT THE BOTTOM OF THE CODE

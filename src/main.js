@@ -1,6 +1,17 @@
+// ************************************************
+// Teugg Soccer Physics
+// Rip-off of the once popular Soccer Physics game
+// Horribly coded by : Kevin Le Teugg, 2020
+// File : main.js
+// Description :
+// ************************************************
+
 function main() {
 
+  // GAME ENGINE UPDATE
   Engine.update(engine);
+
+  // CANVAS BACKGROUND AND TEXT
   background(80, 255, 0);
   push();
   fill(0);
@@ -17,34 +28,52 @@ function main() {
   gameTimer.timerTick();
   gameTimer.show();
 
+  // SHOW GRAPHICS
 	ball.show();
   ground.show();
   goal1.show();
   goal2.show();
 	player1_def.show();
-  /*player1_atk.show();
+  player1_atk.show();
   player2_def.show();
-	player2_atk.show();*/
+	player2_atk.show();
 
+  // KEEP PLAYERS UPRIGHT
   if (player1_def.isOnGround(ground)){
+    player1_def.updateAbsoluteAngle();
     player1_def.uprightTilt();
   }
+  if (player1_atk.isOnGround(ground)){
+    player1_atk.updateAbsoluteAngle();
+    player1_atk.uprightTilt();
+  }
+  if (player2_def.isOnGround(ground)){
+    player2_def.updateAbsoluteAngle();
+    player2_def.uprightTilt();
+  }
+  if (player2_atk.isOnGround(ground)){
+    player2_atk.updateAbsoluteAngle();
+    player2_atk.uprightTilt();
+  }
 
-  // CONTROLS
+  // GAME CONTROLS
   if (keyIsDown(65)) {
     player1_def.cstr_legs.stiffness = 0.0001;      
-    player1_def.kick();  
+    player1_def.kick();
   }
 
   if (keyIsDown(68)) {
-    
+    player1_atk.cstr_legs.stiffness = 0.0001;      
+    player1_atk.kick();
   }
 
   if (keyIsDown(RIGHT_ARROW)) {
-    
+    player2_def.cstr_legs.stiffness = 0.0001;      
+    player2_def.kick();
   }
 
   if (keyIsDown(LEFT_ARROW)){
-
+    player2_atk.cstr_legs.stiffness = 0.0001;      
+    player2_atk.kick();
   }
 }

@@ -99,7 +99,7 @@ function setup() {
 
   // Matter.js renderer creation - COMMENT FROM HERE...
 
-  /*var render = Render.create({
+  var render = Render.create({
       element: document.body,
       engine: engine,
       options: {
@@ -110,7 +110,7 @@ function setup() {
       }
   });
 
-  Render.run(render);*/
+  Render.run(render);
 
   // ... TO HERE TO GET RID OF THE RENDERER
 
