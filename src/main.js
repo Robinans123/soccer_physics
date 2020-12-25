@@ -12,7 +12,8 @@ function main() {
   Engine.update(engine);
 
   // CANVAS BACKGROUND AND TEXT
-  background(80, 255, 0);
+  //background(80, 255, 0);
+  image(background0, 0, 0);
   push();
   fill(0);
   textSize(20);

@@ -12,7 +12,8 @@ function main_debug() {
   Engine.update(engine);
 
   // CANVAS BACKGROUND AND TEXT - OK
-  background(0, 100, 255);
+  //background(0, 100, 255);
+  image(background0, 0, 0);
   push();
   fill(0);
   textSize(20);

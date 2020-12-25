@@ -47,10 +47,10 @@ function Ball(x, y, r) {
     push();
     translate(this.body.position.x, this.body.position.y);
     rotate(this.body.angle);
+    image(spriteSoccerBall, -this.r, -this.r, 2 * this.r, 2 * this.r);
     stroke(0, 0, 0);
     fill(255);
-    ellipse(0, 0, (this.r) * 2, (this.r) * 2);
-    // line((this.body.position.x) - this.r, this.body.position.y, (this.body.position.x + this.r), this.body.position.y);  
+    //ellipse(0, 0, (this.r) * 2, (this.r) * 2); 
     pop();
   }
 }

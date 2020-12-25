@@ -89,17 +89,27 @@ let jumpForceCoeff = 0.47; // 0.5 works
     ballDensity: 0.00005,
   }*/
 
+let background0;
+let spriteSoccerBall;
+function preload() {
+  background0 = loadImage('../assets/0_background.png');
+  spriteSoccerBall = loadImage('../assets/sprite_soccer_ball.png');
+}
+
 function setup() {
   // CANVAS CREATION
   canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
   canvas.parent('sketch-holder');
+
+  // Draw background
+  image(background0, 0, 0);
 
   // Matter.js engine creation
   engine = Engine.create();
 
   // Matter.js renderer creation - COMMENT FROM HERE...
 
-  var render = Render.create({
+  /*var render = Render.create({
       element: document.body,
       engine: engine,
       options: {
@@ -110,7 +120,7 @@ function setup() {
       }
   });
 
-  Render.run(render);
+  Render.run(render);*/
 
   // ... TO HERE TO GET RID OF THE RENDERER
 
@@ -139,7 +149,7 @@ function draw() {
   // GAME LOOP
 
   // MAIN MENU DRAWING
-  background(50);
+  //background(50);
   rectMode(CENTER);
   fill(0, 255, 40);
   rect((CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 3), 200, 75);
