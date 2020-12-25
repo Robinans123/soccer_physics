@@ -238,7 +238,6 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
   this.cstr_legs_A = Matter.Vector.create(0, 0);
   this.cstr_legs_B = Matter.Vector.create(0, 0);
 
-  //this.cstrLegsLength = Math.sqrt(((this.leg_h) ** 2) + ((this.leg_fixed_h) ** 2));
   this.cstrLegsLength = 4;
 
   var cstr_legs_options = {
@@ -299,28 +298,107 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
   // CLASS METHODS ------------------------------------------------------------------------------------------------------------------------
   // --------------------------------------------------------------------------------------------------------------------------------------
 
-  // JUMP FUNCTION (Working)
+  // Jump function - OK
   this.jump = function() {
     var jumpForceTest = Matter.Vector.create(this.main_body.axes[0].x * -jumpForceCoeff, -this.main_body.axes[0].y * jumpForceCoeff);
     Body.applyForce(this.main_body, this.main_body.position, jumpForceTest);
   }
 
-  // WORKING MORE OR LESS
+  // Kick function - WORKING MORE OR LESS
   this.kick = function() {
-    var kickForce = Matter.Vector.create(this.main_body.axes[1].x * -kickForceCoeff, this.main_body.axes[1].y * -kickForceCoeff);
-    if (this.main_body.angle - this.leg_body.angle <= PI/2) { // THIS LINE SEEMS TO WORK
-      Body.applyForce(this.leg_body, this.leg_body.position, kickForce);
-      // DISPLAY DEBUG
-      push();
-      translate(this.leg_body.position.x, this.leg_body.position.y);
-      strokeWeight(4);
-      stroke(50, 255, 55);
-      line(0, 0, kickForce.x*1000, kickForce.y*1000);
-      pop();
+    if (this.s) {
+      var kickForce = Matter.Vector.create(this.main_body.axes[1].x * -kickForceCoeff, this.main_body.axes[1].y * -kickForceCoeff);
+      if (this.main_body.angle - this.leg_body.angle <= PI/2) {
+        Body.applyForce(this.leg_body, this.leg_body.position, kickForce);
+      }
+    }
+    else {
+      var kickForce = Matter.Vector.create(-this.main_body.axes[1].x * -kickForceCoeff, -this.main_body.axes[1].y * -kickForceCoeff);
+      if (this.leg_body.angle - this.main_body.angle <= PI/2) {
+        Body.applyForce(this.leg_body, this.leg_body.position, kickForce);
+      }
     }
   }
 
-  // GRAPHICS FUNCTION
+  // Returns True if player is on ground - OK
+  this.isOnGround = function(ground) {
+    mainBodyGroundColl = Matter.SAT.collides(this.main_body, ground.body);
+    legFixedBodyGroundColl = Matter.SAT.collides(this.leg_fixed_body, ground.body);
+    legBodyGroundColl = Matter.SAT.collides(this.leg_body, ground.body);
+    footBodyGroundColl = Matter.SAT.collides(this.foot_body, ground.body);
+    counterweightBodyGroundColl = Matter.SAT.collides(this.counterweight_body, ground.body);
+
+    isMainBodyOnGround = mainBodyGroundColl.collided;
+    isLegFixedBodyOnGround = legFixedBodyGroundColl.collided;
+    isLegBodyOnGround = legBodyGroundColl.collided;
+    isFootBodyOnGround = footBodyGroundColl.collided;
+    isCounterweightBodyOnGround = counterweightBodyGroundColl.collided;
+
+    isPlayerOnGround = isMainBodyOnGround || isLegFixedBodyOnGround || isLegBodyOnGround || isFootBodyOnGround || isCounterweightBodyOnGround;
+
+    return isPlayerOnGround;
+  }
+
+  // Getting the absolute angle of the player, the angle the body of the player makes with...
+  // ... the perpendicular to the ground (angle bound between -PI and PI) -> OK IT IS WORKING BUT CAN BE REFACTORED
+  this.updateAbsoluteAngle = function() {
+    // FIRST QUADRANT [0 ... +90°[
+    if (Math.sin(this.main_body.angle) > 0 && Math.cos(this.main_body.angle) > 0){
+      if (this.main_body.angle >= 0){
+        this.absoluteAngle = this.main_body.angle % (2 * PI);
+      }
+      else {
+        this.absoluteAngle = (2 * PI) + (this.main_body.angle % (2 * PI));
+      }
+    }
+    // SECOND QUADRANT ]0 ... -90°]
+    if (Math.sin(this.main_body.angle) < 0 && Math.cos(this.main_body.angle) > 0){
+      if (this.main_body.angle < 0){
+        this.absoluteAngle = this.main_body.angle % (2 * PI);
+      }
+      else {
+        this.absoluteAngle = (this.main_body.angle % (2 * PI)) - (2 * PI);
+      }
+    }
+    // THIRD QUADRANT ]-90 ... -180°]
+    if (Math.sin(this.main_body.angle) < 0 && Math.cos(this.main_body.angle) < 0){
+      if (this.main_body.angle <= 0){
+        this.absoluteAngle = this.main_body.angle % (2 * PI);
+      }
+      else {
+        this.absoluteAngle = (this.main_body.angle % (2 * PI)) - (2 * PI);
+      }
+    }
+    // FOURTH QUADRANT [+90 ... +180°[
+    if (Math.sin(this.main_body.angle) > 0 && Math.cos(this.main_body.angle) < 0){
+      if (this.main_body.angle > 0){
+        this.absoluteAngle = this.main_body.angle % (2 * PI);
+      }
+      else {
+        this.absoluteAngle = (2 * PI) + this.main_body.angle % (2 * PI);
+      }
+    }
+  }
+
+  // Function used to keep the play upright - ALMOST WORKS
+  // TO DO : CREATE A VARYING FORCE (E.G. IT HAS TO BE STRONGER WHEN ANGLE OF PLAYER IS BIG) BUT IT MIGHT ALREADY BE THE CASE WHEN USING THE AXES ATTRIBUTE OF THE BODY
+  // OR    : CREATE VARIOUS ANGLE BOUNDS WHERE THE tiltForceCoeff would change
+  this.uprightTilt = function() {
+    var tiltForce = Matter.Vector.create(this.main_body.axes[1].x * -tiltForceCoeff, -this.main_body.axes[1].y * tiltForceCoeff);
+    if ((this.absoluteAngle) >= PI/5) {
+      // TEMPORISATION NEEDED ?
+      Body.applyForce(this.main_body, this.main_body.position, Matter.Vector.neg(tiltForce));
+    }
+    if ((this.absoluteAngle) <= -PI/5) {
+      Body.applyForce(this.main_body, this.main_body.position, tiltForce);
+    }
+    else {
+      // Reset applied force when angle of player is enough to keep him upright
+      Body.applyForce(this.main_body, this.main_body.position, Matter.Vector.create(0,0));
+    }
+  }
+
+  // Graphics function - OK
   this.show = function() {
     // DRAWING MAIN BODY
     push();
@@ -362,59 +440,6 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     rotate(this.foot_body.angle);
     rect(0, 0, this.foot_w, this.foot_h);
     pop();
-  }
-
-  // Returns True if player is on ground
-  this.isOnGround = function(ground) {
-    mainBodyGroundColl = Matter.SAT.collides(this.main_body, ground.body);
-    legFixedBodyGroundColl = Matter.SAT.collides(this.leg_fixed_body, ground.body);
-    legBodyGroundColl = Matter.SAT.collides(this.leg_body, ground.body);
-    footBodyGroundColl = Matter.SAT.collides(this.foot_body, ground.body);
-    counterweightBodyGroundColl = Matter.SAT.collides(this.counterweight_body, ground.body);
-
-    isMainBodyOnGround = mainBodyGroundColl.collided;
-    isLegFixedBodyOnGround = legFixedBodyGroundColl.collided;
-    isLegBodyOnGround = legBodyGroundColl.collided;
-    isFootBodyOnGround = footBodyGroundColl.collided;
-    isCounterweightBodyOnGround = counterweightBodyGroundColl.collided;
-
-    isPlayerOnGround = isMainBodyOnGround || isLegFixedBodyOnGround || isLegBodyOnGround || isFootBodyOnGround || isCounterweightBodyOnGround;
-
-    return isPlayerOnGround;
-  }
-
-  this.uprightTilt = function() {
-    // Replace this.main_body.angle by this.absoluteAngle and getting rid of the % 2*PI operation
-    var tiltForce = Matter.Vector.create(this.main_body.axes[1].x * -tiltForceCoeff, -this.main_body.axes[1].y * tiltForceCoeff);
-    if ((this.absoluteAngle) >= PI/5) {
-      // TEMPORISATION NEEDED ?
-      Body.applyForce(this.main_body, this.main_body.position, Matter.Vector.neg(tiltForce));
-      // DEBUG DISPLAY
-      push();
-      //text(this.main_body.angle % (2*PI), (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 3));
-      text("Positive angle", (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 3));
-      translate(this.main_body.position.x, this.main_body.position.y);
-      strokeWeight(4);
-      stroke(255, 255, 255);
-      line(0, 0, -tiltForce.x*2000, -tiltForce.y*2000);
-      pop();
-    }
-    if ((this.absoluteAngle) <= -PI/5) {
-      Body.applyForce(this.main_body, this.main_body.position, tiltForce);
-      // DEBUG DISPLAY
-      push();
-      //text(this.main_body.angle % (2*PI), (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 3));
-      text("Negative angle", (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 3));
-      translate(this.main_body.position.x, this.main_body.position.y);
-      strokeWeight(4);
-      stroke(255, 255, 255);
-      line(0, 0, tiltForce.x*2000, tiltForce.y*2000);
-      pop();
-    }
-    else {
-      // Reset applied force when angle of player is enough to keep him upright
-      Body.applyForce(player1_def.main_body, player1_def.main_body.position, Matter.Vector.create(0,0));
-    }
   }
 
   // Shows some debug stuff

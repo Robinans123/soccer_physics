@@ -99,7 +99,7 @@ function setup() {
 
   // Matter.js renderer creation - COMMENT FROM HERE...
 
-  var render = Render.create({
+  /*var render = Render.create({
       element: document.body,
       engine: engine,
       options: {
@@ -110,7 +110,7 @@ function setup() {
       }
   });
 
-  Render.run(render);
+  Render.run(render);*/
 
   // ... TO HERE TO GET RID OF THE RENDERER
 
@@ -122,11 +122,11 @@ function setup() {
   ball = new Ball((CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 4), ball_diameter);
 
   player1_def = new Player(300, 300, player_width, player_height, player_leg_width, player_leg_height, true);
-  //player1_atk = new Player(600, 600, player_width, player_height, player_leg_width, player_leg_height, true);
+  player1_atk = new Player(600, 600, player_width, player_height, player_leg_width, player_leg_height, true);
   goal1 = new Goal((goal_width / 2), (CANVAS_HEIGHT - (goal_height / 2)), goal_width, goal_height, 10, true);
 
-  //player2_atk = new Player(900, 600, player_width, player_height, player_leg_width, player_leg_height, false);
-  //player2_def = new Player(1200, 600, player_width, player_height, player_leg_width, player_leg_height, false);
+  player2_atk = new Player(900, 600, player_width, player_height, player_leg_width, player_leg_height, false);
+  player2_def = new Player(1200, 600, player_width, player_height, player_leg_width, player_leg_height, false);
   goal2 = new Goal((CANVAS_WIDTH - (goal_width / 2)), (CANVAS_HEIGHT - (goal_height / 2)), goal_width, goal_height, 10, false);
 
   gameTimer = new GameTimer();
@@ -184,31 +184,27 @@ function mouseClicked() {
 
 // EVENTS
 function keyPressed() {
-  if (keyCode == UP_ARROW) {
-    
-  }
-
   if (keyCode == 65) {
-    if (1) {
+    if (player1_def.isOnGround(ground)) {
       player1_def.jump();
     }
   }
 
   if (keyCode == 68) {
-    if (1) {
+    if (player1_atk.isOnGround(ground)) {
       player1_atk.jump();
     } 
   }
 
-  if (keyCode == LEFT_ARROW) {
-    if (1) {
-      player2_atk.jump();
+  if (keyCode == RIGHT_ARROW) {
+    if (player2_def.isOnGround(ground)) {
+      player2_def.jump();
     }
   }
 
-  if (keyCode == RIGHT_ARROW) {
-    if (1) {
-      //player2_def.jump();
+  if (keyCode == LEFT_ARROW) {
+    if (player2_atk.isOnGround(ground)) {
+      player2_atk.jump();
     }
   }
 }
@@ -216,21 +212,17 @@ function keyPressed() {
 function keyReleased() {
   if (keyCode == 65) {
     player1_def.cstr_legs.stiffness = 0.06;
-    // OK IT WORKS !
   }
 
-    if (keyCode == 68) {
+  if (keyCode == 68) {
     player1_atk.cstr_legs.stiffness = 0.06;
-    // OK IT WORKS !
   }
 
-    if (keyCode == LEFT_ARROW) {
-    player2_atk.cstr_legs.stiffness = 0.06;
-    // OK IT WORKS !
-  }
-
-    if (keyCode == RIGHT_ARROW) {
+  if (keyCode == RIGHT_ARROW) {
     player2_def.cstr_legs.stiffness = 0.06;
-    // OK IT WORKS !
+  }
+
+  if (keyCode == LEFT_ARROW) {
+    player2_atk.cstr_legs.stiffness = 0.06;
   }
 }
