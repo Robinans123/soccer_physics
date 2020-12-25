@@ -14,11 +14,10 @@ var ground;
 let CANVAS_WIDTH = 1400; // Default 1400
 let CANVAS_HEIGHT = 700; // Default 700
 
-var jumpForceCoeff = 0.47; // 0.5 works
-var kickForce = Matter.Vector.create(0.0, 0);
-var kickBackForce = Matter.Vector.create(-0.0, 0);
+
 let menu = 0;
 
+// Elements dimensions
 let ball_diameter = 25;
 let goal_width = 150;
 let goal_height = 400;
@@ -32,6 +31,7 @@ let ground_offset = 6;
 let ground_x = CANVAS_WIDTH / 2;
 let ground_y = CANVAS_HEIGHT - ground_height / 2;
 
+// Score and timer initialisation
 let score1 = 0;
 let score2 = 0;
 let t_elapsed_sec = 0;
@@ -40,7 +40,11 @@ let t_elapsed_min = 0;
 // Coefficient that is applied to the tiltForce vector that is derived from the axes[1] vector of the player
 let tiltForceCoeff = 0.017;
 
+// Coefficient that is applied to the kickForce vector that is perpendicular to the movable leg of the players
 let kickForceCoeff = 0.03;
+
+// Coefficient that is applied to the jumpForce vector
+let jumpForceCoeff = 0.47; // 0.5 works
 
 // Create "structure that contains all arguments that can be passed to the player constructor"
 /*var player1DefOptions = {
@@ -85,7 +89,7 @@ function setup() {
   // Matter.js engine creation
   engine = Engine.create();
 
-  // Matter.js renderer creation
+  // Matter.js renderer creation - COMMENT FROM HERE...
 
   var render = Render.create({
       element: document.body,
@@ -99,6 +103,8 @@ function setup() {
   });
 
   Render.run(render);
+
+  // ... TO HERE TO GET RID OF THE RENDERER
 
   //Engine.run(engine);
   world = engine.world;
@@ -169,13 +175,24 @@ function mouseClicked() {
 }
 
 // EVENTS
-  function keyPressed() {
+function keyPressed() {
   if (keyCode == UP_ARROW) {
     
   }
 
+  if (keyCode == 65) {
+    if (1) {
+      player1_def.jump();
+    }
+  }
+
+  if (keyCode == 68) {
+    if (1) {
+      player1_atk.jump();
+    } 
+  }
+
   if (keyCode == LEFT_ARROW) {
-    //if (isplayer1_defOnGround) {
     if (1) {
       player2_atk.jump();
     }
@@ -183,28 +200,29 @@ function mouseClicked() {
 
   if (keyCode == RIGHT_ARROW) {
     if (1) {
-      //Body.applyForce(player1_def.main_body, player1_def.main_body.position, jumpForce);
-      //player1_def.kick();
       //player2_def.jump();
-      
     }
-    //Body.applyForce(player1_def.leg_body, player1_def.leg_body.position, kickForce);
-  }
-
-  if (keyCode == 65) {
-    //Body.applyForce(player1_def.main_body, player1_def.main_body.position, jumpForce2);
-    player1_def.jump();
-  }
-
-  if (keyCode == 68) {
-    //Body.applyForce(player1_def.main_body, player1_def.main_body.position, jumpForce);
-    player1_atk.jump();
   }
 }
 
 function keyReleased() {
   if (keyCode == 65) {
     player1_def.cstr_legs.stiffness = 0.06;
+    // OK IT WORKS !
+  }
+
+    if (keyCode == 68) {
+    player1_atk.cstr_legs.stiffness = 0.06;
+    // OK IT WORKS !
+  }
+
+    if (keyCode == LEFT_ARROW) {
+    player2_atk.cstr_legs.stiffness = 0.06;
+    // OK IT WORKS !
+  }
+
+    if (keyCode == RIGHT_ARROW) {
+    player2_def.cstr_legs.stiffness = 0.06;
     // OK IT WORKS !
   }
 }

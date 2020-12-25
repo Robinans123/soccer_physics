@@ -382,6 +382,37 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     return isPlayerOnGround;
   }
 
+  this.uprightTilt = function() {
+    var tiltForce = Matter.Vector.create(this.main_body.axes[1].x * -tiltForceCoeff, -this.main_body.axes[1].y * tiltForceCoeff);
+    if ((this.main_body.angle) % (2 * PI) >= PI/5) {
+      // TEMPORISATION NEEDED ?
+      Body.applyForce(this.main_body, this.main_body.position, Matter.Vector.neg(tiltForce));
+      // DEBUG DISPLAY
+      push();
+      text(this.main_body.angle % 2*PI, (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 3));
+      translate(this.main_body.position.x, this.main_body.position.y);
+      strokeWeight(4);
+      stroke(255, 255, 255);
+      line(0, 0, -tiltForce.x*2000, -tiltForce.y*2000);
+      pop();
+    }
+    if ((this.main_body.angle) % (2 * PI) <= -PI/5) {
+      Body.applyForce(this.main_body, this.main_body.position, tiltForce);
+      // DEBUG DISPLAY
+      push();
+      text(this.main_body.angle % 2*PI, (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 3));
+      translate(this.main_body.position.x, this.main_body.position.y);
+      strokeWeight(4);
+      stroke(255, 255, 255);
+      line(0, 0, tiltForce.x*2000, tiltForce.y*2000);
+      pop();
+    }
+    else {
+      // Reset applied force when angle of player is enough to keep him upright
+      Body.applyForce(player1_def.main_body, player1_def.main_body.position, Matter.Vector.create(0,0));
+    }
+  }
+
   // Shows some debug stuff
   this.showDebug = function() {
     // DRAWING MAIN BODY

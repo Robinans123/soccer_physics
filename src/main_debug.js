@@ -2,6 +2,12 @@ function main_debug() {
 
   Engine.update(engine);
   background(0, 100, 255);
+  push();
+  fill(0);
+  textSize(20);
+  stroke(0, 0, 0);
+  text('Press ESC key to return to menu', ((CANVAS_WIDTH  * 6) / 7), 30);
+  pop();
 
   // SCORE LOGIC - OK
   gameScore.scoreCheck(ball, goal1, goal2);
@@ -11,65 +17,27 @@ function main_debug() {
   gameTimer.timerTick();
   gameTimer.show();
   
-  push();
-  fill(0);
-  textSize(20);
-  stroke(0, 0, 0);
-  text('Press ESC key to return to menu', ((CANVAS_WIDTH  * 6) / 7), 30);
-  pop();
-
 	ball.show();
   ground.show();
-
   goal1.show();
   goal2.show();
-
   player1_def.show();
+  /*player1_atk.show();
+  player2_def.show();
+  player2_atk.show();*/
+
   player1_def.showDebug();
+  /*player1_atk.showDebug();
+  player2_def.showDebug();
+  player2_atk.showDebug();*/
 
   // TEST OF GETTING THE PLAYER 1 DEF UPRIGHT - WORKS PARTIALLY
   // TO DO : CREATE A VARYING FORCE (E.G. IT HAS TO BE STRONGER WHEN ANGLE OF PLAYER IS BIG) BUT IT MIGHT ALREADY BE THE CASE WHEN USING THE AXES ATTRIBUTE OF THE BODY
   // OR    : CREATE VARIOUS ANGLE BOUNDS WHERE THE tiltForceCoeff would change
   // MUST FIX THE ISSUE WHERE THE PLAYER MAKE A COMPLETE TURN
   if (player1_def.isOnGround(ground)){
-    var tiltForce = Matter.Vector.create(player1_def.main_body.axes[1].x * -tiltForceCoeff, -player1_def.main_body.axes[1].y * tiltForceCoeff);
-    if ((player1_def.main_body.angle) % (2 * PI) >= PI/5) {
-      // TEMPORISATION NEEDED ?
-      Body.applyForce(player1_def.main_body, player1_def.main_body.position, Matter.Vector.neg(tiltForce));
-      // DEBUG DISPLAY
-      push();
-      text(player1_def.main_body.angle % 2*PI, (CANVAS_WIDTH / 2), CANVAS_HEIGHT/3);
-      translate(player1_def.main_body.position.x, player1_def.main_body.position.y);
-      strokeWeight(4);
-      stroke(255, 255, 255);
-      line(0, 0, -tiltForce.x*2000, -tiltForce.y*2000);
-      pop();
-    }
-    if ((player1_def.main_body.angle) % (2 * PI) <= -PI/5) {
-      Body.applyForce(player1_def.main_body, player1_def.main_body.position, tiltForce);
-      // DEBUG DISPLAY
-      push();
-      text(player1_def.main_body.angle, (CANVAS_WIDTH / 2), CANVAS_HEIGHT/3);
-      translate(player1_def.main_body.position.x % 2*PI, player1_def.main_body.position.y);
-      strokeWeight(4);
-      stroke(255, 255, 255);
-      line(0, 0, tiltForce.x*2000, tiltForce.y*2000);
-      pop();
-    }
-    else {
-      // Reset applied force when angle of player is enough to keep him upright
-      Body.applyForce(player1_def.main_body, player1_def.main_body.position, Matter.Vector.create(0,0));
-    }
+    player1_def.uprightTilt();
   }
-
-  /*player1_atk.show();
-  player1_atk.showDebug();
-
-  player2_def.show();
-  player2_def.showDebug();
-
-  player2_atk.show();
-  player2_atk.showDebug();*/
 
   // CONTROLS
   if (keyIsDown(65)) {
@@ -82,10 +50,7 @@ function main_debug() {
     strokeWeight(4);
     stroke(255, 255, 255);
     line(0, 0, jumpForceDebug.x*1000, jumpForceDebug.y*1000);
-    pop();
-
-    // TEST OF KICK ON PLAYER 1 DEF
-    
+    pop();    
   }
 
   if (keyIsDown(68)) {
