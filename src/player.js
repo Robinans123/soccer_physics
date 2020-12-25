@@ -16,6 +16,7 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
   this.leg_y = 0;
   this.counterweight_w = this.leg_w + this.leg_fixed_w;
   this.counterweight_h = 4;
+  this.absoluteAngle = 0;
 
   // BODY -----------------------------------------------------------------------------------------------------------------------------------------------------------------
   // BODIES CREATION - OPTIONS
@@ -383,24 +384,27 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
   }
 
   this.uprightTilt = function() {
+    // Replace this.main_body.angle by this.absoluteAngle and getting rid of the % 2*PI operation
     var tiltForce = Matter.Vector.create(this.main_body.axes[1].x * -tiltForceCoeff, -this.main_body.axes[1].y * tiltForceCoeff);
-    if ((this.main_body.angle) % (2 * PI) >= PI/5) {
+    if ((this.absoluteAngle) >= PI/5) {
       // TEMPORISATION NEEDED ?
       Body.applyForce(this.main_body, this.main_body.position, Matter.Vector.neg(tiltForce));
       // DEBUG DISPLAY
       push();
-      text(this.main_body.angle % 2*PI, (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 3));
+      //text(this.main_body.angle % (2*PI), (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 3));
+      text("Positive angle", (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 3));
       translate(this.main_body.position.x, this.main_body.position.y);
       strokeWeight(4);
       stroke(255, 255, 255);
       line(0, 0, -tiltForce.x*2000, -tiltForce.y*2000);
       pop();
     }
-    if ((this.main_body.angle) % (2 * PI) <= -PI/5) {
+    if ((this.absoluteAngle) <= -PI/5) {
       Body.applyForce(this.main_body, this.main_body.position, tiltForce);
       // DEBUG DISPLAY
       push();
-      text(this.main_body.angle % 2*PI, (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 3));
+      //text(this.main_body.angle % (2*PI), (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 3));
+      text("Negative angle", (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 3));
       translate(this.main_body.position.x, this.main_body.position.y);
       strokeWeight(4);
       stroke(255, 255, 255);

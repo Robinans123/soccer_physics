@@ -1,3 +1,11 @@
+// ************************************************
+// Teugg Soccer Physics
+// Rip-off of the once popular Soccer Physics game
+// Horribly coded by : Kevin Le Teugg, 2020
+// File : main_debug.js
+// Description :
+// ************************************************
+
 function main_debug() {
 
   Engine.update(engine);
@@ -30,6 +38,91 @@ function main_debug() {
   /*player1_atk.showDebug();
   player2_def.showDebug();
   player2_atk.showDebug();*/
+
+
+
+  // GETTING THE ABSOLUTE ANGLE OF THE PLAYER (ANGLE BOUND BETWEEN -PI and PI) -> OK IT IS WORKING BUT CAN BE REFACTORED
+  // FIRST QUADRANT [0 ... +90°[
+  if (Math.sin(player1_def.main_body.angle) > 0 && Math.cos(player1_def.main_body.angle) > 0){
+    if (player1_def.main_body.angle >= 0){
+      player1_def.absoluteAngle = player1_def.main_body.angle % (2 * PI);
+    }
+    else {
+      player1_def.absoluteAngle = (2 * PI) + (player1_def.main_body.angle % (2 * PI));
+    }
+
+    // DEBUG DISPLAY
+    push();
+    fill(0);
+    textSize(20);
+    stroke(0, 0, 0);
+    text("1st quadrant - positive", (CANVAS_WIDTH / 2), CANVAS_HEIGHT / 2);
+    pop();
+  }
+  // SECOND QUADRANT ]0 ... -90°]
+  if (Math.sin(player1_def.main_body.angle) < 0 && Math.cos(player1_def.main_body.angle) > 0){
+    if (player1_def.main_body.angle < 0){
+      player1_def.absoluteAngle = player1_def.main_body.angle % (2 * PI);
+    }
+    else {
+      player1_def.absoluteAngle = (player1_def.main_body.angle % (2 * PI)) - (2 * PI);
+    }
+    // DEBUG DISPLAY
+    push();
+    fill(0);
+    textSize(20);
+    stroke(0, 0, 0);
+    text("2nd quadrant - negative", (CANVAS_WIDTH / 2), CANVAS_HEIGHT / 2);
+    pop();
+  }
+  // THIRD QUADRANT ]-90 ... -180°]
+  if (Math.sin(player1_def.main_body.angle) < 0 && Math.cos(player1_def.main_body.angle) < 0){
+    if (player1_def.main_body.angle <= 0){
+      player1_def.absoluteAngle = player1_def.main_body.angle % (2 * PI);
+    }
+    else {
+      player1_def.absoluteAngle = (player1_def.main_body.angle % (2 * PI)) - (2 * PI);
+    }
+    // DEBUG DISPLAY
+    push();
+    fill(0);
+    textSize(20);
+    stroke(0, 0, 0);
+    text("3rd quadrant - negative", (CANVAS_WIDTH / 2), CANVAS_HEIGHT / 2);
+    pop();
+  }
+  // FOURTH QUADRANT [+90 ... +180°[
+  if (Math.sin(player1_def.main_body.angle) > 0 && Math.cos(player1_def.main_body.angle) < 0){
+    if (player1_def.main_body.angle > 0){
+      player1_def.absoluteAngle = player1_def.main_body.angle % (2 * PI);
+    }
+    else {
+      player1_def.absoluteAngle = (2 * PI) + player1_def.main_body.angle % (2 * PI);
+    }
+    // DEBUG DISPLAY
+    push();
+    fill(0);
+    textSize(20);
+    stroke(0, 0, 0);
+    text("4th quadrant - positive", (CANVAS_WIDTH / 2), CANVAS_HEIGHT / 2);
+    pop();
+  }
+
+  // DEBUG DISPLAY
+  push();
+  fill(0);
+  textSize(20);
+  stroke(0, 0, 0);
+  text("Absolute angle : " + Math.floor(player1_def.absoluteAngle * 180 / PI) + "°", (CANVAS_WIDTH / 2), CANVAS_HEIGHT / 4);
+  pop();
+
+  push();
+  fill(0);
+  textSize(20);
+  stroke(255, 0, 0);
+  text("Body full angle : " + Math.floor(player1_def.main_body.angle * 180 / PI) + "°", (CANVAS_WIDTH / 2), CANVAS_HEIGHT / 4.5);
+  pop();
+  
 
   // TEST OF GETTING THE PLAYER 1 DEF UPRIGHT - WORKS PARTIALLY
   // TO DO : CREATE A VARYING FORCE (E.G. IT HAS TO BE STRONGER WHEN ANGLE OF PLAYER IS BIG) BUT IT MIGHT ALREADY BE THE CASE WHEN USING THE AXES ATTRIBUTE OF THE BODY

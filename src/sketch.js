@@ -1,3 +1,11 @@
+// ************************************************
+// Teugg Soccer Physics
+// Rip-off of the once popular Soccer Physics game
+// Horribly coded by : Kevin Le Teugg, 2020
+// File : sketch.js
+// Description :
+// ************************************************
+
 // Matter.js module aliases
 var Engine = Matter.Engine,
     World = Matter.World,
