@@ -1,8 +1,18 @@
+// ************************************************
+// Teugg Soccer Physics
+// Rip-off of the once popular Soccer Physics game
+// Horribly coded by : Kevin Le Teugg, 2020
+// File : game_score.js
+// Description : Game score class used for keeping track of the score
+// ************************************************
+
 function GameScore(ball, goal1, goal2) {
 
+  // ATTRIBUTES
   this.score1 = 0;
   this.score2 = 0;
 
+  // METHODS
   this.scoreCheck = function(ball, goal1, goal2) {
     if (ball.body.position.x >= CANVAS_WIDTH - goal2.w && ball.body.position.y >= CANVAS_HEIGHT - goal2.h) {
       this.score1 = this.score1 + 1;

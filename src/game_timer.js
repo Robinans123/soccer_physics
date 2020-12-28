@@ -1,3 +1,11 @@
+// ************************************************
+// Teugg Soccer Physics
+// Rip-off of the once popular Soccer Physics game
+// Horribly coded by : Kevin Le Teugg, 2020
+// File : game_timer.js
+// Description : Game timer class used for keeping track of the elapsed time in game
+// ************************************************
+
 function GameTimer() {
 
   this.timerTick = function() {

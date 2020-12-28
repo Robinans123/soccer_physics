@@ -1,3 +1,11 @@
+// ************************************************
+// Teugg Soccer Physics
+// Rip-off of the once popular Soccer Physics game
+// Horribly coded by : Kevin Le Teugg, 2020
+// File : ball.js
+// Description : Ball class
+// ************************************************
+
 function Ball(x, y, r) {
   // PHYSICS ENGINE OPTIONS
   var options = {
@@ -17,7 +25,7 @@ function Ball(x, y, r) {
   // Adding the body to the world
   World.add(world, this.body);
 
-  // RESET FUNCTION FOR WHEN SOMEONE SCORE, THE BALL IS PUT IN THE CENTER AGAIN
+  // RESET FUNCTION FOR WHEN SOMEONE SCORES, THE BALL IS PUT IN THE CENTER AGAIN
   this.reset_loc = function() {
     var rand_ball_x;
     var rand_ball_y;
@@ -50,7 +58,6 @@ function Ball(x, y, r) {
     image(spriteSoccerBall, -this.r, -this.r, 2 * this.r, 2 * this.r);
     stroke(0, 0, 0);
     fill(255);
-    //ellipse(0, 0, (this.r) * 2, (this.r) * 2); 
     pop();
   }
 }

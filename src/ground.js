@@ -1,3 +1,11 @@
+// ************************************************
+// Teugg Soccer Physics
+// Rip-off of the once popular Soccer Physics game
+// Horribly coded by : Kevin Le Teugg, 2020
+// File : ground.js
+// Description : Ground class used for defining the ground properties of the game
+// ************************************************
+
 function Ground(x, y, w, h, a) {
   this.x = x;
   this.y = y;

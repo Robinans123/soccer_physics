@@ -3,7 +3,7 @@
 // Rip-off of the once popular Soccer Physics game
 // Horribly coded by : Kevin Le Teugg, 2020
 // File : sketch.js
-// Description :
+// Description : Constants declaration, setup, animation loop and mouse / keys events
 // ************************************************
 
 // Matter.js module aliases
@@ -22,7 +22,7 @@ var ground;
 let CANVAS_WIDTH = 1400; // Default 1400
 let CANVAS_HEIGHT = 700; // Default 700
 
-
+// Menus states
 let menu = 0;
 
 // Elements dimensions
@@ -53,6 +53,10 @@ let kickForceCoeff = 0.03;
 
 // Coefficient that is applied to the jumpForce vector
 let jumpForceCoeff = 0.47; // 0.5 works
+
+// Sprites handles
+let background0;
+let spriteSoccerBall;
 
 // Create "structure that contains all arguments that can be passed to the player constructor"
 /*var player1DefOptions = {
@@ -89,15 +93,15 @@ let jumpForceCoeff = 0.47; // 0.5 works
     ballDensity: 0.00005,
   }*/
 
-let background0;
-let spriteSoccerBall;
+// Assets preload
 function preload() {
   background0 = loadImage('../assets/0_background.png');
   spriteSoccerBall = loadImage('../assets/sprite_soccer_ball.png');
 }
 
+// Entry point of code
 function setup() {
-  // CANVAS CREATION
+  // Canvas creation
   canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
   canvas.parent('sketch-holder');
 
@@ -145,11 +149,10 @@ function setup() {
   world.gravity.y = 1;
 }
 
+// P5.js animation loop
 function draw() {
-  // GAME LOOP
 
-  // MAIN MENU DRAWING
-  //background(50);
+  // Drawing main menu
   rectMode(CENTER);
   fill(0, 255, 40);
   rect((CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 3), 200, 75);
@@ -192,7 +195,6 @@ function mouseClicked() {
   }
 }
 
-// EVENTS
 function keyPressed() {
   if (keyCode == 65) {
     if (player1_def.isOnGround(ground)) {

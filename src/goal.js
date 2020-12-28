@@ -1,3 +1,11 @@
+// ************************************************
+// Teugg Soccer Physics
+// Rip-off of the once popular Soccer Physics game
+// Horribly coded by : Kevin Le Teugg, 2020
+// File : goal.js
+// Description : Goal class used to define the player one and two goals
+// ************************************************
+
 function Goal(x, y, w, h, t, s) {
   var options = {
     isStatic: true

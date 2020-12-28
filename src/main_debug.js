@@ -3,7 +3,7 @@
 // Rip-off of the once popular Soccer Physics game
 // Horribly coded by : Kevin Le Teugg, 2020
 // File : main_debug.js
-// Description :
+// Description : Main function used for debugging purposes
 // ************************************************
 
 function main_debug() {
@@ -12,13 +12,12 @@ function main_debug() {
   Engine.update(engine);
 
   // CANVAS BACKGROUND AND TEXT - OK
-  //background(0, 100, 255);
   image(background0, 0, 0);
   push();
   fill(0);
   textSize(20);
   stroke(0, 0, 0);
-  text('Press ESC key to return to menu', ((CANVAS_WIDTH  * 6) / 7), 30);
+  //text('Press ESC key to return to menu', ((CANVAS_WIDTH  * 6) / 7), 30);
   pop();
 
   // SCORE LOGIC - OK
