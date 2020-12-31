@@ -46,17 +46,22 @@ let t_elapsed_sec = 0;
 let t_elapsed_min = 0;
 
 // Coefficient that is applied to the tiltForce vector that is derived from the axes[1] vector of the player
-let tiltForceCoeff = 0.017;
+let tiltForceCoeff = 0.007;
 
 // Coefficient that is applied to the kickForce vector that is perpendicular to the movable leg of the players
-let kickForceCoeff = 0.03;
+let kickForceCoeff = 0.0018;
 
 // Coefficient that is applied to the jumpForce vector
-let jumpForceCoeff = 0.47; // 0.5 works
+let jumpForceCoeff = 0.55; // 0.5 works
 
 // Sprites handles
 let background0;
 let spriteSoccerBall;
+
+// Collision categories
+var generalCollCategory = 0x0001,
+    generalNoCollCategory = 0x0002,
+    groundCollCategory = 0x0004;
 
 // Create "structure that contains all arguments that can be passed to the player constructor"
 /*var player1DefOptions = {
@@ -113,23 +118,29 @@ function setup() {
 
   // Matter.js renderer creation - COMMENT FROM HERE...
 
-  /*var render = Render.create({
+  var render = Render.create({
       element: document.body,
       engine: engine,
       options: {
         width: CANVAS_WIDTH,
         height: CANVAS_HEIGHT,
         showAxes: true,
-        showConvexHulls: true
+        showConvexHulls: true,
+        showInternalEdges: true,
+        showVelocity: true,
+        showDebug: true,
+        showAngleIndicator: true
       }
   });
 
-  Render.run(render);*/
+  Render.run(render);
 
   // ... TO HERE TO GET RID OF THE RENDERER
 
   //Engine.run(engine);
   world = engine.world;
+
+
 
   // INSTANCIATIONS
   ground = new Ground(CANVAS_WIDTH / 2, (CANVAS_HEIGHT +  (ground_height / 2) - ground_offset), ground_width, ground_height, 0);
@@ -224,17 +235,21 @@ function keyPressed() {
 function keyReleased() {
   if (keyCode == 65) {
     player1_def.cstr_legs.stiffness = 0.06;
+    //player1_def.kick(-kickForceCoeff * 0.1);
   }
 
   if (keyCode == 68) {
     player1_atk.cstr_legs.stiffness = 0.06;
+    //player1_atk.kick(-kickForceCoeff * 0.1);
   }
 
   if (keyCode == RIGHT_ARROW) {
     player2_def.cstr_legs.stiffness = 0.06;
+    //player2_def.kick(-kickForceCoeff * 0.1);
   }
 
   if (keyCode == LEFT_ARROW) {
     player2_atk.cstr_legs.stiffness = 0.06;
+    //player2_atk.kick(-kickForceCoeff * 0.1);
   }
 }

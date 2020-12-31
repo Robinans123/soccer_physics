@@ -8,6 +8,10 @@
 
 function Goal(x, y, w, h, t, s) {
   var options = {
+    collisionFilter: {
+      category: generalCollCategory,
+      mask: generalCollCategory
+    },
     isStatic: true
   }
   // ATTRIBUTES

@@ -58,22 +58,22 @@ function main() {
 
   // GAME CONTROLS
   if (keyIsDown(65)) {
-    player1_def.cstr_legs.stiffness = 0.0001;      
-    player1_def.kick();
+    player1_def.cstr_legs.stiffness = 0.00001;      
+    player1_def.kick(kickForceCoeff);
   }
 
   if (keyIsDown(68)) {
-    player1_atk.cstr_legs.stiffness = 0.0001;      
-    player1_atk.kick();
+    player1_atk.cstr_legs.stiffness = 0.00001;      
+    player1_atk.kick(kickForceCoeff);
   }
 
   if (keyIsDown(RIGHT_ARROW)) {
-    player2_def.cstr_legs.stiffness = 0.0001;      
-    player2_def.kick();
+    player2_def.cstr_legs.stiffness = 0.00001;      
+    player2_def.kick(kickForceCoeff);
   }
 
   if (keyIsDown(LEFT_ARROW)){
-    player2_atk.cstr_legs.stiffness = 0.0001;      
-    player2_atk.kick();
+    player2_atk.cstr_legs.stiffness = 0.00001;      
+    player2_atk.kick(kickForceCoeff);
   }
 }

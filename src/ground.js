@@ -15,6 +15,10 @@ function Ground(x, y, w, h, a) {
     friction: 0.99,
     restitution: 0.8,
     isStatic: true,
+    collisionFilter: {
+      category: groundCollCategory,
+      mask: generalCollCategory | generalNoCollCategory
+    }
   }
   this.body = Bodies.rectangle(this.x, this.y, this.w, this.h, options);
   this.body.position.x = this.x;

@@ -19,10 +19,13 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
   this.leg_fixed_w = leg_w;
   this.leg_fixed_h = leg_h;
   this.foot_w = this.leg_w;
-  this.foot_h = this.leg_h / 5;
+  //this.foot_h = this.leg_h / 5;
+  this.foot_h = 8;
   this.leg_x = 0;
   this.leg_y = 0;
-  this.counterweight_w = this.leg_w + this.leg_fixed_w;
+  //this.counterweight_w = this.leg_fixed_w;
+  //this.counterweight_w = this.leg_fixed_w + this.leg_w;
+  this.counterweight_w = this.leg_fixed_w + this.leg_w + this.foot_w;
   this.counterweight_h = 4;
   this.absoluteAngle = 0;
 
@@ -35,37 +38,57 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     friction: 0.8,
     restitution: 0.1,
     angle: 0,
-    density: 0.001
+    density: 0.001,
+    collisionFilter: {
+      category: generalCollCategory,
+      mask: generalCollCategory | groundCollCategory
+    }
   }
 
   var leg_options = {
     friction: 0.8,
     restitution: 0.1,
     angle: 0,
-    density: 0.001
+    density: 0.00002,
+    collisionFilter: {
+      category: generalCollCategory,
+      mask: generalCollCategory | groundCollCategory
+    }
   }
 
   var leg_fixed_options = {
     friction: 0.8,
     restitution: 0.1,
     angle: 0,
-    density: 0.001
+    density: 0.001,
     //inertia: 0.0001,
     //inverseInertia: 1/0.0001,
+    collisionFilter: {
+      category: generalCollCategory,
+      mask: generalCollCategory | groundCollCategory
+    }
   }
 
   var foot_options = {
     friction: 0.8,
     restitution: 0.1,
     angle: 0,
-    density: 0.001
+    density: 0.00005,
+    collisionFilter: {
+      category: generalCollCategory,
+      mask: generalCollCategory | groundCollCategory
+    }
   }
 
   var counterweight_options = {
     friction: 0.99,
     restitution: 0.1,
     angle: 0,
-    density: 0.02
+    density: 0.02,
+    collisionFilter: {
+      category: generalNoCollCategory,
+      mask: groundCollCategory
+    }
   }
 
   // BODIES CREATION - MAIN BODY
@@ -119,7 +142,7 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
   // BODIES CREATION - COUNTERWEIGHT BODY (counterweight that will be put under the player)
   this.counterweight_x = this.leg_fixed_body.position.x + (this.leg_fixed_w / 2);
   this.counterweight_y = this.leg_fixed_body.position.y + (this.leg_fixed_h / 2) + (this.counterweight_h / 2);
-  // MAYBE MAKE THE COUNTERWEIGHT A LITTLE BIT WIDER, FOR NOW IT IS WIDTH OF LEG + WIDTH OF IFXED LEG
+  // MAYBE MAKE THE COUNTERWEIGHT A LITTLE BIT WIDER, FOR NOW IT IS WIDTH OF LEG + WIDTH OF FIXED LEG
   this.counterweight_body = Bodies.rectangle(this.counterweight_x, this.counterweight_y, this.counterweight_w, this.counterweight_h, counterweight_options);
   World.add(world, this.counterweight_body);
 
@@ -210,7 +233,7 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     bodyB: this.foot_body,
     pointA: this.cstr_foot_A,
     pointB: this.cstr_foot_B,
-    length: 1,
+    length: 0,
     stiffness: 0.99,
     damping: 0
   }
@@ -231,22 +254,21 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
   World.add(world, this.cstr_foot);
   World.add(world, this.cstr_foot2);
 
-  // NOT FINISHED
-  // CONSTRAINTS CREATION - CONSTRAINT BETWEEN LEG BODY AND FIXED LEG BODY (ON THEIR BOTTOM CORNERS)
-  /*if (this.s) {
-    this.cstr_legs_A = Matter.Vector.create(-(this.leg_w / 2) - 1, (this.leg_h / 2) + 1);
-    this.cstr_legs_B = Matter.Vector.create((this.leg_fixed_w / 2), (this.leg_fixed_h / 2));
+  // CONSTRAINTS CREATION - CONSTRAINT BETWEEN LEG BODY AND FIXED LEG BODY
+  if (this.s) {
+    this.cstr_legs_A = Matter.Vector.create(-(this.leg_w / 2) - 1, -(this.leg_h / 2) + 1);
+    this.cstr_legs_B = Matter.Vector.create((this.leg_fixed_w / 2), -(this.leg_fixed_h / 2));
   }
   else {
-    this.cstr_legs_A = Matter.Vector.create((this.leg_w / 2) + 1, (this.leg_h / 2) + 1);
-    this.cstr_legs_B = Matter.Vector.create(-(this.leg_fixed_w / 2), (this.leg_fixed_h / 2));
-  }*/
+    this.cstr_legs_A = Matter.Vector.create((this.leg_w / 2) + 1, -(this.leg_h / 2) + 1);
+    this.cstr_legs_B = Matter.Vector.create(-(this.leg_fixed_w / 2), -(this.leg_fixed_h / 2));
+  }
 
   // CONSTRAINTS CREATION - 2ND TRY WITH CONSTRAINT BETWEEN CENTER OF BOTH BODIES
-  this.cstr_legs_A = Matter.Vector.create(0, 0);
-  this.cstr_legs_B = Matter.Vector.create(0, 0);
+  /*this.cstr_legs_A = Matter.Vector.create(0, 0);
+  this.cstr_legs_B = Matter.Vector.create(0, 0);*/
 
-  this.cstrLegsLength = 4;
+  this.cstrLegsLength = 2;
 
   var cstr_legs_options = {
     bodyA: this.leg_body,
@@ -254,7 +276,7 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     pointA: this.cstr_legs_A,
     pointB: this.cstr_legs_B,
     length: this.cstrLegsLength, // Options to be tweaked
-    stiffness: 0.01, // Options to be tweaked
+    stiffness: 0.06, // Options to be tweaked
     damping: 0.01 // Options to be tweaked
   }
 
@@ -264,15 +286,15 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
 
   // CONSTRAINTS CREATION - CONSTRAINTS BETWEEN COUNTERWEIGHT BODY AND LEG FIXED BODY
   if (this.s) {
-    this.cstr_counterweight_A = Matter.Vector.create(-(this.leg_fixed_w / 2) - 1, (this.leg_fixed_h / 2) + 1);
+    this.cstr_counterweight_A = Matter.Vector.create(-(this.leg_fixed_w / 2), (this.leg_fixed_h / 2));
     this.cstr_counterweight_B = Matter.Vector.create(-(this.counterweight_w / 2), -(this.counterweight_h / 2));
-    this.cstr_counterweight2_A = Matter.Vector.create((this.leg_fixed_w / 2) + 1, (this.leg_fixed_h / 2) + 1);
+    this.cstr_counterweight2_A = Matter.Vector.create((this.leg_fixed_w / 2), (this.leg_fixed_h / 2));
     this.cstr_counterweight2_B = Matter.Vector.create(-(this.counterweight_w / 2) + this.leg_fixed_w, -(this.counterweight_h / 2));
   }
   else {
-    this.cstr_counterweight_A = Matter.Vector.create((this.leg_fixed_w / 2) + 1, (this.leg_fixed_h / 2) + 1);
+    this.cstr_counterweight_A = Matter.Vector.create((this.leg_fixed_w / 2), (this.leg_fixed_h / 2));
     this.cstr_counterweight_B = Matter.Vector.create((this.counterweight_w / 2), -(this.counterweight_h / 2));
-    this.cstr_counterweight2_A = Matter.Vector.create(-(this.leg_fixed_w / 2) - 1, (this.leg_fixed_h / 2) + 1);
+    this.cstr_counterweight2_A = Matter.Vector.create(-(this.leg_fixed_w / 2), (this.leg_fixed_h / 2));
     this.cstr_counterweight2_B = Matter.Vector.create((this.counterweight_w / 2) - this.leg_fixed_w, -(this.counterweight_h / 2));
   }
   
@@ -281,7 +303,7 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     bodyB: this.counterweight_body,
     pointA: this.cstr_counterweight_A,
     pointB: this.cstr_counterweight_B,
-    length: 1,
+    length: 0,
     stiffness: 0.99,
     damping: 0
   }
@@ -291,7 +313,7 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     bodyB: this.counterweight_body,
     pointA: this.cstr_counterweight2_A,
     pointB: this.cstr_counterweight2_B,
-    length: 1,
+    length: 0,
     stiffness: 0.99,
     damping: 0
   }
@@ -312,18 +334,24 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     Body.applyForce(this.main_body, this.main_body.position, jumpForceTest);
   }
 
-  // Kick function - WORKING MORE OR LESS
-  this.kick = function() {
+  // Kick function - WORKING MORE OR LESS - CAN BE REFACTORED
+  this.kick = function(coeff) {
     if (this.s) {
-      var kickForce = Matter.Vector.create(this.main_body.axes[1].x * -kickForceCoeff, this.main_body.axes[1].y * -kickForceCoeff);
-      if (this.main_body.angle - this.leg_body.angle <= PI/2) {
+      var kickForce = Matter.Vector.create(this.main_body.axes[1].x * -coeff, this.main_body.axes[1].y * -coeff);
+      if (this.absoluteAngle + this.leg_body.angle <= PI/2) {
         Body.applyForce(this.leg_body, this.leg_body.position, kickForce);
+      }
+      else {
+        Body.setAngle(this.leg_body, this.absoluteAngle);
       }
     }
     else {
-      var kickForce = Matter.Vector.create(-this.main_body.axes[1].x * -kickForceCoeff, -this.main_body.axes[1].y * -kickForceCoeff);
-      if (this.leg_body.angle - this.main_body.angle <= PI/2) {
+      var kickForce = Matter.Vector.create(-this.main_body.axes[1].x * -coeff, -this.main_body.axes[1].y * -coeff);
+      if (this.absoluteAngle - this.leg_body.angle <= PI/2) {
         Body.applyForce(this.leg_body, this.leg_body.position, kickForce);
+      }
+      else {
+        Body.setAngle(this.leg_body, this.absoluteAngle);
       }
     }
   }
@@ -491,6 +519,16 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     translate(this.foot_body.position.x, this.foot_body.position.y);
     rotate(this.foot_body.angle);
     rect(0, 0, this.foot_w, this.foot_h);
+    pop();
+
+    // DRAWING COUNTERWIEGHT
+    push();
+    fill(255, 0, 0);
+    rectMode(CENTER);
+    angleMode(RADIANS);
+    translate(this.counterweight_body.position.x, this.counterweight_body.position.y);
+    rotate(this.counterweight_body.angle);
+    rect(0, 0, this.counterweight_w, this.counterweight_h);
     pop();
 
     /*// DRAWING AXES OF THE MAIN BODY
