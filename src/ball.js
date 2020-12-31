@@ -9,9 +9,13 @@
 function Ball(x, y, r) {
   // PHYSICS ENGINE OPTIONS
   var options = {
-    friction: 0.01,
+    friction: 0.006,
     restitution: 0.89,
-    density: 0.00005
+    density: 0.00005,
+    collisionFilter: {
+      category: generalCollCategory,
+      mask: generalCollCategory | groundCollCategory
+    }
   }
 
   // ATTRIBUTES
