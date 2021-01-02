@@ -33,54 +33,54 @@ function main_debug() {
   ground.show();
   goal1.show();
   goal2.show();
-  player1_def.show();
-  player1_atk.show();
-  player2_def.show();
-  player2_atk.show();
+  player1Def.show();
+  player1Atk.show();
+  player2Def.show();
+  player2Atk.show();
 
   // SHOW DEBUG GRAPHICS - OK
-  player1_def.showDebug();
-  player1_atk.showDebug();
-  player2_def.showDebug();
-  player2_atk.showDebug();
+  player1Def.showDebug();
+  player1Atk.showDebug();
+  player2Def.showDebug();
+  player2Atk.showDebug();
 
   // KEEP PLAYERS UPRIGHT - ALMOST OK
-  if (player1_def.isOnGround(ground)){
-    player1_def.updateAbsoluteAngle();
-    player1_def.uprightTilt();
+  if (player1Def.isOnGround(ground)){
+    player1Def.updateAbsoluteAngle();
+    player1Def.uprightTilt();
   }
-  if (player1_atk.isOnGround(ground)){
-    player1_atk.updateAbsoluteAngle();
-    player1_atk.uprightTilt();
+  if (player1Atk.isOnGround(ground)){
+    player1Atk.updateAbsoluteAngle();
+    player1Atk.uprightTilt();
   }
-  if (player2_def.isOnGround(ground)){
-    player2_def.updateAbsoluteAngle();
-    player2_def.uprightTilt();
+  if (player2Def.isOnGround(ground)){
+    player2Def.updateAbsoluteAngle();
+    player2Def.uprightTilt();
   }
-  if (player2_atk.isOnGround(ground)){
-    player2_atk.updateAbsoluteAngle();
-    player2_atk.uprightTilt();
+  if (player2Atk.isOnGround(ground)){
+    player2Atk.updateAbsoluteAngle();
+    player2Atk.uprightTilt();
   }
 
   // GAME CONTROLS - OK
   if (keyIsDown(65)) {
-    player1_def.cstr_legs.stiffness = 0.00001;      
-    player1_def.kick(kickForceCoeff); 
+    player1Def.cstr_legs.stiffness = 0.00001;      
+    player1Def.kick(kickForceCoeff); 
   }
 
   if (keyIsDown(68)) {
-    player1_atk.cstr_legs.stiffness = 0.00001;      
-    player1_atk.kick(kickForceCoeff);
+    player1Atk.cstr_legs.stiffness = 0.00001;      
+    player1Atk.kick(kickForceCoeff);
   }
 
   if (keyIsDown(RIGHT_ARROW)) {
-    player2_def.cstr_legs.stiffness = 0.00001;      
-    player2_def.kick(kickForceCoeff);
+    player2Def.cstr_legs.stiffness = 0.00001;      
+    player2Def.kick(kickForceCoeff);
   }
 
   if (keyIsDown(LEFT_ARROW)){
-    player2_atk.cstr_legs.stiffness = 0.00001;      
-    player2_atk.kick(kickForceCoeff);
+    player2Atk.cstr_legs.stiffness = 0.00001;      
+    player2Atk.kick(kickForceCoeff);
   }
 
   // ********************************************************************************************************************************
@@ -90,9 +90,9 @@ function main_debug() {
   // DEBUG --------------------------------------------------------------------------------------------------------------------------
 
   // DEBUG DATA TO BE DISPLAYED ON THE HTML PAGE
-  document.getElementById("playerMainBodyDensity").innerHTML = player1_def.main_body.density;
-  document.getElementById("playerMovableLegDensity").innerHTML = player1_def.leg_body.density;
-  document.getElementById("playerFixedLegDensity").innerHTML = player1_def.leg_fixed_body.density;
-  document.getElementById("playerFootDensity").innerHTML = player1_def.foot_body.density;
+  document.getElementById("playerMainBodyDensity").innerHTML = player1Def.main_body.density;
+  document.getElementById("playerMovableLegDensity").innerHTML = player1Def.leg_body.density;
+  document.getElementById("playerFixedLegDensity").innerHTML = player1Def.leg_fixed_body.density;
+  document.getElementById("playerFootDensity").innerHTML = player1Def.foot_body.density;
   document.getElementById("gravity").innerHTML = world.gravity.y;
 }

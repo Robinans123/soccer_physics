@@ -444,7 +444,8 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     rotate(this.main_body.angle);
     stroke(0);
     fill(255);
-    rect(0, 0, this.main_w, this.main_h);
+    image(spritePlayerMainBody0, -this.main_w / 2, -this.main_h / 2,  this.main_w, this.main_h);
+    //rect(0, 0, this.main_w, this.main_h);
     pop();
     
     // DRAWING LEG
@@ -455,6 +456,7 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     rotate(this.leg_body.angle);
     fill(255);
     rect(0, 0, this.leg_w, this.leg_h);
+    image(spritePlayerLeg0, -this.leg_w / 2, -this.leg_h / 2,  this.leg_w, this.leg_h);
     pop();
 
     // DRAWING FIXED LEG
@@ -464,7 +466,8 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     translate(this.leg_fixed_body.position.x, this.leg_fixed_body.position.y);
     rotate(this.leg_fixed_body.angle);
     fill(255);
-    rect(0, 0, this.leg_fixed_w, this.leg_fixed_h);
+    //rect(0, 0, this.leg_fixed_w, this.leg_fixed_h);
+    image(spritePlayerLeg0, -this.leg_fixed_w / 2, -this.leg_fixed_h / 2,  this.leg_fixed_w, this.leg_fixed_h);
     pop();
 
     // DRAWING FOOT

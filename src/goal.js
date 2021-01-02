@@ -14,6 +14,7 @@ function Goal(x, y, w, h, t, s) {
     },
     isStatic: true
   }
+
   // ATTRIBUTES
   this.x = x;
   this.y = y;
@@ -23,10 +24,6 @@ function Goal(x, y, w, h, t, s) {
   this.s = s;
   this.top_x = x; // X-location of the top bar of the goal
   this.top_y = CANVAS_HEIGHT - h; // Y-location of the top bar of the goal
-
-
-  
-
 
   // X-location of the side bar (depends if it is goal 1 or goal 2)
   if (s == true) {

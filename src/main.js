@@ -33,47 +33,47 @@ function main() {
   ground.show();
   goal1.show();
   goal2.show();
-	player1_def.show();
-  player1_atk.show();
-  player2_def.show();
-	player2_atk.show();
+	player1Def.show();
+  player1Atk.show();
+  player2Def.show();
+	player2Atk.show();
 
   // KEEP PLAYERS UPRIGHT
-  if (player1_def.isOnGround(ground)){
-    player1_def.updateAbsoluteAngle();
-    player1_def.uprightTilt();
+  if (player1Def.isOnGround(ground)){
+    player1Def.updateAbsoluteAngle();
+    player1Def.uprightTilt();
   }
-  if (player1_atk.isOnGround(ground)){
-    player1_atk.updateAbsoluteAngle();
-    player1_atk.uprightTilt();
+  if (player1Atk.isOnGround(ground)){
+    player1Atk.updateAbsoluteAngle();
+    player1Atk.uprightTilt();
   }
-  if (player2_def.isOnGround(ground)){
-    player2_def.updateAbsoluteAngle();
-    player2_def.uprightTilt();
+  if (player2Def.isOnGround(ground)){
+    player2Def.updateAbsoluteAngle();
+    player2Def.uprightTilt();
   }
-  if (player2_atk.isOnGround(ground)){
-    player2_atk.updateAbsoluteAngle();
-    player2_atk.uprightTilt();
+  if (player2Atk.isOnGround(ground)){
+    player2Atk.updateAbsoluteAngle();
+    player2Atk.uprightTilt();
   }
 
   // GAME CONTROLS
   if (keyIsDown(65)) {
-    player1_def.cstr_legs.stiffness = 0.00001;      
-    player1_def.kick(kickForceCoeff);
+    player1Def.cstr_legs.stiffness = 0.00001;      
+    player1Def.kick(kickForceCoeff);
   }
 
   if (keyIsDown(68)) {
-    player1_atk.cstr_legs.stiffness = 0.00001;      
-    player1_atk.kick(kickForceCoeff);
+    player1Atk.cstr_legs.stiffness = 0.00001;      
+    player1Atk.kick(kickForceCoeff);
   }
 
   if (keyIsDown(RIGHT_ARROW)) {
-    player2_def.cstr_legs.stiffness = 0.00001;      
-    player2_def.kick(kickForceCoeff);
+    player2Def.cstr_legs.stiffness = 0.00001;      
+    player2Def.kick(kickForceCoeff);
   }
 
   if (keyIsDown(LEFT_ARROW)){
-    player2_atk.cstr_legs.stiffness = 0.00001;      
-    player2_atk.kick(kickForceCoeff);
+    player2Atk.cstr_legs.stiffness = 0.00001;      
+    player2Atk.kick(kickForceCoeff);
   }
 }

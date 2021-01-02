@@ -18,32 +18,47 @@ var engine;
 var world;
 var ground;
 
+// CONSTANTS
 // Canvas dimensions
 let CANVAS_WIDTH = 1400; // Default 1400
 let CANVAS_HEIGHT = 700; // Default 700
 
+// Collision categories
+var generalCollCategory = 0x0001,
+    generalNoCollCategory = 0x0002,
+    groundCollCategory = 0x0004;
+
+// INITIALIZATION VARIABLES
 // Menus states
 let menu = 0;
 
 // Elements dimensions
-let ball_diameter = 25;
-let goal_width = 150;
-let goal_height = 400;
-let player_width = 50; // default : 60
-let player_height = 90; // default : 170
-let player_leg_width = player_width / 2;
-let player_leg_height = (player_height * 2) / 3;
-let ground_width = CANVAS_WIDTH;
-let ground_height = 100;
-let ground_offset = 6;
-let ground_x = CANVAS_WIDTH / 2;
-let ground_y = CANVAS_HEIGHT - ground_height / 2;
+let ballRadius = 25;
+let goalWidth = 150;
+let goalHeight = 400;
+let playerWidth = 50; // default : 60
+let playerHeight = 90; // default : 170
+let playerLegWidth = playerWidth / 2;
+let playerLegHeight = (playerHeight * 2) / 3;
+let player1DefStartPosX = 0;
+let player1DefStartPosY = 0;
+let player1AtkStartPosX = 0;
+let player1AtkStartPosY = 0;
+let player2DefStartPosX = 0;
+let player2DefStartPosY = 0;
+let player2AtkStartPosX = 0;
+let player2AtkStartPosY = 0;
+let groundWidth = CANVAS_WIDTH;
+let groundHeight = 100;
+let groundOffset = 6;
+let groundX = CANVAS_WIDTH / 2;
+let groundY = CANVAS_HEIGHT - groundHeight / 2;
 
 // Score and timer initialisation
 let score1 = 0;
 let score2 = 0;
-let t_elapsed_sec = 0;
-let t_elapsed_min = 0;
+let elapsedTimeSec = 0;
+let elapsedTimeMin = 0;
 
 // Coefficient that is applied to the tiltForce vector that is derived from the axes[1] vector of the player
 let tiltForceCoeff = 0.007;
@@ -57,20 +72,16 @@ let jumpForceCoeff = 0.55; // 0.5 works
 // Sprites handles
 let background0;
 let spriteSoccerBall;
-
-// Collision categories
-var generalCollCategory = 0x0001,
-    generalNoCollCategory = 0x0002,
-    groundCollCategory = 0x0004;
+let spritePlayerMainBody0;
 
 // Create "structure that contains all arguments that can be passed to the player constructor"
 /*var player1DefOptions = {
     playerXLocation: 300,
     playerYLocation: 300,
-    playerWidth: player_width,
-    playerHeight: player_height,
-    playerLegWidth: player_leg_width,
-    playerLegHeight: player_leg_height,
+    playerWidth: playerWidth,
+    playerHeight: playerHeight,
+    playerLegWidth: playerLegWidth,
+    playerLegHeight: playerLegHeight,
     playerSide: true,
     playerFriction: 0.8,
     playerRestitution: 0.1,
@@ -102,6 +113,8 @@ var generalCollCategory = 0x0001,
 function preload() {
   background0 = loadImage('../assets/0_background.png');
   spriteSoccerBall = loadImage('../assets/sprite_soccer_ball.png');
+  spritePlayerMainBody0 = loadImage('../assets/sprite_player_main_body0.png');
+  spritePlayerLeg0 = loadImage('../assets/sprite_player_leg0.png');
 }
 
 // Entry point of code
@@ -117,8 +130,7 @@ function setup() {
   engine = Engine.create();
 
   // Matter.js renderer creation - COMMENT FROM HERE...
-
-  var render = Render.create({
+  /*var render = Render.create({
       element: document.body,
       engine: engine,
       options: {
@@ -133,34 +145,31 @@ function setup() {
       }
   });
 
-  Render.run(render);
-
+  Render.run(render);*/
   // ... TO HERE TO GET RID OF THE RENDERER
 
   //Engine.run(engine);
   world = engine.world;
 
-
-
   // INSTANCIATIONS
-  ground = new Ground(CANVAS_WIDTH / 2, (CANVAS_HEIGHT +  (ground_height / 2) - ground_offset), ground_width, ground_height, 0);
-  ball = new Ball((CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 4), ball_diameter);
+  ground = new Ground(CANVAS_WIDTH / 2, (CANVAS_HEIGHT +  (groundHeight / 2) - groundOffset), groundWidth, groundHeight, 0);
+  ball = new Ball((CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 4), ballRadius);
 
-  player1_def = new Player(300, 300, player_width, player_height, player_leg_width, player_leg_height, true);
-  player1_atk = new Player(600, 600, player_width, player_height, player_leg_width, player_leg_height, true);
-  goal1 = new Goal((goal_width / 2), (CANVAS_HEIGHT - (goal_height / 2)), goal_width, goal_height, 10, true);
+  player1Def = new Player(300, 300, playerWidth, playerHeight, playerLegWidth, playerLegHeight, true);
+  player1Atk = new Player(600, 600, playerWidth, playerHeight, playerLegWidth, playerLegHeight, true);
+  goal1 = new Goal((goalWidth / 2), (CANVAS_HEIGHT - (goalHeight / 2)), goalWidth, goalHeight, 10, true);
 
-  player2_atk = new Player(900, 600, player_width, player_height, player_leg_width, player_leg_height, false);
-  player2_def = new Player(1200, 600, player_width, player_height, player_leg_width, player_leg_height, false);
-  goal2 = new Goal((CANVAS_WIDTH - (goal_width / 2)), (CANVAS_HEIGHT - (goal_height / 2)), goal_width, goal_height, 10, false);
+  player2Atk = new Player(900, 600, playerWidth, playerHeight, playerLegWidth, playerLegHeight, false);
+  player2Def = new Player(1200, 600, playerWidth, playerHeight, playerLegWidth, playerLegHeight, false);
+  goal2 = new Goal((CANVAS_WIDTH - (goalWidth / 2)), (CANVAS_HEIGHT - (goalHeight / 2)), goalWidth, goalHeight, 10, false);
 
-  gameTimer = new GameTimer();
+  gameTimer = new GameTimer(elapsedTimeSec, elapsedTimeMin);
   gameScore = new GameScore();
 
   world.gravity.y = 1;
 }
 
-// P5.js animation loop
+// p5.js animation loop
 function draw() {
 
   // Drawing main menu
@@ -168,12 +177,12 @@ function draw() {
   fill(0, 255, 40);
   rect((CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 3), 200, 75);
   fill(0, 100, 255);
-  rect((CANVAS_WIDTH /2), ((CANVAS_HEIGHT / 3) * 2), 200, 75);
+  rect((CANVAS_WIDTH / 2), ((CANVAS_HEIGHT / 3) * 2), 200, 75);
   textSize(50)
   fill(255);
   textAlign(CENTER, CENTER);
   text('START', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 3));
-  text('DEBUG', (CANVAS_WIDTH /2), ((CANVAS_HEIGHT / 3) * 2));
+  text('DEBUG', (CANVAS_WIDTH / 2), ((CANVAS_HEIGHT / 3) * 2));
 
   // START GAME - PUT GAME CODE HERE
   if (menu == 1) {
@@ -208,48 +217,48 @@ function mouseClicked() {
 
 function keyPressed() {
   if (keyCode == 65) {
-    if (player1_def.isOnGround(ground)) {
-      player1_def.jump();
+    if (player1Def.isOnGround(ground)) {
+      player1Def.jump();
     }
   }
 
   if (keyCode == 68) {
-    if (player1_atk.isOnGround(ground)) {
-      player1_atk.jump();
+    if (player1Atk.isOnGround(ground)) {
+      player1Atk.jump();
     } 
   }
 
   if (keyCode == RIGHT_ARROW) {
-    if (player2_def.isOnGround(ground)) {
-      player2_def.jump();
+    if (player2Def.isOnGround(ground)) {
+      player2Def.jump();
     }
   }
 
   if (keyCode == LEFT_ARROW) {
-    if (player2_atk.isOnGround(ground)) {
-      player2_atk.jump();
+    if (player2Atk.isOnGround(ground)) {
+      player2Atk.jump();
     }
   }
 }
 
 function keyReleased() {
   if (keyCode == 65) {
-    player1_def.cstr_legs.stiffness = 0.06;
-    //player1_def.kick(-kickForceCoeff * 0.1);
+    player1Def.cstr_legs.stiffness = 0.06;
+    //player1Def.kick(-kickForceCoeff * 0.1);
   }
 
   if (keyCode == 68) {
-    player1_atk.cstr_legs.stiffness = 0.06;
-    //player1_atk.kick(-kickForceCoeff * 0.1);
+    player1Atk.cstr_legs.stiffness = 0.06;
+    //player1Atk.kick(-kickForceCoeff * 0.1);
   }
 
   if (keyCode == RIGHT_ARROW) {
-    player2_def.cstr_legs.stiffness = 0.06;
-    //player2_def.kick(-kickForceCoeff * 0.1);
+    player2Def.cstr_legs.stiffness = 0.06;
+    //player2Def.kick(-kickForceCoeff * 0.1);
   }
 
   if (keyCode == LEFT_ARROW) {
-    player2_atk.cstr_legs.stiffness = 0.06;
-    //player2_atk.kick(-kickForceCoeff * 0.1);
+    player2Atk.cstr_legs.stiffness = 0.06;
+    //player2Atk.kick(-kickForceCoeff * 0.1);
   }
 }
