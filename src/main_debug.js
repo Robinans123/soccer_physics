@@ -12,7 +12,7 @@ function main_debug() {
   Engine.update(engine);
 
   // CANVAS BACKGROUND AND TEXT - OK
-  image(background0, 0, 0);
+  image(background0, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   push();
   fill(0);
   textSize(20);

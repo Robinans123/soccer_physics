@@ -3,7 +3,7 @@
 // Rip-off of the once popular Soccer Physics game
 // Horribly coded by : Kevin Le Teugg, 2020
 // File : sketch.js
-// Description : Constants declaration, setup, animation loop and mouse / keys events
+// Description : Constants declaration, variables initialization, setup, animation loop and mouse / keys events
 // ************************************************
 
 // Matter.js module aliases
@@ -20,36 +20,37 @@ var ground;
 
 // CONSTANTS
 // Canvas dimensions
-let CANVAS_WIDTH = 1400; // Default 1400
-let CANVAS_HEIGHT = 700; // Default 700
+let CANVAS_WIDTH = 1280; // Default 1400
+let CANVAS_HEIGHT = 720; // Default 700
 
 // Collision categories
-var generalCollCategory = 0x0001,
-    generalNoCollCategory = 0x0002,
-    groundCollCategory = 0x0004;
+var generalCollCategory = 0x0001, // Used for all parts of player except counterweight, ball and goal
+    generalNoCollCategory = 0x0002, // Used only for the counterweight of players
+    groundCollCategory = 0x0004; // Used for ground
 
 // INITIALIZATION VARIABLES
 // Menus states
 let menu = 0;
 
 // Elements dimensions
-let ballRadius = 25;
-let goalWidth = 150;
-let goalHeight = 400;
-let playerWidth = 50; // default : 60
-let playerHeight = 90; // default : 170
+let ballRadius = 25; // TO BE RECALCULATED
+let goalWidth = CANVAS_WIDTH / 9.333; // Default : 150
+let goalHeight = CANVAS_HEIGHT / 1.75; // Default : 400
+let goalStartPosX = 0; // TO DO
+let playerWidth = CANVAS_WIDTH / 28; // Default : 50
+let playerHeight = CANVAS_HEIGHT / 7.778; // Default : 90
 let playerLegWidth = playerWidth / 2;
 let playerLegHeight = (playerHeight * 2) / 3;
-let player1DefStartPosX = 0;
-let player1DefStartPosY = 0;
-let player1AtkStartPosX = 0;
-let player1AtkStartPosY = 0;
-let player2DefStartPosX = 0;
-let player2DefStartPosY = 0;
-let player2AtkStartPosX = 0;
-let player2AtkStartPosY = 0;
+let player1DefStartPosX = CANVAS_WIDTH / 4.667;
+let player1DefStartPosY = CANVAS_HEIGHT / 1.167;
+let player1AtkStartPosX = CANVAS_WIDTH / 2.333;
+let player1AtkStartPosY = CANVAS_HEIGHT / 1.167;
+let player2DefStartPosX = CANVAS_WIDTH / 1.167;
+let player2DefStartPosY = CANVAS_HEIGHT / 1.167;
+let player2AtkStartPosX = CANVAS_WIDTH / 1.555;
+let player2AtkStartPosY = CANVAS_HEIGHT / 1.167;
 let groundWidth = CANVAS_WIDTH;
-let groundHeight = 100;
+let groundHeight = 100; // Has to be a big arbitrary number because of the unknown surrounding the inner computing time of the Matter.js engine
 let groundOffset = 6;
 let groundX = CANVAS_WIDTH / 2;
 let groundY = CANVAS_HEIGHT - groundHeight / 2;
@@ -124,7 +125,7 @@ function setup() {
   canvas.parent('sketch-holder');
 
   // Draw background
-  image(background0, 0, 0);
+  image(background0, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
   // Matter.js engine creation
   engine = Engine.create();
@@ -155,12 +156,12 @@ function setup() {
   ground = new Ground(CANVAS_WIDTH / 2, (CANVAS_HEIGHT +  (groundHeight / 2) - groundOffset), groundWidth, groundHeight, 0);
   ball = new Ball((CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 4), ballRadius);
 
-  player1Def = new Player(300, 300, playerWidth, playerHeight, playerLegWidth, playerLegHeight, true);
-  player1Atk = new Player(600, 600, playerWidth, playerHeight, playerLegWidth, playerLegHeight, true);
+  player1Def = new Player(player1DefStartPosX, player1DefStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, true);
+  player1Atk = new Player(player1AtkStartPosX, player1AtkStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, true);
   goal1 = new Goal((goalWidth / 2), (CANVAS_HEIGHT - (goalHeight / 2)), goalWidth, goalHeight, 10, true);
 
-  player2Atk = new Player(900, 600, playerWidth, playerHeight, playerLegWidth, playerLegHeight, false);
-  player2Def = new Player(1200, 600, playerWidth, playerHeight, playerLegWidth, playerLegHeight, false);
+  player2Atk = new Player(player2AtkStartPosX, player2AtkStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, false);
+  player2Def = new Player(player2DefStartPosX, player2DefStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, false);
   goal2 = new Goal((CANVAS_WIDTH - (goalWidth / 2)), (CANVAS_HEIGHT - (goalHeight / 2)), goalWidth, goalHeight, 10, false);
 
   gameTimer = new GameTimer(elapsedTimeSec, elapsedTimeMin);

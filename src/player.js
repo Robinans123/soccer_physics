@@ -3,7 +3,7 @@
 // Rip-off of the once popular Soccer Physics game
 // Horribly coded by : Kevin Le Teugg, 2020
 // File : player.js
-// Description :
+// Description : Player class
 // ************************************************
 
 function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
@@ -19,12 +19,9 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
   this.leg_fixed_w = leg_w;
   this.leg_fixed_h = leg_h;
   this.foot_w = this.leg_w;
-  //this.foot_h = this.leg_h / 5;
-  this.foot_h = 8;
+  this.foot_h = 8; // TO BE TUNED
   this.leg_x = 0;
   this.leg_y = 0;
-  //this.counterweight_w = this.leg_fixed_w;
-  //this.counterweight_w = this.leg_fixed_w + this.leg_w;
   this.counterweight_w = this.leg_fixed_w + this.leg_w + this.foot_w;
   this.counterweight_h = 4;
   this.absoluteAngle = 0;
