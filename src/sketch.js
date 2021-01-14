@@ -41,14 +41,14 @@ let playerWidth = CANVAS_WIDTH / 28; // Default : 50
 let playerHeight = CANVAS_HEIGHT / 7.778; // Default : 90
 let playerLegWidth = playerWidth / 2;
 let playerLegHeight = (playerHeight * 2) / 3;
-let player1DefStartPosX = CANVAS_WIDTH / 4.667;
-let player1DefStartPosY = CANVAS_HEIGHT / 1.167;
-let player1AtkStartPosX = CANVAS_WIDTH / 2.333;
-let player1AtkStartPosY = CANVAS_HEIGHT / 1.167;
-let player2DefStartPosX = CANVAS_WIDTH / 1.167;
-let player2DefStartPosY = CANVAS_HEIGHT / 1.167;
-let player2AtkStartPosX = CANVAS_WIDTH / 1.555;
-let player2AtkStartPosY = CANVAS_HEIGHT / 1.167;
+let player1DefStartPosX = CANVAS_WIDTH * 0.214;
+let player1DefStartPosY = CANVAS_HEIGHT * 6 / 7;
+let player1AtkStartPosX = CANVAS_WIDTH * 0.429;
+let player1AtkStartPosY = CANVAS_HEIGHT * 6 / 7;
+let player2DefStartPosX = CANVAS_WIDTH * 0.768;
+let player2DefStartPosY = CANVAS_HEIGHT * 6 / 7;
+let player2AtkStartPosX = CANVAS_WIDTH * 0.571;
+let player2AtkStartPosY = CANVAS_HEIGHT * 6 / 7;
 let groundWidth = CANVAS_WIDTH;
 let groundHeight = 100; // Has to be a big arbitrary number because of the unknown surrounding the inner computing time of the Matter.js engine
 let groundOffset = 6;
@@ -131,7 +131,7 @@ function setup() {
   engine = Engine.create();
 
   // Matter.js renderer creation - COMMENT FROM HERE...
-  /*var render = Render.create({
+  var render = Render.create({
       element: document.body,
       engine: engine,
       options: {
@@ -146,7 +146,7 @@ function setup() {
       }
   });
 
-  Render.run(render);*/
+  Render.run(render);
   // ... TO HERE TO GET RID OF THE RENDERER
 
   //Engine.run(engine);

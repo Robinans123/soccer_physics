@@ -431,6 +431,15 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     }
   }
 
+  // Reset location
+  /*this.resetLocation = function(x, y) {
+    // ALL PARTS OF THE PLAYER MUST BE RESETTED....
+    Matter.Body.setPosition(this.main_body, {x,y});
+    Matter.Body.setAngle(this.main_body, 0);
+    Matter.Body.setAngularVelocity(this.main_body, 0);
+    Matter.Body.setVelocity(this.main_body, {x:0, y:0});
+  }*/
+
   // Graphics function - OK
   this.show = function() {
     // DRAWING MAIN BODY
