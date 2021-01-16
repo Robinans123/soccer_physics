@@ -77,6 +77,11 @@ let background0;
 let spriteSoccerBall;
 let spritePlayerMainBody0;
 
+// Used for the temporisation of the game AI
+var randTimingAI = 0;
+var previousTimingAI = 0;
+var choosePlayerAI = 0;
+
 // Create "structure that contains all arguments that can be passed to the player constructor"
 /*var player1DefOptions = {
     playerXLocation: 300,
@@ -172,6 +177,8 @@ function setup() {
   gameScore = new GameScore();
 
   world.gravity.y = 1;
+  randTimingAI = random(30, 140);
+  choosePlayerAI = random(0.0, 1.0);
 }
 
 // p5.js animation loop
@@ -206,8 +213,13 @@ function draw() {
     }
   }
 
-  // 1 PLAYER - LOCAL
+  // 1 PLAYER - LOCAL |LEFT
   if (menu == 4) {
+    main();
+  }
+
+  // 1 PLAYER - LOCAL | RIGHT
+  if (menu == 5) {
     gameMenus.draw(menu);
   }
 }	

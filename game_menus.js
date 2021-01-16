@@ -9,7 +9,8 @@
 function GameMenus() {
 
   this.draw = function(menu) {
-    // Drawing main menu
+    
+    // MAIN MENU
     if (menu == 0) {
       image(background0, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       rectMode(CENTER);
@@ -45,11 +46,27 @@ function GameMenus() {
       text('RIGHT', (CANVAS_WIDTH * 2 / 3), (CANVAS_HEIGHT / 2));
     }
 
+    // 2 PLAYERS - LOCAL
     if (menu == 2) {
 
     }
 
-    if (menu == 3 || menu == 4) {
+    // 2 PLAYERS - ONLINE
+    if (menu == 3) {
+      image(background0, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      textAlign(CENTER, CENTER);
+      textSize(60);
+      fill(200, 220, 30);
+      text('UNDER CONSTRUCTION', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2));
+    }
+
+    // 1 PLAYER - LOCAL | LEFT
+    if (menu == 4) {
+
+    }
+
+    // 1 PLAYER - LOCAL | RIGHT
+    if (menu == 5) {
       image(background0, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       textAlign(CENTER, CENTER);
       textSize(60);
@@ -78,7 +95,7 @@ function GameMenus() {
           menu = 4;
         }
         if (mouseX < (CANVAS_WIDTH * 2 / 3) + (menuButtonWidth / 2) && mouseX > (CANVAS_WIDTH * 2 / 3) - (menuButtonWidth / 2)) {
-          menu = 4;
+          menu = 5;
         }
       }
     }

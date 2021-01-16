@@ -38,6 +38,10 @@ function main() {
   player2Def.show();
 	player2Atk.show();
 
+  if (menu == 4) {
+    singlePlayerAI();
+  }
+  
   // KEEP PLAYERS UPRIGHT
   if (player1Def.isOnGround(ground)){
     player1Def.updateAbsoluteAngle();
