@@ -131,7 +131,7 @@ function setup() {
   engine = Engine.create();
 
   // Matter.js renderer creation - COMMENT FROM HERE...
-  var render = Render.create({
+  /*var render = Render.create({
       element: document.body,
       engine: engine,
       options: {
@@ -146,7 +146,7 @@ function setup() {
       }
   });
 
-  Render.run(render);
+  Render.run(render);*/
   // ... TO HERE TO GET RID OF THE RENDERER
 
   //Engine.run(engine);
@@ -174,43 +174,70 @@ function setup() {
 function draw() {
 
   // Drawing main menu
-  rectMode(CENTER);
-  fill(0, 255, 40);
-  rect((CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 3), 200, 75);
-  fill(0, 100, 255);
-  rect((CANVAS_WIDTH / 2), ((CANVAS_HEIGHT / 3) * 2), 200, 75);
-  textSize(50)
-  fill(255);
-  textAlign(CENTER, CENTER);
-  text('START', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 3));
-  text('DEBUG', (CANVAS_WIDTH / 2), ((CANVAS_HEIGHT / 3) * 2));
+  if (menu == 0) {
+    gameMenus(menu);
+  }
 
-  // START GAME - PUT GAME CODE HERE
+  // 1 PLAYER - LOCAL | CHOOSE SIDE
   if (menu == 1) {
-    main();
+    gameMenus(menu);
     if (keyCode == ESCAPE) {
-      menu = 0
+      menu = 0;
     }
   }
 
-  // START DEBUG - PUT DEBUG CODE HERE
+  // 2 PLAYERS - LOCAL
   if (menu == 2) {
-	  main_debug();
+    main();
     if (keyCode == ESCAPE) {
-      menu = 0
+      menu = 0;
     }
+  }
+
+  // 2 PLAYERS - ONLINE
+  if (menu == 3) {
+    image(background0, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    textAlign(CENTER, CENTER);
+    textSize(60);
+    fill(255);
+    text('UNDER CONSTRUCTION', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2));
+    if (keyCode == ESCAPE) {
+      menu = 0;
+    }
+  }
+
+  // 1 PLAYER - LOCAL
+  if (menu == 4) {
+    image(background0, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    textAlign(CENTER, CENTER);
+    textSize(60);
+    fill(255);
+    text('UNDER CONSTRUCTION', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2));
   }
 }	
 
 // EVENT FUNCTIONS
 function mouseClicked() {
   if (menu == 0) {
-    if (mouseX < ((CANVAS_WIDTH / 2) + 100) && mouseX > ((CANVAS_WIDTH / 2)- 100)) {
-      if (mouseY < ((CANVAS_HEIGHT / 3) + 15) && mouseY > ((CANVAS_HEIGHT / 3) - 15)) {
-        menu = 1
+    if (mouseX < ((CANVAS_WIDTH / 2) + 100) && mouseX > ((CANVAS_WIDTH / 2) - 100)) {
+      if (mouseY < ((CANVAS_HEIGHT / 4) + 15) && mouseY > ((CANVAS_HEIGHT / 4) - 15)) {
+        menu = 1;
       }
-      if (mouseY < (((CANVAS_HEIGHT / 3) * 2) + 15) && mouseY > (((CANVAS_HEIGHT / 3) * 2) - 15)) {
-        menu = 2
+      if (mouseY < ((CANVAS_HEIGHT / 2) + 15) && mouseY > ((CANVAS_HEIGHT / 2) - 15)) {
+        menu = 2;
+      }
+      if (mouseY < ((CANVAS_HEIGHT * 3 / 4) + 15) && mouseY > ((CANVAS_HEIGHT * 3 / 4) - 15)) {
+        menu = 3;
+      }
+    }
+  }
+  if (menu == 1) {
+    if (mouseY < CANVAS_HEIGHT / 2 + 15 && mouseY > CANVAS_HEIGHT / 2 - 15) {
+      if (mouseX < CANVAS_WIDTH / 3 + 100 && mouseX > CANVAS_WIDTH / 3 - 100) {
+        menu = 4;
+      }
+      if (mouseX < CANVAS_WIDTH * 2 / 3 + 100 && mouseX > CANVAS_WIDTH * 2 /3 - 100) {
+        menu = 4;
       }
     }
   }
@@ -245,21 +272,17 @@ function keyPressed() {
 function keyReleased() {
   if (keyCode == 65) {
     player1Def.cstr_legs.stiffness = 0.06;
-    //player1Def.kick(-kickForceCoeff * 0.1);
   }
 
   if (keyCode == 68) {
     player1Atk.cstr_legs.stiffness = 0.06;
-    //player1Atk.kick(-kickForceCoeff * 0.1);
   }
 
   if (keyCode == RIGHT_ARROW) {
     player2Def.cstr_legs.stiffness = 0.06;
-    //player2Def.kick(-kickForceCoeff * 0.1);
   }
 
   if (keyCode == LEFT_ARROW) {
     player2Atk.cstr_legs.stiffness = 0.06;
-    //player2Atk.kick(-kickForceCoeff * 0.1);
   }
 }
