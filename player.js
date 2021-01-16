@@ -90,20 +90,20 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
 
   // BODIES CREATION - MAIN BODY
   this.main_body = Bodies.rectangle(this.main_x, this.main_y, this.main_w, this.main_h, main_options);
-  World.add(world,this.main_body); // Adding the main body to the world
+  World.add(world,this.main_body);
 
   // BODIES CREATION - LEG BODY
   if (this.s) {
     this.leg_x = this.main_body.position.x + (this.main_w / 2) + (this.leg_w / 2);
     this.leg_y = this.main_body.position.y + (this.main_h / 2) + (this.leg_h / 2);
     this.leg_body = Bodies.rectangle(this.leg_x, this.leg_y, this.leg_w, this.leg_h, leg_options);
-    World.add(world,this.leg_body); // Adding the leg body to the world
+    World.add(world,this.leg_body);
   }
   else {
     this.leg_x = this.main_body.position.x - (this.main_w / 2) - (this.leg_w / 2);
     this.leg_y = this.main_body.position.y + (this.main_h / 2) + (this.leg_h / 2);
     this.leg_body = Bodies.rectangle(this.leg_x, this.leg_y, this.leg_w, this.leg_h, leg_options);
-    World.add(world,this.leg_body); // Adding the leg body to the world
+    World.add(world,this.leg_body);
   }
   
 
@@ -112,13 +112,13 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     this.leg_fixed_x = this.main_body.position.x - (this.main_w / 2) + (this.leg_fixed_w / 2);
     this.leg_fixed_y = this.main_body.position.y + (this.main_h / 2) + (this.leg_fixed_h / 2);
     this.leg_fixed_body = Bodies.rectangle(this.leg_fixed_x, this.leg_fixed_y, this.leg_fixed_w, this.leg_fixed_h, leg_fixed_options);
-    World.add(world,this.leg_fixed_body); // Adding the fixed leg body to the world
+    World.add(world,this.leg_fixed_body);
   }
   else {
     this.leg_fixed_x = this.main_body.position.x + (this.main_w / 2) - (this.leg_fixed_w / 2);
     this.leg_fixed_y = this.main_body.position.y + (this.main_h / 2) + (this.leg_fixed_h / 2);
     this.leg_fixed_body = Bodies.rectangle(this.leg_fixed_x, this.leg_fixed_y, this.leg_fixed_w, this.leg_fixed_h, leg_fixed_options);
-    World.add(world,this.leg_fixed_body); // Adding the fixed leg body to the world
+    World.add(world,this.leg_fixed_body);
   }
 
 
@@ -261,10 +261,6 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     this.cstr_legs_B = Matter.Vector.create(-(this.leg_fixed_w / 2), -(this.leg_fixed_h / 2));
   }
 
-  // CONSTRAINTS CREATION - 2ND TRY WITH CONSTRAINT BETWEEN CENTER OF BOTH BODIES
-  /*this.cstr_legs_A = Matter.Vector.create(0, 0);
-  this.cstr_legs_B = Matter.Vector.create(0, 0);*/
-
   this.cstrLegsLength = 2;
 
   var cstr_legs_options = {
@@ -353,7 +349,7 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     }
   }
 
-  // Returns True if player is on ground - OK
+  // Returns True if player is on ground
   this.isOnGround = function(ground) {
     mainBodyGroundColl = Matter.SAT.collides(this.main_body, ground.body);
     legFixedBodyGroundColl = Matter.SAT.collides(this.leg_fixed_body, ground.body);
@@ -413,13 +409,9 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     }
   }
 
-  // Function used to keep the play upright - ALMOST WORKS
-  // TO DO : CREATE A VARYING FORCE (E.G. IT HAS TO BE STRONGER WHEN ANGLE OF PLAYER IS BIG) BUT IT MIGHT ALREADY BE THE CASE WHEN USING THE AXES ATTRIBUTE OF THE BODY
-  // OR    : CREATE VARIOUS ANGLE BOUNDS WHERE THE tiltForceCoeff would change
   this.uprightTilt = function() {
     var tiltForce = Matter.Vector.create(this.main_body.axes[1].x * -tiltForceCoeff, -this.main_body.axes[1].y * tiltForceCoeff);
     if ((this.absoluteAngle) >= PI/5) {
-      // TEMPORISATION NEEDED ?
       Body.applyForce(this.main_body, this.main_body.position, Matter.Vector.neg(tiltForce));
     }
     if ((this.absoluteAngle) <= -PI/5) {
@@ -431,16 +423,7 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     }
   }
 
-  // Reset location
-  /*this.resetLocation = function(x, y) {
-    // ALL PARTS OF THE PLAYER MUST BE RESETTED....
-    Matter.Body.setPosition(this.main_body, {x,y});
-    Matter.Body.setAngle(this.main_body, 0);
-    Matter.Body.setAngularVelocity(this.main_body, 0);
-    Matter.Body.setVelocity(this.main_body, {x:0, y:0});
-  }*/
-
-  // Graphics function - OK
+  // Graphics function
   this.show = function() {
     // DRAWING MAIN BODY
     push();
@@ -482,162 +465,6 @@ function Player(main_x, main_y, main_w, main_h, leg_w, leg_h, s) {
     rotate(this.foot_body.angle);
     rect(0, 0, this.foot_w, this.foot_h);
     pop();
-  }
-
-  // Shows some debug stuff
-  this.showDebug = function() {
-    // DRAWING MAIN BODY
-    push();
-    rectMode(CENTER);
-    angleMode(RADIANS);
-    translate(this.main_body.position.x, this.main_body.position.y);
-    rotate(this.main_body.angle);
-    stroke(0);
-    fill(255, 0, 0);
-    rect(0, 0, this.main_w, this.main_h);
-    pop();
-    
-    // DRAWING LEG
-    push();
-    rectMode(CENTER);
-    angleMode(RADIANS);
-    translate(this.leg_body.position.x, this.leg_body.position.y);
-    rotate(this.leg_body.angle);
-    fill(255, 0, 0);
-    rect(0, 0, this.leg_w, this.leg_h);
-    pop();
-
-    // DRAWING FIXED LEG
-    push();
-    rectMode(CENTER);
-    angleMode(RADIANS);
-    translate(this.leg_fixed_body.position.x, this.leg_fixed_body.position.y);
-    rotate(this.leg_fixed_body.angle);
-    fill(255, 0, 0);
-    rect(0, 0, this.leg_fixed_w, this.leg_fixed_h);
-    pop();
-
-    // DRAWING FOOT
-    push();
-    fill(255, 0, 0);
-    rectMode(CENTER);
-    angleMode(RADIANS);
-    translate(this.foot_body.position.x, this.foot_body.position.y);
-    rotate(this.foot_body.angle);
-    rect(0, 0, this.foot_w, this.foot_h);
-    pop();
-
-    // DRAWING COUNTERWIEGHT
-    push();
-    fill(255, 0, 0);
-    rectMode(CENTER);
-    angleMode(RADIANS);
-    translate(this.counterweight_body.position.x, this.counterweight_body.position.y);
-    rotate(this.counterweight_body.angle);
-    rect(0, 0, this.counterweight_w, this.counterweight_h);
-    pop();
-
-    /*// DRAWING AXES OF THE MAIN BODY
-    push();
-    translate(this.main_body.position.x, this.main_body.position.y);
-    strokeWeight(4);
-    stroke(0, 255, 0);
-    line(0, 0, 40*this.main_body.axes[0].x, 40*this.main_body.axes[0].y);
-    stroke(0);
-    line(0, 0, 40*this.main_body.axes[1].x, 40*this.main_body.axes[1].y);
-    pop();
-
-    // DRAWING POINT A OF MOVABLE CONSTRAINT
-    push();
-    strokeWeight(8);
-    stroke(0, 0, 0);
-    this.cstrAbs_Ax = this.main_body.position.x + this.cstr_A.x;
-    this.cstrAbs_Ay = this.main_body.position.y + this.cstr_A.y;
-    point(this.cstrAbs_Ax, this.cstrAbs_Ay);
-    
-    // DRAWING POINT B OF CONSTRAINT
-    pop();
-    push();
-    strokeWeight(8);
-    stroke(0, 0, 0);
-    this.cstrAbs_Bx = this.leg_body.position.x + this.cstr_B.x;
-    this.cstrAbs_By = this.leg_body.position.y + this.cstr_B.y;
-    point(this.cstrAbs_Bx, this.cstrAbs_By);
-    pop();
-
-    // DRAWING FIRST CONSTRAINT OF FIXED LEG
-    push();
-    strokeWeight(8);
-    stroke(255, 0, 0);
-    this.cstrAbs_fixed_Ax = this.main_body.position.x + this.cstr_fixed_A.x;
-    this.cstrAbs_fixed_Ay = this.main_body.position.y + this.cstr_fixed_A.y;
-    point(this.cstrAbs_fixed_Ax, this.cstrAbs_fixed_Ay);
-    pop();
-
-    push();
-    strokeWeight(8);
-    stroke(255, 255, 0);
-    this.cstrAbs_fixed_Bx = this.leg_fixed_body.position.x + this.cstr_fixed_B.x;
-    this.cstrAbs_fixed_By = this.leg_fixed_body.position.y + this.cstr_fixed_B.y;
-    point(this.cstrAbs_fixed_Bx, this.cstrAbs_fixed_By);
-    pop();
-
-    // DRAWING SECOND CONSTRAINT OF FIXED LEG
-    push();
-    strokeWeight(8);
-    stroke(0, 255, 0);
-    this.cstrAbs_fixed2_Ax = this.main_body.position.x + this.cstr_fixed2_A.x;
-    this.cstrAbs_fixed2_Ay = this.main_body.position.y + this.cstr_fixed2_A.y;
-    point(this.cstrAbs_fixed2_Ax, this.cstrAbs_fixed2_Ay);
-    pop();
-
-    push();
-    strokeWeight(8);
-    stroke(0, 255, 0);
-    this.cstrAbs_fixed2_Bx = this.leg_fixed_body.position.x + this.cstr_fixed2_B.x;
-    this.cstrAbs_fixed2_By = this.leg_fixed_body.position.y + this.cstr_fixed2_B.y;
-    point(this.cstrAbs_fixed2_Bx, this.cstrAbs_fixed2_By);
-    pop();
-
-    // DRAWING FIRST CONSTRAINT OF FOOT
-    push();
-    strokeWeight(8);
-    stroke(255, 255, 255);
-    this.cstrAbs_foot_Ax = this.leg_body.position.x + this.cstr_foot_A.x;
-    this.cstrAbs_foot_Ay = this.leg_body.position.y + this.cstr_foot_A.y;
-    point(this.cstrAbs_foot_Ax, this.cstrAbs_foot_Ay);
-    pop();
-
-    push();
-    strokeWeight(8);
-    stroke(255, 255, 255);
-    this.cstrAbs_foot_Bx = this.foot_body.position.x + this.cstr_foot_B.x;
-    this.cstrAbs_foot_By = this.foot_body.position.y + this.cstr_foot_B.y;
-    point(this.cstrAbs_foot_Bx, this.cstrAbs_foot_By);
-    pop();
-
-    // DRAWING CONSTRAINT BETWEEN LEG BODY AND LEG FIXED BODY
-    push();
-    strokeWeight(8);
-    stroke(80);
-    this.cstrAbs_legs_Ax = this.leg_body.position.x + this.cstr_legs_A.x;
-    this.cstrAbs_legs_Ay = this.leg_body.position.y + this.cstr_legs_A.y;
-    point(this.cstrAbs_legs_Ax, this.cstrAbs_legs_Ay);
-    pop();
-
-    push();
-    strokeWeight(8);
-    stroke(80);
-    this.cstrAbs_legs_Bx = this.leg_fixed_body.position.x + this.cstr_legs_B.x;
-    this.cstrAbs_legs_By = this.leg_fixed_body.position.y + this.cstr_legs_B.y;
-    point(this.cstrAbs_legs_Bx, this.cstrAbs_legs_By);
-    pop();
-
-    push();
-    strokeWeight(4);
-    stroke(80);
-    line(this.cstrAbs_legs_Ax, this.cstrAbs_legs_Ay, this.cstrAbs_legs_Bx, this.cstrAbs_legs_By);
-    pop();*/
   }
 }
 // EXPLANATIONS

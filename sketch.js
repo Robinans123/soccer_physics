@@ -20,8 +20,8 @@ var ground;
 
 // CONSTANTS
 // Canvas dimensions
-let CANVAS_WIDTH = 1280; // Default 1400
-let CANVAS_HEIGHT = 720; // Default 700
+let CANVAS_WIDTH = 1280; // Default 1280
+let CANVAS_HEIGHT = 720; // Default 720
 
 // Collision categories
 var generalCollCategory = 0x0001, // Used for all parts of player except counterweight, ball and goal
@@ -54,6 +54,8 @@ let groundHeight = 100; // Has to be a big arbitrary number because of the unkno
 let groundOffset = 6;
 let groundX = CANVAS_WIDTH / 2;
 let groundY = CANVAS_HEIGHT - groundHeight / 2;
+let menuButtonWidth = CANVAS_WIDTH / 5;
+let menuButtonHeight = CANVAS_HEIGHT / 10;
 
 // Score and timer initialisation
 let score1 = 0;
@@ -153,6 +155,8 @@ function setup() {
   world = engine.world;
 
   // INSTANCIATIONS
+  gameMenus = new GameMenus();
+
   ground = new Ground(CANVAS_WIDTH / 2, (CANVAS_HEIGHT +  (groundHeight / 2) - groundOffset), groundWidth, groundHeight, 0);
   ball = new Ball((CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 4), ballRadius);
 
@@ -175,12 +179,12 @@ function draw() {
 
   // Drawing main menu
   if (menu == 0) {
-    gameMenus(menu);
+    gameMenus.draw(menu);
   }
 
   // 1 PLAYER - LOCAL | CHOOSE SIDE
   if (menu == 1) {
-    gameMenus(menu);
+    gameMenus.draw(menu);
     if (keyCode == ESCAPE) {
       menu = 0;
     }
@@ -196,11 +200,7 @@ function draw() {
 
   // 2 PLAYERS - ONLINE
   if (menu == 3) {
-    image(background0, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    textAlign(CENTER, CENTER);
-    textSize(60);
-    fill(255);
-    text('UNDER CONSTRUCTION', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2));
+    gameMenus.draw(menu);
     if (keyCode == ESCAPE) {
       menu = 0;
     }
@@ -208,39 +208,14 @@ function draw() {
 
   // 1 PLAYER - LOCAL
   if (menu == 4) {
-    image(background0, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    textAlign(CENTER, CENTER);
-    textSize(60);
-    fill(255);
-    text('UNDER CONSTRUCTION', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2));
+    gameMenus.draw(menu);
   }
 }	
 
 // EVENT FUNCTIONS
 function mouseClicked() {
-  if (menu == 0) {
-    if (mouseX < ((CANVAS_WIDTH / 2) + 100) && mouseX > ((CANVAS_WIDTH / 2) - 100)) {
-      if (mouseY < ((CANVAS_HEIGHT / 4) + 15) && mouseY > ((CANVAS_HEIGHT / 4) - 15)) {
-        menu = 1;
-      }
-      if (mouseY < ((CANVAS_HEIGHT / 2) + 15) && mouseY > ((CANVAS_HEIGHT / 2) - 15)) {
-        menu = 2;
-      }
-      if (mouseY < ((CANVAS_HEIGHT * 3 / 4) + 15) && mouseY > ((CANVAS_HEIGHT * 3 / 4) - 15)) {
-        menu = 3;
-      }
-    }
-  }
-  if (menu == 1) {
-    if (mouseY < CANVAS_HEIGHT / 2 + 15 && mouseY > CANVAS_HEIGHT / 2 - 15) {
-      if (mouseX < CANVAS_WIDTH / 3 + 100 && mouseX > CANVAS_WIDTH / 3 - 100) {
-        menu = 4;
-      }
-      if (mouseX < CANVAS_WIDTH * 2 / 3 + 100 && mouseX > CANVAS_WIDTH * 2 /3 - 100) {
-        menu = 4;
-      }
-    }
-  }
+  gameMenus.clickedOn(menu);
+  console.log("Menu index : " + menu);
 }
 
 function keyPressed() {
