@@ -1,1 +1,7 @@
-css
+.teugg_title {
+  text-align: center;
+  color: black;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  font-size: 40px;
+  font-weight: bold;
+}

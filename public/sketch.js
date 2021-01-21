@@ -26,7 +26,7 @@ let CANVAS_HEIGHT = 720; // Default 720
 // Menus states
 let MAIN_MENU = 0;
 let P1_LOCAL_CHOOSE_SIDE_MENU = 1;
-let P2_LOCAL_MENU = 2;
+let P2_LOCAL_SELECTED = 2;
 let P2_ONLINE_MENU = 3;
 let P1_LOCAL_LEFT_SELECTED = 4;
 let P1_LOCAL_RIGHT_SELECTED = 5;
@@ -91,8 +91,8 @@ let spritePlayerMainBody0;
 
 // Used for the temporisation of the game AI
 var randTimingAI = 0;
-var lowerBoundTimingAI = 5;
-var upperBoundTimingAI = 20;
+var lowerBoundTimingAI = 10;
+var upperBoundTimingAI = 25;
 var previousTimingAI = 0;
 var choosePlayerAI = 0;
 
@@ -155,7 +155,7 @@ function setup() {
   engine = Engine.create();
 
   // Matter.js renderer creation - COMMENT FROM HERE...
-  var render = Render.create({
+  /*var render = Render.create({
       element: document.body,
       engine: engine,
       options: {
@@ -170,7 +170,7 @@ function setup() {
       }
   });
 
-  Render.run(render);
+  Render.run(render);*/
   // ... TO HERE TO GET RID OF THE RENDERER
 
   // Socket connection
@@ -212,25 +212,16 @@ function draw() {
   // 1 PLAYER - LOCAL | CHOOSE SIDE
   if (menu == 1) {
     gameMenus.draw(menu);
-    if (keyCode == ESCAPE) {
-      menu = 0;
-    }
   }
 
   // 2 PLAYERS - LOCAL
   if (menu == 2) {
     main();
-    if (keyCode == ESCAPE) {
-      menu = 0;
-    }
   }
 
   // 2 PLAYERS - ONLINE
   if (menu == 3) {
     gameMenus.draw(menu);
-    if (keyCode == ESCAPE) {
-      menu = 0;
-    }
   }
 
   // 1 PLAYER - LOCAL |LEFT
@@ -258,49 +249,56 @@ function draw() {
 // EVENT FUNCTIONS
 function mouseClicked() {
   gameMenus.clickedOn(menu);
-  console.log("Menu index : " + menu);
 }
 
 function keyPressed() {
   if (keyCode == 65) {
-    if (player1Def.isOnGround(ground) && menu == P1_LOCAL_LEFT_SELECTED) {
-      player1Def.jump();
+    if (menu == P1_LOCAL_LEFT_SELECTED || menu == P2_LOCAL_SELECTED) {
+      if (player1Def.isOnGround(ground)) {
+        player1Def.jump();
+      }
     }
   }
 
   if (keyCode == 68) {
-    if (player1Atk.isOnGround(ground) && menu == P1_LOCAL_LEFT_SELECTED) {
-      player1Atk.jump();
+    if (menu == P1_LOCAL_LEFT_SELECTED || menu == P2_LOCAL_SELECTED) {
+      if (player1Atk.isOnGround(ground)) {
+        player1Atk.jump();
+      }
     } 
   }
 
   if (keyCode == RIGHT_ARROW) {
-    if (player2Def.isOnGround(ground) && menu == P1_LOCAL_RIGHT_SELECTED) {
-      player2Def.jump();
+    if (menu == P1_LOCAL_RIGHT_SELECTED || menu == P2_LOCAL_SELECTED) {
+      if (player2Def.isOnGround(ground)) {
+    	player2Def.jump();
+      }
     }
   }
 
   if (keyCode == LEFT_ARROW) {
-    if (player2Atk.isOnGround(ground) && menu == P1_LOCAL_RIGHT_SELECTED) {
-      player2Atk.jump();
+    if (menu == P1_LOCAL_RIGHT_SELECTED || menu == P2_LOCAL_SELECTED) {
+      if (player2Atk.isOnGround(ground)) {
+        player2Atk.jump();
+      }
     }
   }
 }
 
 function keyReleased() {
-  if (keyCode == 65 && menu == P1_LOCAL_LEFT_SELECTED) {
+  if (keyCode == 65 && menu == P1_LOCAL_LEFT_SELECTED || menu == P2_LOCAL_SELECTED) {
     player1Def.cstrLegs.stiffness = 0.06;
   }
 
-  if (keyCode == 68 && menu == P1_LOCAL_LEFT_SELECTED) {
+  if (keyCode == 68 && menu == P1_LOCAL_LEFT_SELECTED || menu == P2_LOCAL_SELECTED) {
     player1Atk.cstrLegs.stiffness = 0.06;
   }
 
-  if (keyCode == RIGHT_ARROW && menu == P1_LOCAL_RIGHT_SELECTED) {
+  if (keyCode == RIGHT_ARROW && menu == P1_LOCAL_RIGHT_SELECTED || menu == P2_LOCAL_SELECTED) {
     player2Def.cstrLegs.stiffness = 0.06;
   }
 
-  if (keyCode == LEFT_ARROW && menu == P1_LOCAL_RIGHT_SELECTED) {
+  if (keyCode == LEFT_ARROW && menu == P1_LOCAL_RIGHT_SELECTED || menu == P2_LOCAL_SELECTED) {
     player2Atk.cstrLegs.stiffness = 0.06;
   }
 }

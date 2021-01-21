@@ -11,7 +11,7 @@ function GameMenus() {
   this.draw = function(menu) {
     
     // MAIN MENU
-    if (menu == 0) {
+    if (menu == MAIN_MENU) {
       image(background0, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       rectMode(CENTER);
       fill(0, 255, 40);
@@ -29,7 +29,7 @@ function GameMenus() {
     }
 
     // 1 PLAYER - LOCAL | CHOOSE SIDE
-    if (menu == 1) {
+    if (menu == P1_LOCAL_CHOOSE_SIDE_MENU) {
       image(background0, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       textAlign(CENTER, CENTER);
       textSize(30);
@@ -47,12 +47,12 @@ function GameMenus() {
     }
 
     // 2 PLAYERS - LOCAL
-    if (menu == 2) {
+    if (menu == P2_LOCAL_SELECTED) {
 
     }
 
     // 2 PLAYERS - ONLINE
-    if (menu == 3) {
+    if (menu == P2_ONLINE_MENU) {
       image(background0, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       textAlign(CENTER, CENTER);
       textSize(30);
@@ -69,12 +69,12 @@ function GameMenus() {
     }
 
     // 1 PLAYER - LOCAL | LEFT
-    if (menu == 4) {
+    if (menu == P1_LOCAL_LEFT_SELECTED) {
 
     }
 
     // 1 PLAYER - LOCAL | RIGHT
-    if (menu == 5) {
+    if (menu == P1_LOCAL_RIGHT_SELECTED) {
       /*image(background0, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       textAlign(CENTER, CENTER);
       textSize(60);
@@ -83,7 +83,7 @@ function GameMenus() {
     }
 
     // 
-    if (menu == 6) {
+    if (menu == P2_ONLINE_CREATE_MENU) {
       var lobbyName;
       image(background0, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       textAlign(CENTER, CENTER);
@@ -95,7 +95,7 @@ function GameMenus() {
       socket.emit('createLobbyMessage', lobbyName);
     }
 
-    if (menu == 7) {
+    if (menu == P2_ONLINE_JOIN_MENU) {
       var lobbyCode;
       image(background0, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       textAlign(CENTER, CENTER);

@@ -13,7 +13,7 @@ function Goal(x, y, w, h, botW, topW, s) {
       mask: generalCollCategory
     },
     isStatic: true,
-    angle: PI/100
+    //angle: PI/100
   }
 
   // ATTRIBUTES
@@ -27,6 +27,7 @@ function Goal(x, y, w, h, botW, topW, s) {
   this.top_x = x; // X-location of the top bar of the goal
   this.top_y = CANVAS_HEIGHT - h; // Y-location of the top bar of the goal
 
+  // TO BE MODIFIED
   // X-location of the bottom bar (depends if it is goal 1 or goal 2)
   if (s == true) {
     this.bot_x = x + w / 2; // Player 1 (left)
@@ -43,9 +44,18 @@ function Goal(x, y, w, h, botW, topW, s) {
   // Adding the body to the world
   World.add(world,this.top_body);
 
-  /*this.bot_body = Bodies.rectangle(this.bot_body_x, this.bot_y, this.botBarW, this.h, options);
+  this.bot_body = Bodies.rectangle(this.bot_body_x, this.bot_y, this.botBarW, this.h, options);
   
-  World.add(world,this.bot_body);*/
+  World.add(world,this.bot_body);
+
+  // Slight tilt on top bar of goals
+  if (s == true) {
+    Body.setAngle(this.top_body, PI/100);
+  }
+  else {
+    Body.setAngle(this.top_body, -PI/100);
+  }
+  
 
   // DRAWING FUNCTION
   this.show = function() {
@@ -54,8 +64,9 @@ function Goal(x, y, w, h, botW, topW, s) {
     angleMode(RADIANS);
     noFill();
     fill(255);
+    translate(this.top_body.position.x, this.top_body.position.y);
     rotate(this.top_body.angle);
-    rect(this.top_body.position.x, this.top_body.position.y, this.w, this.topBarW); // Drawing top bar of goal
+    rect(0, 0, this.w, this.topBarW); // Drawing top bar of goal
     pop();
 
     push();
