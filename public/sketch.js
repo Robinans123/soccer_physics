@@ -23,6 +23,16 @@ var ground;
 let CANVAS_WIDTH = 1280; // Default 1280
 let CANVAS_HEIGHT = 720; // Default 720
 
+// Menus states
+let MAIN_MENU = 0;
+let P1_LOCAL_CHOOSE_SIDE_MENU = 1;
+let P2_LOCAL_MENU = 2;
+let P2_ONLINE_MENU = 3;
+let P1_LOCAL_LEFT_SELECTED = 4;
+let P1_LOCAL_RIGHT_SELECTED = 5;
+let P2_ONLINE_CREATE_MENU = 6;
+let P2_ONLINE_JOIN_MENU = 7;
+
 // Collision categories
 var generalCollCategory = 0x0001, // Used for all parts of player except counterweight, ball and goal
     generalNoCollCategory = 0x0002, // Used only for the counterweight of players
@@ -30,13 +40,15 @@ var generalCollCategory = 0x0001, // Used for all parts of player except counter
 
 // INITIALIZATION VARIABLES
 // Menus states
-let menu = 0;
+let menu = MAIN_MENU;
 
 // Elements dimensions
 let ballRadius = 25; // TO BE RECALCULATED
 let goalWidth = CANVAS_WIDTH / 9.333; // Default : 150
 let goalHeight = CANVAS_HEIGHT / 1.75; // Default : 400
 let goalStartPosX = 0; // TO DO
+let goalBottomBarW = 10;
+let goalTopBarW = 10;
 let playerWidth = CANVAS_WIDTH / 28; // Default : 50
 let playerHeight = CANVAS_HEIGHT / 7.778; // Default : 90
 let playerLegWidth = playerWidth / 2;
@@ -79,8 +91,13 @@ let spritePlayerMainBody0;
 
 // Used for the temporisation of the game AI
 var randTimingAI = 0;
+var lowerBoundTimingAI = 5;
+var upperBoundTimingAI = 20;
 var previousTimingAI = 0;
 var choosePlayerAI = 0;
+
+// Socket for online multiplayer
+var socket;
 
 // Create "structure that contains all arguments that can be passed to the player constructor"
 /*var player1DefOptions = {
@@ -138,7 +155,7 @@ function setup() {
   engine = Engine.create();
 
   // Matter.js renderer creation - COMMENT FROM HERE...
-  /*var render = Render.create({
+  var render = Render.create({
       element: document.body,
       engine: engine,
       options: {
@@ -153,8 +170,11 @@ function setup() {
       }
   });
 
-  Render.run(render);*/
+  Render.run(render);
   // ... TO HERE TO GET RID OF THE RENDERER
+
+  // Socket connection
+  //socket = io.connect('http://localhost:3000');
 
   //Engine.run(engine);
   world = engine.world;
@@ -167,17 +187,17 @@ function setup() {
 
   player1Def = new Player(player1DefStartPosX, player1DefStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, true);
   player1Atk = new Player(player1AtkStartPosX, player1AtkStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, true);
-  goal1 = new Goal((goalWidth / 2), (CANVAS_HEIGHT - (goalHeight / 2)), goalWidth, goalHeight, 10, true);
+  goal1 = new Goal((goalWidth / 2), (CANVAS_HEIGHT - (goalHeight / 2)), goalWidth, goalHeight, goalBottomBarW, goalTopBarW, true);
 
   player2Atk = new Player(player2AtkStartPosX, player2AtkStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, false);
   player2Def = new Player(player2DefStartPosX, player2DefStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, false);
-  goal2 = new Goal((CANVAS_WIDTH - (goalWidth / 2)), (CANVAS_HEIGHT - (goalHeight / 2)), goalWidth, goalHeight, 10, false);
+  goal2 = new Goal((CANVAS_WIDTH - (goalWidth / 2)), (CANVAS_HEIGHT - (goalHeight / 2)), goalWidth, goalHeight, goalBottomBarW, goalTopBarW, false);
 
   gameTimer = new GameTimer(elapsedTimeSec, elapsedTimeMin);
   gameScore = new GameScore();
 
   world.gravity.y = 1;
-  randTimingAI = random(30, 140);
+  randTimingAI = random(lowerBoundTimingAI, upperBoundTimingAI);
   choosePlayerAI = random(0.0, 1.0);
 }
 
@@ -221,6 +241,17 @@ function draw() {
   // 1 PLAYER - LOCAL | RIGHT
   if (menu == 5) {
     gameMenus.draw(menu);
+    main();
+  }
+
+  // 
+  if (menu == 6) {
+    gameMenus.draw(menu);
+  }
+
+  // 
+  if (menu == 7) {
+    gameMenus.draw(menu);
   }
 }	
 
@@ -232,44 +263,44 @@ function mouseClicked() {
 
 function keyPressed() {
   if (keyCode == 65) {
-    if (player1Def.isOnGround(ground)) {
+    if (player1Def.isOnGround(ground) && menu == P1_LOCAL_LEFT_SELECTED) {
       player1Def.jump();
     }
   }
 
   if (keyCode == 68) {
-    if (player1Atk.isOnGround(ground)) {
+    if (player1Atk.isOnGround(ground) && menu == P1_LOCAL_LEFT_SELECTED) {
       player1Atk.jump();
     } 
   }
 
   if (keyCode == RIGHT_ARROW) {
-    if (player2Def.isOnGround(ground)) {
+    if (player2Def.isOnGround(ground) && menu == P1_LOCAL_RIGHT_SELECTED) {
       player2Def.jump();
     }
   }
 
   if (keyCode == LEFT_ARROW) {
-    if (player2Atk.isOnGround(ground)) {
+    if (player2Atk.isOnGround(ground) && menu == P1_LOCAL_RIGHT_SELECTED) {
       player2Atk.jump();
     }
   }
 }
 
 function keyReleased() {
-  if (keyCode == 65) {
-    player1Def.cstr_legs.stiffness = 0.06;
+  if (keyCode == 65 && menu == P1_LOCAL_LEFT_SELECTED) {
+    player1Def.cstrLegs.stiffness = 0.06;
   }
 
-  if (keyCode == 68) {
-    player1Atk.cstr_legs.stiffness = 0.06;
+  if (keyCode == 68 && menu == P1_LOCAL_LEFT_SELECTED) {
+    player1Atk.cstrLegs.stiffness = 0.06;
   }
 
-  if (keyCode == RIGHT_ARROW) {
-    player2Def.cstr_legs.stiffness = 0.06;
+  if (keyCode == RIGHT_ARROW && menu == P1_LOCAL_RIGHT_SELECTED) {
+    player2Def.cstrLegs.stiffness = 0.06;
   }
 
-  if (keyCode == LEFT_ARROW) {
-    player2Atk.cstr_legs.stiffness = 0.06;
+  if (keyCode == LEFT_ARROW && menu == P1_LOCAL_RIGHT_SELECTED) {
+    player2Atk.cstrLegs.stiffness = 0.06;
   }
 }

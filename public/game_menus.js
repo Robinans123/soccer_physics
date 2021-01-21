@@ -55,9 +55,17 @@ function GameMenus() {
     if (menu == 3) {
       image(background0, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       textAlign(CENTER, CENTER);
-      textSize(60);
-      fill(200, 220, 30);
-      text('UNDER CONSTRUCTION', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2));
+      textSize(30);
+      fill(255);
+      rectMode(CENTER);
+      fill(0, 255, 40);
+      rect((CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2) - (menuButtonHeight / 2), menuButtonWidth, menuButtonHeight);
+      fill(0, 100, 255);
+      rect((CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2) + (menuButtonHeight / 2), menuButtonWidth, menuButtonHeight);
+      textSize(20)
+      fill(255);
+      text('CREATE NEW GAME', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2) - (menuButtonHeight / 2));
+      text('JOIN EXISTING GAME', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2) + (menuButtonHeight / 2));
     }
 
     // 1 PLAYER - LOCAL | LEFT
@@ -67,11 +75,34 @@ function GameMenus() {
 
     // 1 PLAYER - LOCAL | RIGHT
     if (menu == 5) {
+      /*image(background0, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      textAlign(CENTER, CENTER);
+      textSize(60);
+      fill(200, 220, 30);
+      text('UNDER CONSTRUCTION', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2));*/
+    }
+
+    // 
+    if (menu == 6) {
+      var lobbyName;
       image(background0, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       textAlign(CENTER, CENTER);
       textSize(60);
       fill(200, 220, 30);
-      text('UNDER CONSTRUCTION', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2));
+      text('CREATE', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2));
+      lobbyName = prompt("Enter lobby name");
+      // Sending lobby name to server (working)
+      socket.emit('createLobbyMessage', lobbyName);
+    }
+
+    if (menu == 7) {
+      var lobbyCode;
+      image(background0, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      textAlign(CENTER, CENTER);
+      textSize(60);
+      fill(200, 220, 30);
+      text('JOIN', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2));
+      lobbyCode = prompt("Enter code");
     }
   }
 
@@ -96,6 +127,16 @@ function GameMenus() {
         }
         if (mouseX < (CANVAS_WIDTH * 2 / 3) + (menuButtonWidth / 2) && mouseX > (CANVAS_WIDTH * 2 / 3) - (menuButtonWidth / 2)) {
           menu = 5;
+        }
+      }
+    }
+    if (menu == 3) {
+      if (mouseX < (CANVAS_WIDTH / 2) + (menuButtonHeight / 2) && mouseX > (CANVAS_WIDTH / 2) - (menuButtonHeight / 2)) {
+        if (mouseY < (CANVAS_HEIGHT / 2)  && mouseY > (CANVAS_HEIGHT / 2) - (menuButtonWidth / 2)) {
+          menu = 6;
+        }
+        if (mouseY < (CANVAS_HEIGHT / 2) + (menuButtonWidth / 2) && mouseY > (CANVAS_HEIGHT / 2)) {
+          menu = 7;
         }
       }
     }

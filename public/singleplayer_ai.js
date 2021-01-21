@@ -6,22 +6,42 @@
 // Description : Contains the AI algorithm(s) for the bot player in single player mode
 // ************************************************
 
-function singlePlayerAI() {
+function singlePlayerAI(menu) {
+  var playerDef;
+  var playerAtk;
+  
+  if (menu == P1_LOCAL_LEFT_SELECTED) {
+    playerDef = player2Def;
+    playerAtk = player2Atk;
+  }
+  else {
+    playerDef = player1Def;
+    playerAtk = player1Atk;
+  }
+
   // TO BE REFACTORED 
   if (frameCount - previousTimingAI >= randTimingAI) {
-    if (choosePlayerAI >= 0.5) {
-      if (player2Def.isOnGround(ground)) {
-        player2Def.kick(kickForceCoeff);
-        player2Def.jump();  
+    if (choosePlayerAI <= 0.1) {
+      if (playerDef.isOnGround(ground)) {
+        playerDef.kick(kickForceCoeff);
+        playerDef.jump();  
+      }
+    }
+    if (choosePlayerAI > 0.1 && choosePlayerAI <= 0.8) {
+      if (playerAtk.isOnGround(ground)) {
+        playerAtk.kick(kickForceCoeff);
+        playerAtk.jump();
       }
     }
     else {
-      if (player2Atk.isOnGround(ground)) {
-        player2Atk.kick(kickForceCoeff);
-        player2Atk.jump();
-      } 
+      if (playerAtk.isOnGround(ground) && playerDef.isOnGround(ground)) {
+        playerDef.kick(kickForceCoeff);
+        playerDef.jump();
+        playerAtk.kick(kickForceCoeff);
+        playerAtk.jump();
+      }
     }
-    randTimingAI = random(30, 140);
+    randTimingAI = random(lowerBoundTimingAI, upperBoundTimingAI);
     choosePlayerAI = random(0.0, 1.0);
     previousTimingAI = frameCount;
   }

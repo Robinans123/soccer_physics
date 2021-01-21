@@ -11,6 +11,9 @@ function main() {
   // GAME ENGINE UPDATE
   Engine.update(engine);
 
+  // SOCKET EMIT
+  //socket.emit('keys', keyPressed());
+
   // CANVAS BACKGROUND AND TEXT
   image(background0, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   push();
@@ -38,9 +41,7 @@ function main() {
   player2Def.show();
 	player2Atk.show();
 
-  if (menu == 4) {
-    singlePlayerAI();
-  }
+  singlePlayerAI(menu);
   
   // KEEP PLAYERS UPRIGHT
   if (player1Def.isOnGround(ground)){
@@ -61,23 +62,23 @@ function main() {
   }
 
   // GAME CONTROLS
-  if (keyIsDown(65)) {
-    player1Def.cstr_legs.stiffness = 0.00001;      
+  if (keyIsDown(65) && menu == P1_LOCAL_LEFT_SELECTED) {
+    player1Def.cstrLegs.stiffness = 0.00001;      
     player1Def.kick(kickForceCoeff);
   }
 
-  if (keyIsDown(68)) {
-    player1Atk.cstr_legs.stiffness = 0.00001;      
+  if (keyIsDown(68) && menu == P1_LOCAL_LEFT_SELECTED) {
+    player1Atk.cstrLegs.stiffness = 0.00001;      
     player1Atk.kick(kickForceCoeff);
   }
 
-  if (keyIsDown(RIGHT_ARROW)) {
-    player2Def.cstr_legs.stiffness = 0.00001;      
+  if (keyIsDown(RIGHT_ARROW) && menu == P1_LOCAL_RIGHT_SELECTED) {
+    player2Def.cstrLegs.stiffness = 0.00001;      
     player2Def.kick(kickForceCoeff);
   }
 
-  if (keyIsDown(LEFT_ARROW)){
-    player2Atk.cstr_legs.stiffness = 0.00001;      
+  if (keyIsDown(LEFT_ARROW) && menu == P1_LOCAL_RIGHT_SELECTED){
+    player2Atk.cstrLegs.stiffness = 0.00001;      
     player2Atk.kick(kickForceCoeff);
   }
 }
