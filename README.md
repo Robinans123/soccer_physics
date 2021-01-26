@@ -8,5 +8,3 @@ Huge thanks to The Coding Train Youtube channel : https://www.youtube.com/channe
 Libraries used :  
 p5.js : https://p5js.org/  
 Matter.js : https://brm.io/matter-js/
-
-Play the game in 1 or 2 players local : https://k-mertens.github.io/soccer_physics/

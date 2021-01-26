@@ -90,11 +90,11 @@ let spriteSoccerBall;
 let spritePlayerMainBody0;
 
 // Used for the temporisation of the game AI
-var randTimingAI = 0;
-var lowerBoundTimingAI = 10;
-var upperBoundTimingAI = 25;
+var lowerBoundTimingAI = 15;
+var upperBoundTimingAI = 35;
 var previousTimingAI = 0;
 var choosePlayerAI = 0;
+var randTimingAI = 0;
 
 // Socket for online multiplayer
 var socket;
@@ -176,7 +176,7 @@ function setup() {
   // Socket connection
   //socket = io.connect('http://localhost:3000');
 
-  //Engine.run(engine);
+  Engine.run(engine);
   world = engine.world;
 
   // INSTANCIATIONS
@@ -195,6 +195,8 @@ function setup() {
 
   gameTimer = new GameTimer(elapsedTimeSec, elapsedTimeMin);
   gameScore = new GameScore();
+  singlePlayerAILeft = new SinglePlayerAI(previousTimingAI, randTimingAI, choosePlayerAI);
+  singlePlayerAIRight = new SinglePlayerAI(previousTimingAI, randTimingAI, choosePlayerAI);
 
   world.gravity.y = 1;
   randTimingAI = random(lowerBoundTimingAI, upperBoundTimingAI);
@@ -243,6 +245,11 @@ function draw() {
   // 
   if (menu == 7) {
     gameMenus.draw(menu);
+  }
+
+  // EASTER EGG, SPECTATOR MODE BETWEEN TWO AIs
+  if (menu == 1000) {
+    main();
   }
 }	
 

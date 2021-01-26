@@ -31,7 +31,7 @@ function GameScore(ball, goal1, goal2) {
       player1Atk = new Player(player1AtkStartPosX, player1AtkStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, true);
       player2Atk = new Player(player2AtkStartPosX, player2AtkStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, false);
       player2Def = new Player(player2DefStartPosX, player2DefStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, false);
-      ball.reset_loc();
+      ball.resetLocation();
     }
     else if (ball.body.position.x >= CANVAS_WIDTH + ball.r) {
       // Ball is out of right of canvas
@@ -50,7 +50,7 @@ function GameScore(ball, goal1, goal2) {
       player1Atk = new Player(player1AtkStartPosX, player1AtkStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, true);
       player2Atk = new Player(player2AtkStartPosX, player2AtkStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, false);
       player2Def = new Player(player2DefStartPosX, player2DefStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, false);
-      ball.reset_loc();
+      ball.resetLocation();
     }
     // Player 2 scores
     if (ball.body.position.x + ball.r <= goal1.w - goal1.botBarW && ball.body.position.y >= CANVAS_HEIGHT - goal1.h) {
@@ -70,7 +70,7 @@ function GameScore(ball, goal1, goal2) {
       player1Atk = new Player(player1AtkStartPosX, player1AtkStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, true);
       player2Atk = new Player(player2AtkStartPosX, player2AtkStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, false);
       player2Def = new Player(player2DefStartPosX, player2DefStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, false);
-      ball.reset_loc();
+      ball.resetLocation();
     }
     else if (ball.body.position.x <= 0 - ball.r) {
       // Ball is out of left of canvas
@@ -89,7 +89,7 @@ function GameScore(ball, goal1, goal2) {
       player1Atk = new Player(player1AtkStartPosX, player1AtkStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, true);
       player2Atk = new Player(player2AtkStartPosX, player2AtkStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, false);
       player2Def = new Player(player2DefStartPosX, player2DefStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, false);
-      ball.reset_loc();
+      ball.resetLocation();
     }
   }
 

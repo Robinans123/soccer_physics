@@ -6,33 +6,24 @@
 // Description : Contains the AI algorithm(s) for the bot player in single player mode
 // ************************************************
 
-function singlePlayerAI(menu) {
-  var playerDef;
-  var playerAtk;
-  
-  // TO BE REFACTORED
-  if (menu == P1_LOCAL_LEFT_SELECTED) {
-    playerDef = player2Def;
-    playerAtk = player2Atk;
-  }
-  else {
-    playerDef = player1Def;
-    playerAtk = player1Atk;
-  }
+function SinglePlayerAI(previousTimingAI, randTimingAI, choosePlayerAI) {
+  this.previousTimingAI = previousTimingAI;
+  this.randTimingAI = randTimingAI;
+  this.choosePlayerAI = choosePlayerAI;
 
-  if (menu == P1_LOCAL_LEFT_SELECTED || menu == P1_LOCAL_RIGHT_SELECTED) {
-    if (frameCount - previousTimingAI >= randTimingAI) {
-      if (choosePlayerAI <= 0.1) {
+  this.tickAI = function (playerDef, playerAtk) {
+    if (frameCount - this.previousTimingAI >= this.randTimingAI) {
+      if (this.choosePlayerAI <= 0.1) {
         if (playerDef.isOnGround(ground)) {
           playerDef.cstrLegs.stiffness = 0.00001;
           playerDef.kick(kickForceCoeff);
           playerDef.jump();
           playerDef.cstrLegs.stiffness = 0.06;
-          console.log("playerDef jumped");
-          console.log(playerDef.isOnGround(ground));
+          //console.log("playerDef jumped");
+          //console.log(playerDef.isOnGround(ground));
         }
       }
-      if (choosePlayerAI > 0.1 && choosePlayerAI <= 0.8) {
+      if (this.choosePlayerAI > 0.1 && this.choosePlayerAI <= 0.8) {
         if (playerAtk.isOnGround(ground)) {
           playerAtk.cstrLegs.stiffness = 0.00001;
           playerAtk.kick(kickForceCoeff);
@@ -52,9 +43,9 @@ function singlePlayerAI(menu) {
           playerAtk.cstrLegs.stiffness = 0.06;
         }
       }
-      randTimingAI = random(lowerBoundTimingAI, upperBoundTimingAI);
-      choosePlayerAI = random(0.0, 1.0);
-      previousTimingAI = frameCount;
+      this.randTimingAI = random(lowerBoundTimingAI, upperBoundTimingAI);
+      this.choosePlayerAI = random(0.0, 1.0);
+      this.previousTimingAI = frameCount;
     }
   }
 }

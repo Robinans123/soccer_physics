@@ -9,7 +9,7 @@
 function Ball(x, y, r) {
   // PHYSICS ENGINE OPTIONS
   var options = {
-    friction: 0.006,
+    friction: 0.001,
     restitution: 0.89,
     density: 0.00005,
     collisionFilter: {
@@ -30,7 +30,7 @@ function Ball(x, y, r) {
   World.add(world, this.body);
 
   // RESET FUNCTION FOR WHEN SOMEONE SCORES, THE BALL IS PUT IN THE CENTER AGAIN
-  this.reset_loc = function() {
+  this.resetLocation = function() {
     var rand_ball_x;
     var rand_ball_y;
     var rand_ball_velocity_x;

@@ -9,7 +9,7 @@
 function main() {
 
   // GAME ENGINE UPDATE
-  Engine.update(engine);
+  //Engine.update(engine);
 
   // SOCKET EMIT
   //socket.emit('keys', keyPressed());
@@ -41,7 +41,21 @@ function main() {
   player2Def.show();
 	player2Atk.show();
 
-  singlePlayerAI(menu);
+  // IN CASE BALL GETS STUCK ON TOP OF GOAL - DON'T THINK IF IT WILL WORK
+  if (ball.body.position.y < goal1.h && ball.body.velocity.x == 0 && ball.body.velocity.y == 0) {
+    ball.resetLocation();
+  }
+
+  if (menu == P1_LOCAL_LEFT_SELECTED) {
+    singlePlayerAIRight.tickAI(player2Def, player2Atk);
+  }
+  else if (menu == P1_LOCAL_RIGHT_SELECTED) {
+    singlePlayerAILeft.tickAI(player1Def, player1Atk);
+  }
+  else if (menu == 1000) {
+    singlePlayerAILeft.tickAI(player1Def, player1Atk);
+    singlePlayerAIRight.tickAI(player2Def, player2Atk);
+  }
   
   // KEEP PLAYERS UPRIGHT
   if (player1Def.isOnGround(ground)){
