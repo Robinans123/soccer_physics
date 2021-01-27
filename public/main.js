@@ -76,22 +76,22 @@ function main() {
   }
 
   // GAME CONTROLS
-  if (keyIsDown(65) && (menu == P1_LOCAL_LEFT_SELECTED) || (menu == P2_LOCAL_SELECTED)) {
+  if (keyIsDown(65) && menu == P1_LOCAL_LEFT_SELECTED || menu == P2_LOCAL_SELECTED) {
     player1Def.cstrLegs.stiffness = 0.00001;      
     player1Def.kick(kickForceCoeff);
   }
 
-  if (keyIsDown(68) && (menu == P1_LOCAL_LEFT_SELECTED) || (menu == P2_LOCAL_SELECTED)) {
+  if (keyIsDown(68) && menu == P1_LOCAL_LEFT_SELECTED || menu == P2_LOCAL_SELECTED) {
     player1Atk.cstrLegs.stiffness = 0.00001;      
     player1Atk.kick(kickForceCoeff);
   }
 
-  if (keyIsDown(RIGHT_ARROW) && (menu == P1_LOCAL_LEFT_SELECTED) || (menu == P2_LOCAL_SELECTED)) {
+  if (keyIsDown(RIGHT_ARROW) && menu == P1_LOCAL_LEFT_SELECTED || menu == P2_LOCAL_SELECTED) {
     player2Def.cstrLegs.stiffness = 0.00001;      
     player2Def.kick(kickForceCoeff);
   }
 
-  if (keyIsDown(LEFT_ARROW) && (menu == P1_LOCAL_LEFT_SELECTED) || (menu == P2_LOCAL_SELECTED)){
+  if (keyIsDown(LEFT_ARROW) && menu == P1_LOCAL_LEFT_SELECTED || menu == P2_LOCAL_SELECTED){
     player2Atk.cstrLegs.stiffness = 0.00001;      
     player2Atk.kick(kickForceCoeff);
   }
