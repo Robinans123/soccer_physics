@@ -293,19 +293,27 @@ function keyPressed() {
 }
 
 function keyReleased() {
-  if (keyCode == 65 && menu == P1_LOCAL_LEFT_SELECTED || menu == P2_LOCAL_SELECTED) {
-    player1Def.cstrLegs.stiffness = 0.06;
+  if (keyCode == 65) {
+	  if (menu == P1_LOCAL_LEFT_SELECTED || menu == P2_LOCAL_SELECTED) {
+		player1Def.cstrLegs.stiffness = 0.06;
+	  }
   }
 
-  if (keyCode == 68 && menu == P1_LOCAL_LEFT_SELECTED || menu == P2_LOCAL_SELECTED) {
-    player1Atk.cstrLegs.stiffness = 0.06;
+  if (keyCode == 68) {
+	  if (menu == P1_LOCAL_LEFT_SELECTED || menu == P2_LOCAL_SELECTED) {
+		player1Atk.cstrLegs.stiffness = 0.06;
+	  }
   }
 
-  if (keyCode == RIGHT_ARROW && menu == P1_LOCAL_RIGHT_SELECTED || menu == P2_LOCAL_SELECTED) {
-    player2Def.cstrLegs.stiffness = 0.06;
+  if (keyCode == RIGHT_ARROW) {
+	  if (menu == P1_LOCAL_RIGHT_SELECTED || menu == P2_LOCAL_SELECTED) {
+		player2Def.cstrLegs.stiffness = 0.06;
+	  }
   }
 
-  if (keyCode == LEFT_ARROW && menu == P1_LOCAL_RIGHT_SELECTED || menu == P2_LOCAL_SELECTED) {
-    player2Atk.cstrLegs.stiffness = 0.06;
+  if (keyCode == LEFT_ARROW) {
+	  if (menu == P1_LOCAL_RIGHT_SELECTED || menu == P2_LOCAL_SELECTED) {
+		player2Atk.cstrLegs.stiffness = 0.06;
+	  }
   }
 }
