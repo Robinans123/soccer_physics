@@ -9,7 +9,7 @@
 function main() {
 
   // GAME ENGINE UPDATE
-  //Engine.update(engine);
+  Engine.update(engine);
 
   // SOCKET EMIT
   //socket.emit('keys', keyPressed());
@@ -20,7 +20,6 @@ function main() {
   fill(0);
   textSize(20);
   stroke(0, 0, 0);
-  //text('Press ESC key to return to menu', ((CANVAS_WIDTH  * 6) / 7), 30);
   pop();
 
   // SCORE LOGIC
@@ -32,18 +31,18 @@ function main() {
   gameTimer.show();
 
   // SHOW GRAPHICS
-	ball.show();
+  ball.show();
   ground.show();
   goal1.show();
   goal2.show();
-	player1Def.show();
+  player1Def.show();
   player1Atk.show();
   player2Def.show();
-	player2Atk.show();
+  player2Atk.show();
 
   // IN CASE BALL GETS STUCK ON TOP OF GOAL - DON'T THINK IF IT WILL WORK
-  if (ball.body.position.y < goal1.h && ball.body.velocity.x == 0 && ball.body.velocity.y == 0) {
-    ball.resetLocation();
+  if (ball.body.position.y < (goal1.h - ball.r) && ball.body.velocity.x == 0 && ball.body.velocity.y == 0) {
+    gameManager.resetBall();
   }
 
   if (menu == P1_LOCAL_LEFT_SELECTED) {
@@ -53,6 +52,7 @@ function main() {
     singlePlayerAILeft.tickAI(player1Def, player1Atk);
   }
   else if (menu == 1000) {
+  	//singlePlayerAIRight.AItest(player2Def, player2Atk);
     singlePlayerAILeft.tickAI(player1Def, player1Atk);
     singlePlayerAIRight.tickAI(player2Def, player2Atk);
   }
@@ -78,28 +78,32 @@ function main() {
   // GAME CONTROLS
   if (keyIsDown(65)) {
 	  if (menu == P1_LOCAL_LEFT_SELECTED || menu == P2_LOCAL_SELECTED) {
-		player1Def.cstrLegs.stiffness = 0.00001;      
+		//player1Def.cstrLegs.stiffness = 0.00001;
+		player1Def.cstrLegs.stiffness = 0; 
 		player1Def.kick(kickForceCoeff);
 	  }
   }
 
   if (keyIsDown(68)) {
 	  if (menu == P1_LOCAL_LEFT_SELECTED || menu == P2_LOCAL_SELECTED) {
-		player1Atk.cstrLegs.stiffness = 0.00001;      
+		//player1Atk.cstrLegs.stiffness = 0.00001;
+		player1Atk.cstrLegs.stiffness = 0; 
 		player1Atk.kick(kickForceCoeff);
 	  }
   }
 
   if (keyIsDown(RIGHT_ARROW)) {
 	  if (menu == P1_LOCAL_RIGHT_SELECTED || menu == P2_LOCAL_SELECTED) {
-		player2Def.cstrLegs.stiffness = 0.00001;      
+		//player2Def.cstrLegs.stiffness = 0.00001;
+		player2Def.cstrLegs.stiffness = 0;     
 		player2Def.kick(kickForceCoeff);
 	  }
   }
 
   if (keyIsDown(LEFT_ARROW)){
 	  if (menu == P1_LOCAL_RIGHT_SELECTED || menu == P2_LOCAL_SELECTED) {
-		player2Atk.cstrLegs.stiffness = 0.00001;      
+		//player2Atk.cstrLegs.stiffness = 0.00001;
+		player2Atk.cstrLegs.stiffness = 0;
 		player2Atk.kick(kickForceCoeff);
 	  }
   }

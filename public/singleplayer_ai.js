@@ -48,4 +48,24 @@ function SinglePlayerAI(previousTimingAI, randTimingAI, choosePlayerAI) {
       this.previousTimingAI = frameCount;
     }
   }
+
+  // LITTLE FUNNY TEST FOR AI (aimed for player 2)
+  /*this.AItest = function(playerDef, playerAtk) {
+    if (playerAtk.isOnGround(ground)) {
+      if (mouseY >= CANVAS_HEIGHT - playerAtk.mainBody.position.x) {
+        if (mouseX <= playerAtk.mainBody.position.x - 10) {
+          playerAtk.kick();
+          playerAtk.jump();
+        }
+      }
+    }
+    if (playerDef.isOnGround(ground)) {
+      if (mouseY >= CANVAS_HEIGHT - playerDef.mainBody.position.x) {
+        if (mouseX <= playerDef.mainBody.position.x - 10) {
+          playerDef.kick();
+          playerDef.jump();
+        }
+      }
+    }
+  }*/
 }

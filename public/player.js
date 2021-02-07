@@ -6,27 +6,27 @@
 // Description : Player class
 // ************************************************
 
-function Player(mainX, mainY, mainW, mainH, legW, legH, isPlayer1) {
+function Player(generalOptions) {
   // TO DO : REFACTOR !!! AND ADD COMMENTS !!!
   // EXPLANATIONS OF THE PLAYER CLASS IS EXPLAINED AT THE BOTTOM OF THE CODE
-  this.mainX = mainX;
-  this.mainY = mainY;
-  this.mainH = mainH;
-  this.mainW = mainW;
-  this.legW = legW;
-  this.legH = legH;
-  this.isPlayer1 = isPlayer1;
-  this.legFixedW = legW;
-  this.legFixedH = legH;
-  this.footW = this.legW;
-  this.footH = 8; // TO BE TUNED
-  this.legX = 0;
-  this.legY = 0;
-  this.counterweightW = this.legFixedW + this.legW + this.footW;
-  this.counterweightH = 4;
-  this.absoluteAngle = 0;
-  this.flipImageX = 0;
-
+  this.mainBodyX = generalOptions.startPosX;
+  this.mainBodyY = generalOptions.startPosY;
+  this.mainBodyW = generalOptions.mainWidth;
+  this.mainBodyH = generalOptions.mainHeight;
+  this.legBodyX = generalOptions.legX;
+  this.legBodyY = generalOptions.legY;
+  this.legBodyW = generalOptions.legWidth;
+  this.legBodyH = generalOptions.legHeight;
+  this.legFixedBodyX = generalOptions.legFixedX;
+  this.legFixedBodyY = generalOptions.legFixedY;
+  this.legFixedBodyW = generalOptions.legFixedWidth;
+  this.legFixedBodyH = generalOptions.legFixedHeight;
+  //this.footBodyW = this.legBodyW;
+  this.footBodyW = 20;
+  this.footBodyH = 4; // TO BE TUNED
+  this.counterweightBodyW = this.legFixedBodyW + this.legBodyW + this.footBodyW;
+  this.counterweightBodyH = 4;
+  
   this.mainBody;
   this.legBody;
   this.legFixedBody;
@@ -41,6 +41,10 @@ function Player(mainX, mainY, mainW, mainH, legW, legH, isPlayer1) {
   this.cstrLegs;
   this.cstrCounterweight;
   this.cstrCounterweight2;
+
+  this.isPlayer1 = generalOptions.isPlayer1;
+  this.absoluteAngle = 0;
+  this.flipImageX = 0;
 
   // BODY -----------------------------------------------------------------------------------------------------------------------------------------------------------------
   // BODIES CREATION - OPTIONS
@@ -105,58 +109,59 @@ function Player(mainX, mainY, mainW, mainH, legW, legH, isPlayer1) {
   }
 
   // BODIES CREATION - MAIN BODY
-  this.mainBody = Bodies.rectangle(this.mainX, this.mainY, this.mainW, this.mainH, main_options);
+  this.mainBody = Bodies.rectangle(this.mainBodyX, this.mainBodyY, this.mainBodyW, this.mainBodyH, main_options);
   World.add(world,this.mainBody);
 
   // BODIES CREATION - LEG BODY
   if (this.isPlayer1) {
-    this.legX = this.mainBody.position.x + (this.mainW / 2) + (this.legW / 2);
-    this.legY = this.mainBody.position.y + (this.mainH / 2) + (this.legH / 2);
-    this.legBody = Bodies.rectangle(this.legX, this.legY, this.legW, this.legH, leg_options);
+    this.legBodyX = this.mainBody.position.x + (this.mainBodyW / 2) - (this.legBodyW / 2);
+    this.legBodyY = this.mainBody.position.y + (this.mainBodyH / 2) + (this.legBodyH / 2);
+    this.legBody = Bodies.rectangle(this.legBodyX, this.legBodyY, this.legBodyW, this.legBodyH, leg_options);
     World.add(world,this.legBody);
   }
   else {
-    this.legX = this.mainBody.position.x - (this.mainW / 2) - (this.legW / 2);
-    this.legY = this.mainBody.position.y + (this.mainH / 2) + (this.legH / 2);
-    this.legBody = Bodies.rectangle(this.legX, this.legY, this.legW, this.legH, leg_options);
+    this.legBodyX = this.mainBody.position.x - (this.mainBodyW / 2) + (this.legBodyW / 2);
+    this.legBodyY = this.mainBody.position.y + (this.mainBodyH / 2) + (this.legBodyH / 2);
+    this.legBody = Bodies.rectangle(this.legBodyX, this.legBodyY, this.legBodyW, this.legBodyH, leg_options);
     World.add(world,this.legBody);
   }
   
 
   // BODIES CREATION - FIXED LEG BODY
   if (this.isPlayer1) {
-    this.leg_fixed_x = this.mainBody.position.x - (this.mainW / 2) + (this.legFixedW / 2);
-    this.leg_fixed_y = this.mainBody.position.y + (this.mainH / 2) + (this.legFixedH / 2);
-    this.legFixedBody = Bodies.rectangle(this.leg_fixed_x, this.leg_fixed_y, this.legFixedW, this.legFixedH, leg_fixed_options);
+    this.leg_fixed_x = this.mainBody.position.x - (this.mainBodyW / 2) + (this.legFixedBodyW / 2);
+    this.leg_fixed_y = this.mainBody.position.y + (this.mainBodyH / 2) + (this.legFixedBodyH / 2);
+    this.legFixedBody = Bodies.rectangle(this.leg_fixed_x, this.leg_fixed_y, this.legFixedBodyW, this.legFixedBodyH, leg_fixed_options);
     World.add(world,this.legFixedBody);
   }
   else {
-    this.leg_fixed_x = this.mainBody.position.x + (this.mainW / 2) - (this.legFixedW / 2);
-    this.leg_fixed_y = this.mainBody.position.y + (this.mainH / 2) + (this.legFixedH / 2);
-    this.legFixedBody = Bodies.rectangle(this.leg_fixed_x, this.leg_fixed_y, this.legFixedW, this.legFixedH, leg_fixed_options);
+    this.leg_fixed_x = this.mainBody.position.x + (this.mainBodyW / 2) - (this.legFixedBodyW / 2);
+    this.leg_fixed_y = this.mainBody.position.y + (this.mainBodyH / 2) + (this.legFixedBodyH / 2);
+    this.legFixedBody = Bodies.rectangle(this.leg_fixed_x, this.leg_fixed_y, this.legFixedBodyW, this.legFixedBodyH, leg_fixed_options);
     World.add(world,this.legFixedBody);
   }
 
 
   // BODIES CREATION - FOOT BODY
   if (this.isPlayer1) {
-    this.foot_x = this.legBody.position.x + (this.legW / 2) + (this.footW / 2);
-    this.foot_y = this.legBody.position.y + (this.legH / 2) - (this.footH / 2);
-    this.footBody = Bodies.rectangle(this.foot_x, this.foot_y, this.footW, this.footH, foot_options);
+    this.foot_x = this.legBody.position.x + (this.legBodyW / 2) + (this.footBodyW / 2);
+    this.foot_y = this.legBody.position.y + (this.legBodyH / 2) - (this.footBodyH / 2);
+    this.footBody = Bodies.rectangle(this.foot_x, this.foot_y, this.footBodyW, this.footBodyH, foot_options);
     World.add(world, this.footBody);
   }
   else {
-    this.foot_x = this.legBody.position.x - (this.legW / 2) - (this.footW / 2);
-    this.foot_y = this.legBody.position.y + (this.legH / 2) - (this.footH / 2);
-    this.footBody = Bodies.rectangle(this.foot_x, this.foot_y, this.footW, this.footH, foot_options);
+    this.foot_x = this.legBody.position.x - (this.legBodyW / 2) - (this.footBodyW / 2);
+    this.foot_y = this.legBody.position.y + (this.legBodyH / 2) - (this.footBodyH / 2);
+    this.footBody = Bodies.rectangle(this.foot_x, this.foot_y, this.footBodyW, this.footBodyH, foot_options);
     World.add(world, this.footBody);
   }
 
   // BODIES CREATION - COUNTERWEIGHT BODY (counterweight that will be put under the player)
-  this.counterweight_x = this.legFixedBody.position.x + (this.legFixedW / 2);
-  this.counterweight_y = this.legFixedBody.position.y + (this.legFixedH / 2) + (this.counterweightH / 2);
+  //this.counterweight_x = this.legFixedBody.position.x + (this.legFixedBodyW / 2);
+  this.counterweight_x = this.mainBody.position.x;
+  this.counterweight_y = this.legFixedBody.position.y + (this.legFixedBodyH / 2) + (this.counterweightBodyH / 2);
   // MAYBE MAKE THE COUNTERWEIGHT A LITTLE BIT WIDER, FOR NOW IT IS WIDTH OF LEG + WIDTH OF FIXED LEG
-  this.counterweightBody = Bodies.rectangle(this.counterweight_x, this.counterweight_y, this.counterweightW, this.counterweightH, counterweight_options);
+  this.counterweightBody = Bodies.rectangle(this.counterweight_x, this.counterweight_y, this.counterweightBodyW, this.counterweightBodyH, counterweight_options);
   World.add(world, this.counterweightBody);
 
   // CONSTRAINTS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -164,12 +169,12 @@ function Player(mainX, mainY, mainW, mainH, legW, legH, isPlayer1) {
   // CONSTRAINTS CREATION - CONSTRAINT BETWEEN MAIN BODY AND LEG BODY
   // Creating two vectors for each point of the constraint
   if (this.isPlayer1) {
-    this.cstr_A = Matter.Vector.create((this.mainW / 2) + 1, (this.mainH / 2) + 1);
-    this.cstr_B = Matter.Vector.create((this.legW / 2), -(this.legH / 2));
+    this.cstr_A = Matter.Vector.create((this.mainBodyW / 2) + 1, (this.mainBodyH / 2) + 1);
+    this.cstr_B = Matter.Vector.create((this.legBodyW / 2), -(this.legBodyH / 2));
   }
   else {
-    this.cstr_A = Matter.Vector.create(-(this.mainW / 2) - 1, (this.mainH / 2) + 1);
-    this.cstr_B = Matter.Vector.create(-(this.legW / 2), -(this.legH / 2));
+    this.cstr_A = Matter.Vector.create(-(this.mainBodyW / 2) - 1, (this.mainBodyH / 2) + 1);
+    this.cstr_B = Matter.Vector.create(-(this.legBodyW / 2), -(this.legBodyH / 2));
   }
   
 
@@ -190,16 +195,16 @@ function Player(mainX, mainY, mainW, mainH, legW, legH, isPlayer1) {
 
   // TO BE FIXED !!!!
   if (this.isPlayer1) {
-    this.cstrFixed_A = Matter.Vector.create(-(this.mainW / 2) - 1, (this.mainH / 2) + 1); // Bottom left of main body
-    this.cstrFixed_B = Matter.Vector.create(-(this.legFixedW / 2), -(this.legFixedH / 2));
-    this.cstrFixed2_A = Matter.Vector.create(-(this.mainW / 2) + (this.legFixedW) - 1, (this.mainH / 2) + 1);
-    this.cstrFixed2_B = Matter.Vector.create((this.legFixedW / 2), -(this.legFixedH / 2));
+    this.cstrFixed_A = Matter.Vector.create(-(this.mainBodyW / 2) - 1, (this.mainBodyH / 2) + 1); // Bottom left of main body
+    this.cstrFixed_B = Matter.Vector.create(-(this.legFixedBodyW / 2), -(this.legFixedBodyH / 2));
+    this.cstrFixed2_A = Matter.Vector.create(-(this.mainBodyW / 2) + (this.legFixedBodyW) - 1, (this.mainBodyH / 2) + 1);
+    this.cstrFixed2_B = Matter.Vector.create((this.legFixedBodyW / 2), -(this.legFixedBodyH / 2));
   }
   else {
-    this.cstrFixed_A = Matter.Vector.create((this.mainW / 2) + 1, (this.mainH / 2) + 1); // Bottom right of main body
-    this.cstrFixed_B = Matter.Vector.create((this.legFixedW / 2), -(this.legFixedH / 2));
-    this.cstrFixed2_A = Matter.Vector.create((this.mainW / 2) - (this.legFixedW) + 1, (this.mainH / 2) + 1);
-    this.cstrFixed2_B = Matter.Vector.create(-(this.legFixedW / 2), -(this.legFixedH / 2));
+    this.cstrFixed_A = Matter.Vector.create((this.mainBodyW / 2) + 1, (this.mainBodyH / 2) + 1); // Bottom right of main body
+    this.cstrFixed_B = Matter.Vector.create((this.legFixedBodyW / 2), -(this.legFixedBodyH / 2));
+    this.cstrFixed2_A = Matter.Vector.create((this.mainBodyW / 2) - (this.legFixedBodyW) + 1, (this.mainBodyH / 2) + 1);
+    this.cstrFixed2_B = Matter.Vector.create(-(this.legFixedBodyW / 2), -(this.legFixedBodyH / 2));
   }
   
 
@@ -229,16 +234,16 @@ function Player(mainX, mainY, mainW, mainH, legW, legH, isPlayer1) {
 
   // CONSTRAINTS CREATION - CONSTRAINTS BETWEEN LEG BODY AND FOOT BODY
   if (this.isPlayer1) {
-    this.cstrFoot_A = Matter.Vector.create((this.legW / 2) + 1, (this.legH / 2) + 1);
-    this.cstrFoot_B = Matter.Vector.create(-(this.footW / 2), (this.footH / 2));
-    this.cstrFoot2_A = Matter.Vector.create((this.legW / 2) + 1, (this.legH / 2) - this.footH + 1);
-    this.cstrFoot2_B = Matter.Vector.create(-(this.footW / 2), -(this.footH / 2));
+    this.cstrFoot_A = Matter.Vector.create((this.legBodyW / 2) + 1, (this.legBodyH / 2) + 1);
+    this.cstrFoot_B = Matter.Vector.create(-(this.footBodyW / 2), (this.footBodyH / 2));
+    this.cstrFoot2_A = Matter.Vector.create((this.legBodyW / 2) + 1, (this.legBodyH / 2) - this.footBodyH + 1);
+    this.cstrFoot2_B = Matter.Vector.create(-(this.footBodyW / 2), -(this.footBodyH / 2));
   }
   else {
-    this.cstrFoot_A = Matter.Vector.create(-(this.legW / 2) - 1, (this.legH / 2) + 1);
-    this.cstrFoot_B = Matter.Vector.create((this.footW / 2), (this.footH / 2));
-    this.cstrFoot2_A = Matter.Vector.create(-(this.legW / 2) - 1, (this.legH / 2) - this.footH + 1);
-    this.cstrFoot2_B = Matter.Vector.create((this.footW / 2), -(this.footH / 2));
+    this.cstrFoot_A = Matter.Vector.create(-(this.legBodyW / 2) - 1, (this.legBodyH / 2) + 1);
+    this.cstrFoot_B = Matter.Vector.create((this.footBodyW / 2), (this.footBodyH / 2));
+    this.cstrFoot2_A = Matter.Vector.create(-(this.legBodyW / 2) - 1, (this.legBodyH / 2) - this.footBodyH + 1);
+    this.cstrFoot2_B = Matter.Vector.create((this.footBodyW / 2), -(this.footBodyH / 2));
   }
   
   var cstr_foot_options = {
@@ -256,7 +261,7 @@ function Player(mainX, mainY, mainW, mainH, legW, legH, isPlayer1) {
     bodyB: this.footBody,
     pointA: this.cstrFoot2_A,
     pointB: this.cstrFoot2_B,
-    length: 1,
+    length: 0,
     stiffness: 0.99,
     damping: 0
   }
@@ -269,12 +274,12 @@ function Player(mainX, mainY, mainW, mainH, legW, legH, isPlayer1) {
 
   // CONSTRAINTS CREATION - CONSTRAINT BETWEEN LEG BODY AND FIXED LEG BODY
   if (this.isPlayer1) {
-    this.cstrLegs_A = Matter.Vector.create(-(this.legW / 2) - 1, -(this.legH / 2) + 1);
-    this.cstrLegs_B = Matter.Vector.create((this.legFixedW / 2), -(this.legFixedH / 2));
+    this.cstrLegs_A = Matter.Vector.create(-(this.legBodyW / 2) - 1, -(this.legBodyH / 2) + 1);
+    this.cstrLegs_B = Matter.Vector.create((this.legFixedBodyW / 2), -(this.legFixedBodyH / 2));
   }
   else {
-    this.cstrLegs_A = Matter.Vector.create((this.legW / 2) + 1, -(this.legH / 2) + 1);
-    this.cstrLegs_B = Matter.Vector.create(-(this.legFixedW / 2), -(this.legFixedH / 2));
+    this.cstrLegs_A = Matter.Vector.create((this.legBodyW / 2) + 1, -(this.legBodyH / 2) + 1);
+    this.cstrLegs_B = Matter.Vector.create(-(this.legFixedBodyW / 2), -(this.legFixedBodyH / 2));
   }
 
   this.cstrLegsLength = 2;
@@ -295,16 +300,16 @@ function Player(mainX, mainY, mainW, mainH, legW, legH, isPlayer1) {
 
   // CONSTRAINTS CREATION - CONSTRAINTS BETWEEN COUNTERWEIGHT BODY AND LEG FIXED BODY
   if (this.isPlayer1) {
-    this.cstrCounterweight_A = Matter.Vector.create(-(this.legFixedW / 2), (this.legFixedH / 2));
-    this.cstrCounterweight_B = Matter.Vector.create(-(this.counterweightW / 2), -(this.counterweightH / 2));
-    this.cstrCounterweight2_A = Matter.Vector.create((this.legFixedW / 2), (this.legFixedH / 2));
-    this.cstrCounterweight2_B = Matter.Vector.create(-(this.counterweightW / 2) + this.legFixedW, -(this.counterweightH / 2));
+    this.cstrCounterweight_A = Matter.Vector.create(-(this.legFixedBodyW / 2), (this.legFixedBodyH / 2));
+    this.cstrCounterweight_B = Matter.Vector.create(-(this.counterweightBodyW / 2), -(this.counterweightBodyH / 2));
+    this.cstrCounterweight2_A = Matter.Vector.create((this.legFixedBodyW / 2), (this.legFixedBodyH / 2));
+    this.cstrCounterweight2_B = Matter.Vector.create(-(this.counterweightBodyW / 2) + this.legFixedBodyW, -(this.counterweightBodyH / 2));
   }
   else {
-    this.cstrCounterweight_A = Matter.Vector.create((this.legFixedW / 2), (this.legFixedH / 2));
-    this.cstrCounterweight_B = Matter.Vector.create((this.counterweightW / 2), -(this.counterweightH / 2));
-    this.cstrCounterweight2_A = Matter.Vector.create(-(this.legFixedW / 2), (this.legFixedH / 2));
-    this.cstrCounterweight2_B = Matter.Vector.create((this.counterweightW / 2) - this.legFixedW, -(this.counterweightH / 2));
+    this.cstrCounterweight_A = Matter.Vector.create((this.legFixedBodyW / 2), (this.legFixedBodyH / 2));
+    this.cstrCounterweight_B = Matter.Vector.create((this.counterweightBodyW / 2), -(this.counterweightBodyH / 2));
+    this.cstrCounterweight2_A = Matter.Vector.create(-(this.legFixedBodyW / 2), (this.legFixedBodyH / 2));
+    this.cstrCounterweight2_B = Matter.Vector.create((this.counterweightBodyW / 2) - this.legFixedBodyW, -(this.counterweightBodyH / 2));
   }
   
   var cstr_counterweight_options = {
@@ -481,7 +486,7 @@ function Player(mainX, mainY, mainW, mainH, legW, legH, isPlayer1) {
     stroke(0);
     fill(255);
     scale(this.flipImageX, 1);
-    image(spritePlayerMainBody0, -this.mainW / 2, -this.mainH / 2,  this.mainW, this.mainH);
+    image(spritePlayerMainBody0, -this.mainBodyW / 2, -this.mainBodyH / 2,  this.mainBodyW, this.mainBodyH);
     pop();
     
     // DRAWING LEG
@@ -492,7 +497,7 @@ function Player(mainX, mainY, mainW, mainH, legW, legH, isPlayer1) {
     rotate(this.legBody.angle);
     fill(255);
     scale(this.flipImageX, 1);
-    image(spritePlayerLeg0, -this.legW / 2, -this.legH / 2,  this.legW, this.legH);
+    image(spritePlayerLeg0, -this.legBodyW / 2, -this.legBodyH / 2,  this.legBodyW, this.legBodyH);
     pop();
 
     // DRAWING FIXED LEG
@@ -503,18 +508,18 @@ function Player(mainX, mainY, mainW, mainH, legW, legH, isPlayer1) {
     rotate(this.legFixedBody.angle);
     fill(255);
     scale(this.flipImageX, 1);
-    image(spritePlayerLeg0, -this.legFixedW / 2, -this.legFixedH / 2,  this.legFixedW, this.legFixedH);
+    image(spritePlayerLeg0, -this.legFixedBodyW / 2, -this.legFixedBodyH / 2,  this.legFixedBodyW, this.legFixedBodyH);
     pop();
 
     // DRAWING FOOT
-    push();
+    /*push();
     fill(255);
     rectMode(CENTER);
     angleMode(RADIANS);
     translate(this.footBody.position.x, this.footBody.position.y);
     rotate(this.footBody.angle);
-    rect(0, 0, this.footW, this.footH);
-    pop();
+    rect(0, 0, this.footBodyW, this.footBodyH);
+    pop();*/
   }
 }
 // EXPLANATIONS

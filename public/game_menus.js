@@ -72,7 +72,7 @@ function GameMenus() {
       rect((CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2) - (menuButtonHeight / 2), menuButtonWidth, menuButtonHeight);
       fill(0, 100, 255);
       rect((CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2) + (menuButtonHeight / 2), menuButtonWidth, menuButtonHeight);
-      textSize(20)
+      textSize(20);
       fill(255);
       text('CREATE NEW GAME', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2) - (menuButtonHeight / 2));
       text('JOIN EXISTING GAME', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2) + (menuButtonHeight / 2));
@@ -87,7 +87,6 @@ function GameMenus() {
       fill(255);
       text('BACK TO MAIN MENU', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT - menuButtonHeight));
       pop();
-
     }
 
     // 1 PLAYER - LOCAL | LEFT
@@ -112,9 +111,21 @@ function GameMenus() {
       textSize(60);
       fill(200, 220, 30);
       text('CREATE', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2));
+      text('UNDER CONSTRUCTION', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT * 2 / 3));
+      // Drawing back to main menu button
+      push();
+      rectMode(CENTER);
+      fill(170, 60, 0);
+      rect((CANVAS_WIDTH / 2), (CANVAS_HEIGHT - menuButtonHeight), menuButtonWidth, menuButtonHeight);
+      textAlign(CENTER, CENTER);
+      textSize(20);
+      fill(255);
+      text('BACK TO MAIN MENU', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT - menuButtonHeight));
+      pop();
+
       lobbyName = prompt("Enter lobby name");
       // Sending lobby name to server (working)
-      socket.emit('createLobbyMessage', lobbyName);
+      //socket.emit('createLobbyMessage', lobbyName);
     }
 
     if (menu == P2_ONLINE_JOIN_MENU) {
@@ -124,6 +135,18 @@ function GameMenus() {
       textSize(60);
       fill(200, 220, 30);
       text('JOIN', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2));
+      text('UNDER CONSTRUCTION', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT * 2 / 3));
+      // Drawing back to main menu button
+      push();
+      rectMode(CENTER);
+      fill(170, 60, 0);
+      rect((CANVAS_WIDTH / 2), (CANVAS_HEIGHT - menuButtonHeight), menuButtonWidth, menuButtonHeight);
+      textAlign(CENTER, CENTER);
+      textSize(20);
+      fill(255);
+      text('BACK TO MAIN MENU', (CANVAS_WIDTH / 2), (CANVAS_HEIGHT - menuButtonHeight));
+      pop();
+
       lobbyCode = prompt("Enter code");
     }
   }
@@ -172,6 +195,18 @@ function GameMenus() {
         if (mouseY > (CANVAS_HEIGHT / 2) && mouseY < (CANVAS_HEIGHT / 2) + menuButtonHeight) {
           menu = P2_ONLINE_JOIN_MENU;
         }
+      }
+    }
+    if (menu == P2_ONLINE_CREATE_MENU) {
+      // RETURN TO MAIN MENU
+      if (mouseX < (CANVAS_WIDTH / 2) + (menuButtonWidth / 2) && mouseX > (CANVAS_WIDTH / 2) - (menuButtonWidth / 2) && mouseY < CANVAS_HEIGHT - menuButtonHeight / 2 && mouseY > CANVAS_HEIGHT - menuButtonHeight * 3 / 2) {
+        menu = MAIN_MENU;
+      }
+    }
+    if (menu == P2_ONLINE_JOIN_MENU) {
+      // RETURN TO MAIN MENU
+      if (mouseX < (CANVAS_WIDTH / 2) + (menuButtonWidth / 2) && mouseX > (CANVAS_WIDTH / 2) - (menuButtonWidth / 2) && mouseY < CANVAS_HEIGHT - menuButtonHeight / 2 && mouseY > CANVAS_HEIGHT - menuButtonHeight * 3 / 2) {
+        menu = MAIN_MENU;
       }
     }
   }

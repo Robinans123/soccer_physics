@@ -43,24 +43,9 @@ var generalCollCategory = 0x0001, // Used for all parts of player except counter
 let menu = MAIN_MENU;
 
 // Elements dimensions
-let ballRadius = 25; // TO BE RECALCULATED
-let goalWidth = CANVAS_WIDTH / 9.333; // Default : 150
-let goalHeight = CANVAS_HEIGHT / 1.75; // Default : 400
-let goalStartPosX = 0; // TO DO
-let goalBottomBarW = 10;
-let goalTopBarW = 10;
-let playerWidth = CANVAS_WIDTH / 28; // Default : 50
-let playerHeight = CANVAS_HEIGHT / 7.778; // Default : 90
-let playerLegWidth = playerWidth / 2;
-let playerLegHeight = (playerHeight * 2) / 3;
-let player1DefStartPosX = CANVAS_WIDTH * 0.214;
-let player1DefStartPosY = CANVAS_HEIGHT * 6 / 7;
-let player1AtkStartPosX = CANVAS_WIDTH * 0.429;
-let player1AtkStartPosY = CANVAS_HEIGHT * 6 / 7;
-let player2DefStartPosX = CANVAS_WIDTH * 0.768;
-let player2DefStartPosY = CANVAS_HEIGHT * 6 / 7;
-let player2AtkStartPosX = CANVAS_WIDTH * 0.571;
-let player2AtkStartPosY = CANVAS_HEIGHT * 6 / 7;
+
+
+
 let groundWidth = CANVAS_WIDTH;
 let groundHeight = 100; // Has to be a big arbitrary number because of the unknown surrounding the inner computing time of the Matter.js engine
 let groundOffset = 6;
@@ -84,6 +69,9 @@ let kickForceCoeff = 0.0018;
 // Coefficient that is applied to the jumpForce vector
 let jumpForceCoeff = 0.55; // 0.5 works
 
+// Stiffness of the players movable leg when the kick function is no more engaged
+let idleLegStiffness = 0.1; // Previously 0.06
+
 // Sprites handles
 let background0;
 let spriteSoccerBall;
@@ -98,41 +86,6 @@ var randTimingAI = 0;
 
 // Socket for online multiplayer
 var socket;
-
-// Create "structure that contains all arguments that can be passed to the player constructor"
-/*var player1DefOptions = {
-    playerXLocation: 300,
-    playerYLocation: 300,
-    playerWidth: playerWidth,
-    playerHeight: playerHeight,
-    playerLegWidth: playerLegWidth,
-    playerLegHeight: playerLegHeight,
-    playerSide: true,
-    playerFriction: 0.8,
-    playerRestitution: 0.1,
-    playerAngle: 0,
-    playerDensity: 0.01
-  }*/
-
-  // Create "structure that contains all arguments that can be passed to the goal constructor"
-  /*var goal1Options = {
-    goalXLocation: ,
-    goalYLocation: ,
-    goalWidth: 300,
-    goalHeight: ,
-    goalBarsThickness: 10,
-    goalSide: true,
-  }*/
-
-  // Create "structure that contains all arguments that can be passed to the ball constructor"
-  /*var ballOptions = {
-    ballXLocation: ,
-    ballYLocation: ,
-    ballDiameter: 20,
-    ballFriction: 0.01,
-    ballRestitution: 0.89,
-    ballDensity: 0.00005,
-  }*/
 
 // Assets preload
 function preload() {
@@ -176,22 +129,24 @@ function setup() {
   // Socket connection
   //socket = io.connect('http://localhost:3000');
 
-  Engine.run(engine);
+  //Engine.run(engine);
   world = engine.world;
 
   // INSTANCIATIONS
+  gameManager = new GameManager();
+  gameManager.init();
   gameMenus = new GameMenus();
 
   ground = new Ground(CANVAS_WIDTH / 2, (CANVAS_HEIGHT +  (groundHeight / 2) - groundOffset), groundWidth, groundHeight, 0);
-  ball = new Ball((CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 4), ballRadius);
+  ball = new Ball(gameManager.ballOptions);
 
-  player1Def = new Player(player1DefStartPosX, player1DefStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, true);
-  player1Atk = new Player(player1AtkStartPosX, player1AtkStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, true);
-  goal1 = new Goal((goalWidth / 2), (CANVAS_HEIGHT - (goalHeight / 2)), goalWidth, goalHeight, goalBottomBarW, goalTopBarW, true);
+  player1Def = new Player(gameManager.player1DefOptions);
+  player1Atk = new Player(gameManager.player1AtkOptions);
+  goal1 = new Goal(gameManager.goal1Options);
 
-  player2Atk = new Player(player2AtkStartPosX, player2AtkStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, false);
-  player2Def = new Player(player2DefStartPosX, player2DefStartPosY, playerWidth, playerHeight, playerLegWidth, playerLegHeight, false);
-  goal2 = new Goal((CANVAS_WIDTH - (goalWidth / 2)), (CANVAS_HEIGHT - (goalHeight / 2)), goalWidth, goalHeight, goalBottomBarW, goalTopBarW, false);
+  player2Atk = new Player(gameManager.player2AtkOptions);
+  player2Def = new Player(gameManager.player2DefOptions);
+  goal2 = new Goal(gameManager.goal2Options);
 
   gameTimer = new GameTimer(elapsedTimeSec, elapsedTimeMin);
   gameScore = new GameScore();
@@ -207,32 +162,32 @@ function setup() {
 function draw() {
 
   // Drawing main menu
-  if (menu == 0) {
+  if (menu == MAIN_MENU) {
     gameMenus.draw(menu);
   }
 
   // 1 PLAYER - LOCAL | CHOOSE SIDE
-  if (menu == 1) {
+  if (menu == P1_LOCAL_CHOOSE_SIDE_MENU) {
     gameMenus.draw(menu);
   }
 
   // 2 PLAYERS - LOCAL
-  if (menu == 2) {
+  if (menu == P2_LOCAL_SELECTED) {
     main();
   }
 
   // 2 PLAYERS - ONLINE
-  if (menu == 3) {
+  if (menu == P2_ONLINE_MENU) {
     gameMenus.draw(menu);
   }
 
   // 1 PLAYER - LOCAL |LEFT
-  if (menu == 4) {
+  if (menu == P1_LOCAL_LEFT_SELECTED) {
     main();
   }
 
   // 1 PLAYER - LOCAL | RIGHT
-  if (menu == 5) {
+  if (menu == P1_LOCAL_RIGHT_SELECTED) {
     gameMenus.draw(menu);
     main();
   }
@@ -295,25 +250,25 @@ function keyPressed() {
 function keyReleased() {
   if (keyCode == 65) {
 	  if (menu == P1_LOCAL_LEFT_SELECTED || menu == P2_LOCAL_SELECTED) {
-		player1Def.cstrLegs.stiffness = 0.06;
+		  player1Def.cstrLegs.stiffness = idleLegStiffness;
 	  }
   }
 
   if (keyCode == 68) {
 	  if (menu == P1_LOCAL_LEFT_SELECTED || menu == P2_LOCAL_SELECTED) {
-		player1Atk.cstrLegs.stiffness = 0.06;
+		  player1Atk.cstrLegs.stiffness = idleLegStiffness;
 	  }
   }
 
   if (keyCode == RIGHT_ARROW) {
 	  if (menu == P1_LOCAL_RIGHT_SELECTED || menu == P2_LOCAL_SELECTED) {
-		player2Def.cstrLegs.stiffness = 0.06;
+		  player2Def.cstrLegs.stiffness = idleLegStiffness;
 	  }
   }
 
   if (keyCode == LEFT_ARROW) {
 	  if (menu == P1_LOCAL_RIGHT_SELECTED || menu == P2_LOCAL_SELECTED) {
-		player2Atk.cstrLegs.stiffness = 0.06;
+		  player2Atk.cstrLegs.stiffness = idleLegStiffness;
 	  }
   }
 }
