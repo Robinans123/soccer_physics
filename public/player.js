@@ -497,7 +497,7 @@ function Player(generalOptions) {
     rotate(this.legBody.angle);
     fill(255);
     scale(this.flipImageX, 1);
-    image(spritePlayerLeg0, -this.legBodyW / 2, -this.legBodyH / 2,  this.legBodyW, this.legBodyH);
+    image(spritePlayerLeg1, -this.legBodyW / 2, -this.legBodyH / 2,  this.legBodyW, this.legBodyH);
     pop();
 
     // DRAWING FIXED LEG
