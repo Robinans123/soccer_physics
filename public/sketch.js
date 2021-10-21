@@ -93,7 +93,7 @@ function preload() {
   spriteSoccerBall = loadImage('../assets/sprite_soccer_ball.png');
   spritePlayerMainBody0 = loadImage('../assets/sprite_player_main_body0.png');
   spritePlayerLeg0 = loadImage('../assets/sprite_player_leg0.png');
-  spritePlayerLeg1 = loadImage('../assets/sprite_player_leg1.png');
+  spritePlayerLeg1 = loadImage('../assets/sprite_player_leg12.png');
 }
 
 // Entry point of code
